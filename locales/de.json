@@ -225,6 +225,7 @@
     "entryNote": "Übungsnotiz",
     "noNotes": "Keine Notizen",
     "removeSetConfirm": "Diesen Satz entfernen?",
+    "removeExerciseConfirm": "Diese Übung und alle Sätze entfernen?",
     "volumeByExercise": "Volumen pro Übung",
     "effortBreakdown": "Anstrengung",
     "bestSets": "Beste Sätze",

@@ -225,6 +225,7 @@
     "entryNote": "Заметка к упражнению",
     "noNotes": "Нет заметок",
     "removeSetConfirm": "Удалить этот подход?",
+    "removeExerciseConfirm": "Удалить это упражнение и все подходы?",
     "volumeByExercise": "Объём по упражнениям",
     "effortBreakdown": "Распределение усилий",
     "bestSets": "Лучшие подходы",

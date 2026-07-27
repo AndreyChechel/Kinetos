@@ -225,6 +225,7 @@
     "entryNote": "Note d’exercice",
     "noNotes": "Aucune note",
     "removeSetConfirm": "Supprimer cette série ?",
+    "removeExerciseConfirm": "Supprimer cet exercice et toutes ses séries ?",
     "volumeByExercise": "Volume par exercice",
     "effortBreakdown": "Répartition de l’effort",
     "bestSets": "Meilleures séries",

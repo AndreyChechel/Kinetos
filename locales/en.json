@@ -225,6 +225,7 @@
     "entryNote": "Exercise note",
     "noNotes": "No notes",
     "removeSetConfirm": "Remove this set?",
+    "removeExerciseConfirm": "Remove this exercise and all its sets?",
     "volumeByExercise": "Volume by exercise",
     "effortBreakdown": "Effort breakdown",
     "bestSets": "Best sets",

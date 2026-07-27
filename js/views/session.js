@@ -118,7 +118,7 @@ export default function renderSession(root, params, ctx) {
       ]),
       editable ? h('div', { class: 'entry-tools row', style: 'gap:2px' }, [
         h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'),
-          onclick: () => { s.entries.splice(idx, 1); persist(); renderExercises(); } }, [icon('trash', { size: 18 })])
+          onclick: () => confirmRemoveExercise(idx) }, [icon('trash', { size: 18 })])
       ]) : null
     ]);
 
@@ -231,6 +231,11 @@ export default function renderSession(root, params, ctx) {
   function deleteSet(entry, si) { entry.sets.splice(si, 1); entry.sets.forEach((x, i) => (x.n = i + 1)); persist(); renderExercises(); }
   async function confirmDeleteSet(entry, si) {
     if (await confirmDialog(t('session.removeSetConfirm'), { danger: true, okText: t('common.delete') })) deleteSet(entry, si);
+  }
+  async function confirmRemoveExercise(idx) {
+    if (await confirmDialog(t('session.removeExerciseConfirm'), { danger: true, okText: t('common.delete') })) {
+      s.entries.splice(idx, 1); persist(); renderExercises();
+    }
   }
   async function editSetTime(set) {
     const v = await promptDialog(t('session.editTime'), { type: 'datetime-local', value: tsToLocalInput(set.timestamp || s.startedAt) });
