@@ -19,7 +19,7 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
 
 ## Layout
 ```
-index.html  sw.js  manifest.webmanifest  docker-compose.yml  nginx.conf  run.bat
+index.html  404.html  sw.js  manifest.webmanifest  docker-compose.yml  nginx.conf  run.bat
 css/styles.css                 all styles (mobile-first; desktop @media >=900px = sidebar)
 js/app.js                      bootstrap: theme, i18n, routes, chrome, sync.init()
 js/{store,i18n,router,calc,workout,components,ui,svg,pwa,suggest,version}.js   version.js = APP_VERSION (shown in Profile→About)
@@ -46,14 +46,14 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 - Views export a render fn `(root, params, ctx)`; `ctx = {setTitle, setActions, navigate}`.
 - Build DOM with `h()` from `ui.js`. State goes through `store.js` (persists immediately). `store.update(fn, {internal})` — internal skips bumping `updatedAt` (used by sync merge).
 - Text via `t('dotted.key')`; localized data via `pick({en,...})`. Dynamic keys like `t('groups.'+g)` are common.
-- Router: hash-based, patterns like `/plan/:id`. `/plan/new` is listed before `/plan/:id`.
+- Router: **History-API, clean URLs** (no `#`), patterns like `/plan/:id`. `/plan/new` is listed before `/plan/:id`. Base path read from `<base href>` in `index.html` (works at root *and* `/repo/`). Internal links use `data-route` + relative `href` (intercepted in `app.js`); `router.navigate()` uses `pushState`; views listen for the `route:change` event. Deep-link reloads work via `404.html` (GitHub Pages SPA bounce) + the SW navigation fallback (serves cached `index.html`) + nginx `try_files` locally. The base path is auto-detected (no hardcoded sub-path depth): both `index.html` and `404.html` find the first path segment that is a known top-level route and treat everything before it as the base — so **keep `TOP_ROUTES` in sync in both files** when you add a top-level route, and don't name the repo after a route.
 - `store` key `kinetos.v1`; `migrate()` deep-merges → adding fields is safe. Schemas in `docs/data-model.html`.
 
 ## When you change things
 - New exercise → add to `exercises.json`, then `python tools/generate_svgs.py`. (SW auto-precaches every id.)
 - New locale key → add to **all** `locales/*.json` (parity is verified; en is the reference).
 - New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** or clients won't update.
-- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.1.0`). The version shows in Profile → About so you can confirm the loaded build.
+- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.2.0`). The version shows in Profile → About so you can confirm the loaded build.
 
 ## Verify (no browser here; do this)
 ```

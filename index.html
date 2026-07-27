@@ -2,6 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+
+  <!-- Clean-URL routing support (must run before any relative asset loads). -->
+  <base href="./" />
+  <script>
+    // Point <base> at the app root so relative assets (css/js/icons) resolve
+    // correctly even on a deep-link reload like /Kinetos/plan/123, whether the
+    // app is served at the domain root or a /repo/ subpath. Base is detected by
+    // finding the first path segment that is a known in-app route — everything
+    // before it is the base. No hardcoded sub-path depth, so root and subpath
+    // deploys both work. (Keep TOP_ROUTES in sync with 404.html; and don't name
+    // the repo after a route.)
+    var TOP_ROUTES = ['exercises', 'plan', 'progress', 'profile', 'session'];
+    (function () {
+      var segs = location.pathname.split('/');
+      var idx = segs.length;
+      for (var i = 0; i < segs.length; i++) { if (TOP_ROUTES.indexOf(segs[i]) >= 0) { idx = i; break; } }
+      var base = (idx < segs.length) ? segs.slice(0, idx).join('/') + '/' : location.pathname;
+      document.querySelector('base').setAttribute('href', base || '/');
+    })();
+    // Restore a deep link handed over by 404.html (path arrives as "?/plan/1").
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        history.replaceState(null, '', l.pathname.replace(/\/$/, '') + decoded + l.hash);
+      }
+    })(location);
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0b1220" />
   <meta name="description" content="Kinetos — plan and track your gym workouts. Offline-first PWA." />
@@ -25,27 +55,27 @@
     <main id="view" class="view" role="main"></main>
 
     <nav class="tabbar" id="tabbar" aria-label="Primary">
-      <a class="tabbar__brand" href="#/" aria-label="Kinetos home">
+      <a class="tabbar__brand" href="." data-route="/" aria-label="Kinetos home">
         <img src="assets/icons/icon.svg" alt="" />
         <span>Kinetos</span>
       </a>
-      <a class="tabbar__item" href="#/" data-tab="home">
+      <a class="tabbar__item" href="." data-route="/" data-tab="home">
         <span class="tabbar__icon" aria-hidden="true">🏠</span>
         <span class="tabbar__label" data-i18n="nav.home">Home</span>
       </a>
-      <a class="tabbar__item" href="#/exercises" data-tab="exercises">
+      <a class="tabbar__item" href="exercises" data-route="/exercises" data-tab="exercises">
         <span class="tabbar__icon" aria-hidden="true">🏋️</span>
         <span class="tabbar__label" data-i18n="nav.exercises">Exercises</span>
       </a>
-      <a class="tabbar__item" href="#/plan" data-tab="plan">
+      <a class="tabbar__item" href="plan" data-route="/plan" data-tab="plan">
         <span class="tabbar__icon" aria-hidden="true">🗓️</span>
         <span class="tabbar__label" data-i18n="nav.plan">Plan</span>
       </a>
-      <a class="tabbar__item" href="#/progress" data-tab="progress">
+      <a class="tabbar__item" href="progress" data-route="/progress" data-tab="progress">
         <span class="tabbar__icon" aria-hidden="true">📈</span>
         <span class="tabbar__label" data-i18n="nav.progress">Progress</span>
       </a>
-      <a class="tabbar__item" href="#/profile" data-tab="profile">
+      <a class="tabbar__item" href="profile" data-route="/profile" data-tab="profile">
         <span class="tabbar__icon" aria-hidden="true">👤</span>
         <span class="tabbar__label" data-i18n="nav.profile">Profile</span>
       </a>

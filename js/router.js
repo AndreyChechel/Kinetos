@@ -1,8 +1,16 @@
-// Minimal hash router. Routes are patterns like '/exercises/:id'.
+// Minimal History-API router. Routes are patterns like '/exercises/:id'.
+// Clean URLs (no '#'): the home page is the bare base path, other routes are
+// base + '/plan' etc. The base path is read from the document's <base href>, so
+// the same code works at the domain root and at a GitHub Pages '/repo/' subpath.
+// Deep-link reloads rely on 404.html (GitHub Pages) + the service worker shell.
 
 let routes = [];
 let notFound = null;
 let onNavigate = null;
+
+// App base path with a trailing slash, e.g. '/' or '/Kinetos/'.
+// document.baseURI comes from the <base href> set in index.html.
+const BASE = new URL('.', document.baseURI).pathname;
 
 function parse(pattern) {
   const keys = [];
@@ -16,14 +24,25 @@ export function defineRoutes(table, opts = {}) {
   onNavigate = opts.onNavigate || null;
 }
 
+// Current in-app route (base stripped), always starting with '/'. Includes any query string.
 export function currentPath() {
-  const h = location.hash.replace(/^#/, '');
-  return h.startsWith('/') ? h : '/' + h;
+  let p = location.pathname;
+  const baseNoSlash = BASE.replace(/\/$/, ''); // '' at root, '/Kinetos' at a subpath
+  if (baseNoSlash && p.startsWith(baseNoSlash)) p = p.slice(baseNoSlash.length);
+  if (!p.startsWith('/')) p = '/' + p;
+  return p + location.search;
+}
+
+// Build an absolute URL for an in-app path like '/plan' or '/'.
+export function href(path) {
+  return BASE + String(path).replace(/^\//, '');
 }
 
 export function navigate(path) {
-  if (currentPath() === path) { handle(); return; }
-  location.hash = path;
+  const clean = String(path).split('?')[0];
+  if (currentPath().split('?')[0] === clean) { handle(); return; }
+  history.pushState({}, '', href(path));
+  handle();
 }
 
 export function back() {
@@ -31,7 +50,12 @@ export function back() {
   else navigate('/');
 }
 
+// Re-run the current route (used after a language switch re-renders the view).
+export function refresh() { handle(); }
+
 function handle() {
+  // Let views react to navigation (e.g. stop the session timer) before re-render.
+  window.dispatchEvent(new Event('route:change'));
   const path = currentPath() || '/';
   const clean = path.split('?')[0];
   for (const r of routes) {
@@ -48,7 +72,6 @@ function handle() {
 }
 
 export function startRouter() {
-  window.addEventListener('hashchange', handle);
-  if (!location.hash) location.hash = '/';
+  window.addEventListener('popstate', handle);
   handle();
 }

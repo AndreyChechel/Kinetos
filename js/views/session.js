@@ -15,7 +15,7 @@ import { suggestNext, formatSuggestion, suggestionReason, applyToSet } from '../
 let timer = null;
 let collapsed = new Set();      // entry ids currently collapsed (UI-only)
 let collapsedFor = null;        // session id the set belongs to
-window.addEventListener('hashchange', () => { if (timer) { clearInterval(timer); timer = null; } });
+window.addEventListener('route:change', () => { if (timer) { clearInterval(timer); timer = null; } });
 
 const EFFORT = { 1: { label: 'effortEasy', cls: 'eff-1' }, 2: { label: 'effortMedium', cls: 'eff-2' }, 3: { label: 'effortHard', cls: 'eff-3' } };
 

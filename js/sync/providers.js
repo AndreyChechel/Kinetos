@@ -102,8 +102,11 @@ export async function handleRedirect() {
 
 function finishRedirect() {
   sessionStorage.removeItem(OAUTH_KEY);
-  try { history.replaceState({}, document.title, SYNC.redirectUri + '#/profile'); }
-  catch { location.hash = '#/profile'; }
+  // Land back on a clean /profile URL. SYNC.redirectUri is the app base (ends
+  // with '/'); the router picks the route up when it starts during boot.
+  const base = /\/$/.test(SYNC.redirectUri || '') ? SYNC.redirectUri : (SYNC.redirectUri + '/');
+  try { history.replaceState({}, document.title, base + 'profile'); }
+  catch (e) { /* URL cleanup is best-effort */ }
 }
 
 async function ensureToken(provider) {

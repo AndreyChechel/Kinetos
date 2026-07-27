@@ -2,7 +2,7 @@
 import { getSettings, subscribe } from './store.js';
 import { initI18n, setLang, applyDOM, t } from './i18n.js';
 import { loadDB } from './data/db.js';
-import { defineRoutes, startRouter, back, navigate } from './router.js';
+import { defineRoutes, startRouter, back, navigate, refresh } from './router.js';
 import { initPWA } from './pwa.js';
 import * as sync from './sync/manager.js';
 import { qs, qsa } from './ui.js';
@@ -76,13 +76,21 @@ function routes() {
 export async function changeLanguage(code) {
   await setLang(code);
   applyDOM();
-  // re-run current route
-  window.dispatchEvent(new HashChangeEvent('hashchange'));
+  refresh(); // re-run current route
 }
 
 async function boot() {
   applyTheme();
   backBtn.addEventListener('click', () => back());
+  // Intercept internal nav links (data-route) for SPA navigation without reload.
+  // Real hrefs are kept so open-in-new-tab / right-click still work.
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[data-route]');
+    if (!a) return;
+    e.preventDefault();
+    navigate(a.dataset.route);
+  });
   initPWA();
   await Promise.all([initI18n(getSettings().lang), loadDB()]);
   applyDOM();

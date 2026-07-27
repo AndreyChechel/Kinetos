@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kinetos</title>
+  <script>
+    // GitHub Pages SPA fallback. GitHub serves this file for any path that has no
+    // matching file (e.g. /Kinetos/plan). We rewrite the URL into a form the app
+    // can restore ("/Kinetos/?/plan") and hand back to index.html, which decodes
+    // it and replaceState()s the real path.
+    //
+    // The app base is found by locating the first known in-app route segment;
+    // everything before it is the base. This works at the domain root and at a
+    // /repo/ subpath with no hardcoded depth. (Keep TOP_ROUTES in sync with
+    // index.html.)
+    var TOP_ROUTES = ['exercises', 'plan', 'progress', 'profile', 'session'];
+    var l = window.location;
+    var segs = l.pathname.split('/');
+    var idx = segs.length;
+    for (var i = 0; i < segs.length; i++) { if (TOP_ROUTES.indexOf(segs[i]) >= 0) { idx = i; break; } }
+    var base = segs.slice(0, idx).join('/');            // '' at root, '/Kinetos' at a subpath
+    var route = segs.slice(idx).join('/').replace(/&/g, '~and~');
+    l.replace(
+      l.protocol + '//' + l.host + base + '/?/' + route +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>

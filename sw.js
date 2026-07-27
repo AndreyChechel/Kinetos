@@ -1,11 +1,12 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates.
    Keep the version in sync with js/version.js (APP_VERSION). */
-const CACHE = 'kinetos-1.1.0';
+const CACHE = 'kinetos-1.2.0';
 
 const CORE = [
   './',
   'index.html',
+  '404.html',
   'manifest.webmanifest',
   'css/styles.css',
   'js/app.js', 'js/version.js', 'js/ui.js', 'js/store.js', 'js/i18n.js', 'js/calc.js', 'js/router.js',
@@ -47,11 +48,15 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return; // don't touch cross-origin
 
-  // Navigation requests -> serve app shell (SPA, offline-friendly).
+  // Navigation requests -> serve the cached app shell (clean-URL SPA routing).
+  // Serving index.html for any in-app path (e.g. /Kinetos/plan) keeps deep-link
+  // reloads instant and fully offline, and avoids the GitHub Pages 404 bounce.
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
+      const shell = (await caches.match('index.html')) || (await caches.match('./'));
+      if (shell) return shell;
       try { return await fetch(req); }
-      catch { return (await caches.match('index.html')) || (await caches.match('./')); }
+      catch { return Response.error(); }
     })());
     return;
   }

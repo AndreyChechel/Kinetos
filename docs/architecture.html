@@ -18,7 +18,7 @@
 <ol>
   <li>applies theme (<code>applyTheme()</code>, reads <code>settings.theme</code> + system preference);</li>
   <li><code>await initI18n(settings.lang)</code> and <code>await loadDB()</code> (fetch exercise + muscle JSON);</li>
-  <li>defines routes and starts the hash router;</li>
+  <li>defines routes and starts the router (History API, clean URLs);</li>
   <li><code>initPWA()</code> registers the service worker and captures the install prompt.</li>
 </ol>
 
@@ -28,7 +28,7 @@
 <tr><td><code>app.js</code></td><td>Bootstrap, theme, chrome (top bar + tabs), route table, <code>changeLanguage()</code>.</td></tr>
 <tr><td><code>store.js</code></td><td>State + <code>localStorage</code> persistence (key <code>kinetos.v1</code>), pub/sub, CRUD for plans/sessions/profile/settings/custom exercises, export/import, <code>resetAll()</code>, <code>migrate()</code>.</td></tr>
 <tr><td><code>i18n.js</code></td><td>Loads <code>locales/&lt;code&gt;.json</code>, <code>t(key, params)</code>, <code>pick(map)</code> for localized data fields, <code>applyDOM()</code> for <code>data-i18n</code> attributes, <code>SUPPORTED</code> list.</td></tr>
-<tr><td><code>router.js</code></td><td>Hash router. <code>defineRoutes(table,opts)</code>, patterns like <code>/plan/:id</code>, <code>navigate()</code>, <code>back()</code>.</td></tr>
+<tr><td><code>router.js</code></td><td>History-API router (clean URLs, no <code>#</code>; base auto-detected from <code>&lt;base href&gt;</code>). <code>defineRoutes(table,opts)</code>, patterns like <code>/plan/:id</code>, <code>navigate()</code>, <code>back()</code>, <code>refresh()</code>. Deep-link reloads use <code>404.html</code> + the SW shell fallback.</td></tr>
 <tr><td><code>calc.js</code></td><td>Pure calculation functions (see <a href="extending.html">Extending</a>).</td></tr>
 <tr><td><code>workout.js</code></td><td>Session helpers: create empty/from-plan, active session, last-set lookup, <code>historyFor()</code>, week stats, duration.</td></tr>
 <tr><td><code>suggest.js</code></td><td>Effort- and performance-aware next-set target suggestions (see <a href="extending.html">Extending</a>).</td></tr>
