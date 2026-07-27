@@ -218,6 +218,9 @@ p { line-height: 1.5; }
 .set__in { width: 100%; min-height: 40px; padding: 7px 6px; text-align: center; }
 .set__rm { color: var(--text-muted); font-size: 1.2rem; }
 .set__ts { width: 100%; text-align: right; }
+.set__ts--edit { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; text-decoration: underline dotted var(--border); text-underline-offset: 3px; }
+.x2-badge { display: inline-flex; align-items: center; justify-content: center; flex: none; align-self: center; padding: 2px 7px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); font-size: .7rem; font-weight: 800; line-height: 1.4; white-space: nowrap; }
+.set__ro-val .x2-badge, .small .x2-badge { margin-left: 6px; }
 
 /* Effort pill: none / easy / medium / hard */
 .effort { width: 36px; height: 40px; flex: none; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); font-weight: 800; color: var(--text-muted); cursor: pointer; }
@@ -420,7 +423,8 @@ canvas { max-width: 100%; }
 .stack > .note + .note { margin-top: 8px; }
 
 /* Combined effort + done control */
-.donebtn { width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); font-size: 1.2rem; font-weight: 800; color: var(--text-muted); cursor: pointer; touch-action: none; }
+.donebtn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-muted); cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.donebtn svg { display: block; pointer-events: none; }
 .donebtn:active { transform: scale(.94); }
 .donebtn--done { color: #fff; border-color: transparent; }
 .done-eff--1 { background: var(--success); }

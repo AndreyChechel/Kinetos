@@ -5,15 +5,15 @@
 // extended stats with charts.
 import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate } from '../ui.js';
 import { t, getLang } from '../i18n.js';
-import { getSession, saveSession, deleteSession } from '../store.js';
-import { getExercise, exName } from '../data/db.js';
+import { getSession, saveSession, deleteSession, saveTemplate } from '../store.js';
+import { getExercise, exName, effectiveWeight, isPerDumbbell, volumeWeightOf } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
   exercisePicker, confirmDialog, promptDialog, popoverMenu, repChooser,
   attachLongPress, attachSwipeToDelete
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
-import { lastSetFor, sessionDurationMs } from '../workout.js';
+import { lastSetFor, sessionDurationMs, targetsFromSession } from '../workout.js';
 import { sessionVolume, oneRepMax } from '../calc.js';
 import { suggestNext, formatSuggestion, suggestionReason, applyToSet } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
@@ -27,6 +27,11 @@ window.addEventListener('route:change', () => { if (timer) { clearInterval(timer
 
 const EFFORT = { 1: { label: 'effortEasy' }, 2: { label: 'effortMedium' }, 3: { label: 'effortHard' } };
 const EFFORT_COLOR = { 1: 'var(--success)', 2: '#f0b429', 3: 'var(--danger)' };
+
+// Inline SVG glyphs for the done control — SVG (not text) so a long-press can't
+// trigger native text selection / callout on touch devices.
+const ICON_DONE = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M5 12.5l4.2 4.3L19 7.2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_TODO = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 
 export default function renderSession(root, params, ctx) {
   if (timer) { clearInterval(timer); timer = null; }
@@ -122,7 +127,8 @@ export default function renderSession(root, params, ctx) {
         const sug = suggestNext(entry.exerciseId, s.id);
         if (sug) body.appendChild(suggestionChip(entry, sug, metric));
       }
-      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric)));
+      const perDb = isPerDumbbell(entry.exerciseId);
+      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb)));
       if (editable) body.appendChild(h('button', { class: 'btn btn--sm btn--block', style: 'margin-top:4px',
         onclick: () => { entry.sets.push(nextSet(entry, metric)); persist(); renderExercises(); } }, ['＋ ' + t('session.addSet')]));
       body.appendChild(entryNoteBlock(entry));
@@ -142,6 +148,7 @@ export default function renderSession(root, params, ctx) {
     if (metric === 'reps') {
       const repsInp = numInput(set.reps, 'reps', set.targetReps ? String(set.targetReps) : t('common.reps'), { step: '1' });
       attachLongPress(repsInp, { onLongPress: () => repChooser(repsInp, set.reps ?? set.targetReps ?? 12, (v) => { set.reps = v; repsInp.value = v; persist(); }) });
+      if (isPerDumbbell(entry.exerciseId)) fields.append(x2Badge());
       fields.append(
         numInput(set.weightKg, 'weightKg', set.targetWeightKg ? String(set.targetWeightKg) : t('units.kg'), { step: '2.5' }),
         repsInp
@@ -157,7 +164,11 @@ export default function renderSession(root, params, ctx) {
     attachLongPress(numEl, { onLongPress: () => confirmDeleteSet(entry, si) });
 
     const row = h('div', { class: 'set' + (set.done ? ' set--done' : '') }, [numEl, fields, doneControl(entry, set)]);
-    if (set.done && set.timestamp) row.appendChild(h('div', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) }));
+    if (set.done && set.timestamp) {
+      const ts = h('div', { class: 'set__ts set__ts--edit small muted', style: 'cursor:pointer', title: t('session.editTime'), text: fmtTimeSec(set.timestamp, lang) });
+      attachLongPress(ts, { onLongPress: () => editSetTime(set) });
+      row.appendChild(ts);
+    }
     attachSwipeToDelete(row, { onDelete: () => deleteSet(entry, si), isEnabled: () => editable });
     return row;
   }
@@ -176,7 +187,7 @@ export default function renderSession(root, params, ctx) {
     });
     function paint() {
       btn.className = 'donebtn' + (set.done ? ' donebtn--done done-eff--' + (set.effort || 2) : '');
-      btn.textContent = set.done ? '✓' : '○';
+      btn.innerHTML = set.done ? ICON_DONE : ICON_TODO;
       btn.title = set.done ? t('session.' + EFFORT[set.effort || 2].label) : t('session.markDone');
     }
     return btn;
@@ -190,14 +201,15 @@ export default function renderSession(root, params, ctx) {
   }
 
   // --- read-only set row ---
-  function setRowRO(set, metric) {
+  function setRowRO(set, metric, perDb) {
     let val;
     if (metric === 'time') val = set.seconds ? `${set.seconds} ${t('common.sec')}` : '—';
     else if (metric === 'distance') val = [set.distanceKm ? `${set.distanceKm} ${t('units.km')}` : null, set.minutes ? `${set.minutes} ${t('common.min')}` : null].filter(Boolean).join(' · ') || '—';
     else val = set.weightKg ? `${set.weightKg} ${t('units.kg')} × ${set.reps ?? '—'}` : (set.reps ? `${set.reps} ${t('common.reps')}` : '—');
+    const showX2 = perDb && metric === 'reps' && !!set.weightKg;
     return h('div', { class: 'set set--ro' + (set.done ? ' set--done' : '') }, [
       h('span', { class: 'set__n', text: String(set.n) }),
-      h('div', { class: 'set__ro-val', text: val }),
+      h('div', { class: 'set__ro-val' }, [val, showX2 ? x2Badge() : null]),
       set.effort ? h('span', { class: 'eff-dot done-eff--' + set.effort, title: t('session.' + EFFORT[set.effort].label) }) : null,
       set.done ? h('span', { class: 'set__done-mark', text: '✓' }) : null,
       set.timestamp ? h('span', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) }) : null
@@ -207,6 +219,12 @@ export default function renderSession(root, params, ctx) {
   function deleteSet(entry, si) { entry.sets.splice(si, 1); entry.sets.forEach((x, i) => (x.n = i + 1)); persist(); renderExercises(); }
   async function confirmDeleteSet(entry, si) {
     if (await confirmDialog(t('session.removeSetConfirm'), { danger: true, okText: t('common.delete') })) deleteSet(entry, si);
+  }
+  async function editSetTime(set) {
+    const v = await promptDialog(t('session.editTime'), { type: 'datetime-local', value: tsToLocalInput(set.timestamp || s.startedAt) });
+    if (v == null) return;
+    const iso = localInputToISO(v);
+    if (iso) { set.timestamp = iso; persist(); renderExercises(); }
   }
 
   // --- per-entry note (feature 8) — editable in read-only too ---
@@ -306,6 +324,7 @@ export default function renderSession(root, params, ctx) {
     wrap.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: finish }, [t('session.finish')]));
     wrap.appendChild(h('button', { class: 'btn btn--ghost btn--block', style: 'color:var(--danger)', onclick: discard }, [t('session.discard')]));
   } else {
+    wrap.appendChild(h('button', { class: 'btn btn--block', onclick: saveAsTemplate }, [t('plan.saveAsTemplate')]));
     wrap.appendChild(h('button', { class: 'btn btn--danger btn--block', onclick: remove }, [t('common.delete')]));
   }
 
@@ -334,11 +353,17 @@ export default function renderSession(root, params, ctx) {
       deleteSession(s.id); toast(t('toast.deleted')); ctx.navigate('/');
     }
   }
+  function saveAsTemplate() {
+    const exercises = targetsFromSession(s);
+    if (!exercises.length) { toast(t('session.empty')); return; }
+    const tpl = { id: uid('tpl'), name: s.name || fmtDate(s.startedAt, lang), notes: s.notes || '', exercises };
+    saveTemplate(tpl); toast(t('templates.saved')); ctx.navigate('/templates/' + tpl.id);
+  }
 }
 
 // ---- Finished-session stats + charts (feature 16) ----
 async function renderFinishedStats(host, s, lang) {
-  const v = sessionVolume(s);
+  const v = sessionVolume(s, volumeWeightOf);
   const eff = avgEffort(s);
   host.appendChild(h('div', { class: 'grid2' }, [
     tile(fmtDuration(sessionDurationMs(s)), t('session.duration')),
@@ -358,16 +383,17 @@ async function renderFinishedStats(host, s, lang) {
     (e.sets || []).forEach((st) => {
       const counted = st.done !== false && (st.reps || st.seconds || st.distanceKm);
       if (!counted) return;
-      if (st.reps) vol += (st.weightKg || 0) * st.reps;
+      const effW = effectiveWeight(e.exerciseId, st.weightKg);
+      if (st.reps) vol += (effW || 0) * st.reps;
       if (st.weightKg && st.reps) {
-        const o = oneRepMax(st.weightKg, st.reps);
+        const o = oneRepMax(effW, st.reps);
         if (o && o.avg > e1rm) e1rm = o.avg;
         if (!best || st.weightKg > (best.weightKg || 0)) best = st;
       } else if (!best && st.reps) best = st;
       if (ex) byGroup[ex.group] = (byGroup[ex.group] || 0) + 1;
       if (st.effort) effDist[st.effort - 1]++;
     });
-    perEx.push({ name, volume: Math.round(vol), best, e1rm: Math.round(e1rm) });
+    perEx.push({ name, volume: Math.round(vol), best, e1rm: Math.round(e1rm), perDumbbell: isPerDumbbell(e.exerciseId) });
   });
 
   const hasChart = await ensureChart();
@@ -392,12 +418,32 @@ async function renderFinishedStats(host, s, lang) {
       h('span', { text: p.name }),
       h('span', { class: 'small' }, [
         p.best ? h('span', { class: 'muted', text: `${p.best.weightKg} ${t('units.kg')} × ${p.best.reps}  ` }) : null,
+        p.best && p.perDumbbell ? x2Badge() : null,
         h('strong', { text: `${p.e1rm} ${t('units.kg')} ` }),
         h('span', { class: 'muted small', text: t('progress.est1rm') })
       ])
     ]));
     host.appendChild(card(t('session.bestSets'), h('div', {}, rows)));
   }
+}
+
+/** ISO timestamp -> value for a <input type="datetime-local"> (local, minute precision). */
+function tsToLocalInput(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+/** datetime-local value (parsed as local time) -> ISO string, or null if invalid. */
+function localInputToISO(v) {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d) ? null : d.toISOString();
+}
+
+/** Small "2×" pill shown on dumbbell exercises when weight is logged per hand. */
+function x2Badge() {
+  return h('span', { class: 'x2-badge', title: t('session.dumbbellX2Hint'), text: '2×' });
 }
 
 function avgEffort(s) {

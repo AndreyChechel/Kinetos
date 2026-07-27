@@ -101,13 +101,17 @@ export function tdee(weightKg, heightCm, ageYears, sex, activityLevel) {
 
 function round1(n) { return Math.round(n * 10) / 10; }
 
-/** Total volume (weight * reps summed) for a session. */
-export function sessionVolume(session) {
+/** Total volume (weight * reps summed) for a session.
+ *  `weightOf(set, entry)` resolves the effective load per set (defaults to the
+ *  raw entered weight); callers pass a resolver to apply the dumbbell 2× rule.
+ *  Kept pure — no store/db imports — so it stays unit-testable. */
+export function sessionVolume(session, weightOf) {
+  const wOf = typeof weightOf === 'function' ? weightOf : (s) => s.weightKg || 0;
   let vol = 0, sets = 0, reps = 0;
   (session.entries || []).forEach((e) => {
     (e.sets || []).forEach((s) => {
       if (s.done !== false && s.reps) {
-        vol += (s.weightKg || 0) * s.reps;
+        vol += (wOf(s, e) || 0) * s.reps;
         reps += s.reps;
         sets += 1;
       }

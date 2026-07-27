@@ -226,10 +226,11 @@
     "entryNote": "Übungsnotiz",
     "noNotes": "Keine Notizen",
     "removeSetConfirm": "Diesen Satz entfernen?",
-    "customReps": "Benutzerdefiniert",
     "volumeByExercise": "Volumen pro Übung",
     "effortBreakdown": "Anstrengung",
-    "bestSets": "Beste Sätze"
+    "bestSets": "Beste Sätze",
+    "dumbbellX2Hint": "Gewicht pro Hantel – in Summen ×2 gezählt",
+    "editTime": "Zeit bearbeiten"
   },
   "progress": {
     "title": "Fortschritt",
@@ -310,7 +311,11 @@
     "about": "Über",
     "version": "Version",
     "aboutText": "Kinetos ist ein Offline-Trainingsplaner. Deine Daten bleiben auf diesem Gerät.",
-    "backupReminder": "Tipp: Exportiere deine Daten regelmäßig, damit nichts verloren geht."
+    "backupReminder": "Tipp: Exportiere deine Daten regelmäßig, damit nichts verloren geht.",
+    "dumbbellInput": "Hantelgewicht",
+    "dumbbellSingle": "Pro Hantel (×2)",
+    "dumbbellPair": "Beide Hanteln (gesamt)",
+    "dumbbellHint": "Wie du das Hantelgewicht eingibst. „Pro Hantel“ erfasst das Gewicht einer Hand und zählt es bei Volumen und 1RM ×2."
   },
   "sync": {
     "title": "Cloud-Sync",

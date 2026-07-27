@@ -1,7 +1,7 @@
 // Higher-level workout helpers shared by views.
 import { getSessions, saveSession, getPlan, getTemplate, getState } from './store.js';
 import { uid } from './ui.js';
-import { getExercise } from './data/db.js';
+import { getExercise, volumeWeightOf } from './data/db.js';
 import { sessionVolume } from './calc.js';
 
 const DEFAULT_REPS = 12; // app-wide default target reps (feature: default to 12)
@@ -26,6 +26,25 @@ export function entriesFromExerciseList(list) {
       timestamp: null
     }))
   }));
+}
+
+/** Inverse of entriesFromExerciseList: turn a logged session into reusable
+ *  template/plan target rows. For reps exercises the heaviest logged set is
+ *  used as the representative target (entered weight is kept as-is). */
+export function targetsFromSession(session) {
+  return (session.entries || []).map((e) => {
+    const ex = getExercise(e.exerciseId);
+    const metric = ex ? ex.metric : 'reps';
+    const sets = e.sets || [];
+    const row = { exerciseId: e.exerciseId, targetSets: sets.length || 3, targetReps: null, targetWeightKg: null };
+    if (metric === 'reps') {
+      let top = null;
+      sets.forEach((s) => { if (!top || (s.weightKg || 0) > (top.weightKg || 0)) top = s; });
+      row.targetReps = (top && top.reps != null) ? top.reps : DEFAULT_REPS;
+      row.targetWeightKg = (top && top.weightKg) || null;
+    }
+    return row;
+  });
 }
 
 export function activeSession() {
@@ -170,7 +189,7 @@ export function completedSessions() {
 export function weekStats() {
   const list = completedSessions().filter((s) => isThisWeek(s.startedAt));
   let volume = 0, sets = 0;
-  list.forEach((s) => { const v = sessionVolume(s); volume += v.volume; sets += v.sets; });
+  list.forEach((s) => { const v = sessionVolume(s, volumeWeightOf); volume += v.volume; sets += v.sets; });
   return { workouts: list.length, volume, sets };
 }
 

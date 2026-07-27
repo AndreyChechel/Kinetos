@@ -119,13 +119,19 @@ export default function renderProfile(root, params, ctx) {
   const themeSel = select([['system', t('profile.themeSystem')], ['light', t('profile.themeLight')], ['dark', t('profile.themeDark')]],
     st.theme, (v) => { setSettings({ theme: v }); applyTheme(); });
   const unitSel = select([['metric', t('units.kg') + ' / ' + t('units.cm')]], st.units, () => {});
+  const dumbbellSel = select([
+    ['single', t('profile.dumbbellSingle')],
+    ['pair', t('profile.dumbbellPair')]
+  ], st.dumbbellInput || 'single', (v) => setSettings({ dumbbellInput: v }));
   root.appendChild(h('div', { class: 'card' }, [
     h('div', { class: 'card__title', text: t('profile.settings') }),
     h('div', { class: 'grid2' }, [
       field(t('profile.language'), langSel),
       field(t('profile.theme'), themeSel),
-      field(t('profile.units'), unitSel)
-    ])
+      field(t('profile.units'), unitSel),
+      field(t('profile.dumbbellInput'), dumbbellSel)
+    ]),
+    h('div', { class: 'small muted', text: t('profile.dumbbellHint') })
   ]));
 
   // ---------- Cloud sync ----------

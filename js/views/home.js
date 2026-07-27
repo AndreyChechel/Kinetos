@@ -4,6 +4,7 @@ import { t } from '../i18n.js';
 import { getProfile, getPlans } from '../store.js';
 import { activeSession, createEmptySession, createSessionFromPlan, completedSessions, weekStats, sessionDurationMs } from '../workout.js';
 import { sessionVolume } from '../calc.js';
+import { volumeWeightOf } from '../data/db.js';
 import { getLang } from '../i18n.js';
 
 export default function renderHome(root, params, ctx) {
@@ -78,7 +79,7 @@ export default function renderHome(root, params, ctx) {
   if (recent.length) {
     const ul = h('ul', { class: 'list card card--pad-0' });
     recent.forEach((s) => {
-      const v = sessionVolume(s);
+      const v = sessionVolume(s, volumeWeightOf);
       ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
         h('div', { class: 'list__thumb', text: '🏋️', style: 'font-size:1.4rem' }),
         h('div', { class: 'list__body' }, [

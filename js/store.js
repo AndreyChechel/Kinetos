@@ -22,6 +22,7 @@ function defaultState() {
       lang: '',             // '' => auto-detect from browser
       theme: 'system',      // system|light|dark
       units: 'metric',
+      dumbbellInput: 'single', // 'single' => user logs ONE dumbbell (counted x2); 'pair' => logs both (total)
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
     templates: [],          // reusable, dateless workout blueprints

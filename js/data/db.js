@@ -2,7 +2,7 @@
 // exercises from the store, exposes query helpers. Extensible: add rows to
 // exercises.json (and an SVG) or let users add custom ones at runtime.
 
-import { getCustomExercises, isExerciseHidden } from '../store.js';
+import { getCustomExercises, isExerciseHidden, getSettings } from '../store.js';
 import { pick } from '../i18n.js';
 
 let builtin = [];
@@ -34,6 +34,37 @@ export function isCustom(ex) { return !!(ex && ex.custom); }
 
 export function getExercise(id) {
   return allExercises().find((e) => e.id === id);
+}
+
+// --- Dumbbell weight handling ---------------------------------------------
+// A dumbbell exercise can be logged two ways (Profile → Dumbbell weight):
+//   'single' (default): user enters ONE dumbbell's weight; it counts x2 in
+//                        volume / est-1RM / progress. The UI shows a "2×" badge.
+//   'pair':             user enters the combined weight of both; no scaling.
+
+/** True if this exercise is loaded with a pair of dumbbells (per-hand weight). */
+export function usesDumbbell(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  return !!(ex && ex.equipment === 'dumbbell');
+}
+
+/** True when a "2×" multiplier is currently in effect for this exercise. */
+export function isPerDumbbell(exOrId) {
+  return usesDumbbell(exOrId) && (getSettings().dumbbellInput || 'single') === 'single';
+}
+
+/** Multiplier applied to the ENTERED weight when computing loads (1 or 2). */
+export function weightFactor(exOrId) { return isPerDumbbell(exOrId) ? 2 : 1; }
+
+/** Effective load for calculations from an exercise (or id) + entered weight. */
+export function effectiveWeight(exOrId, weightKg) {
+  if (weightKg == null) return weightKg;
+  return weightKg * weightFactor(exOrId);
+}
+
+/** Resolver for calc.js sessionVolume: entry-aware effective set weight. */
+export function volumeWeightOf(set, entry) {
+  return effectiveWeight(entry && entry.exerciseId, set.weightKg) || 0;
 }
 
 export function groups() { return muscleMeta.groups; }

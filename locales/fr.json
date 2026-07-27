@@ -226,10 +226,11 @@
     "entryNote": "Note d’exercice",
     "noNotes": "Aucune note",
     "removeSetConfirm": "Supprimer cette série ?",
-    "customReps": "Personnalisé",
     "volumeByExercise": "Volume par exercice",
     "effortBreakdown": "Répartition de l’effort",
-    "bestSets": "Meilleures séries"
+    "bestSets": "Meilleures séries",
+    "dumbbellX2Hint": "Poids par haltère — compté ×2 dans les totaux",
+    "editTime": "Modifier l'heure"
   },
   "progress": {
     "title": "Progrès",
@@ -310,7 +311,11 @@
     "about": "À propos",
     "version": "Version",
     "aboutText": "Kinetos est un planificateur d'entraînement hors ligne. Vos données restent sur cet appareil.",
-    "backupReminder": "Astuce : exportez vos données régulièrement pour ne rien perdre."
+    "backupReminder": "Astuce : exportez vos données régulièrement pour ne rien perdre.",
+    "dumbbellInput": "Poids des haltères",
+    "dumbbellSingle": "Par haltère (×2)",
+    "dumbbellPair": "Les deux haltères (total)",
+    "dumbbellHint": "Comment saisir le poids des haltères. « Par haltère » enregistre le poids d’une main et le compte ×2 dans le volume et le 1RM."
   },
   "sync": {
     "title": "Sync cloud",

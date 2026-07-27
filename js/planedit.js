@@ -3,7 +3,7 @@
 // Provides steppers, a long-press rep chooser, drag-to-reorder and remove.
 import { h } from './ui.js';
 import { t } from './i18n.js';
-import { getExercise, exName } from './data/db.js';
+import { getExercise, exName, isPerDumbbell } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
 import { stepper, repChooser, attachLongPress } from './components.js';
 import { makeSortable } from './sortable.js';
@@ -48,7 +48,7 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
         ? h('div', { class: 'row', style: 'gap:8px' }, [
             labeled(t('plan.targetSets'), sets.el),
             labeled(t('plan.targetReps'), reps.el),
-            labeled(t('plan.targetWeight') + ' (' + t('units.kg') + ')', weight.el)
+            labeled(t('plan.targetWeight') + ' (' + t('units.kg') + ')' + (isPerDumbbell(ex) ? ' · 2×' : ''), weight.el)
           ])
         : h('div', { class: 'row', style: 'gap:8px' }, [labeled(t('plan.targetSets'), sets.el)])
     ]);

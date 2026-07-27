@@ -226,10 +226,11 @@
     "entryNote": "Exercise note",
     "noNotes": "No notes",
     "removeSetConfirm": "Remove this set?",
-    "customReps": "Custom",
     "volumeByExercise": "Volume by exercise",
     "effortBreakdown": "Effort breakdown",
-    "bestSets": "Best sets"
+    "bestSets": "Best sets",
+    "dumbbellX2Hint": "Per-dumbbell weight — counted ×2 in totals",
+    "editTime": "Edit time"
   },
   "progress": {
     "title": "Progress",
@@ -310,7 +311,11 @@
     "about": "About",
     "version": "Version",
     "aboutText": "Kinetos is an offline-first workout planner. Your data stays on this device.",
-    "backupReminder": "Tip: export your data regularly so it is never lost."
+    "backupReminder": "Tip: export your data regularly so it is never lost.",
+    "dumbbellInput": "Dumbbell weight",
+    "dumbbellSingle": "Per dumbbell (×2)",
+    "dumbbellPair": "Both dumbbells (total)",
+    "dumbbellHint": "How you enter dumbbell weight. “Per dumbbell” logs one hand’s weight and counts it ×2 in volume and 1RM totals."
   },
   "sync": {
     "title": "Cloud sync",

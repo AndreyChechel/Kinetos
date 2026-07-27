@@ -16,7 +16,7 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
 - **Finished sessions** are **read-only** (explicit Edit mode to correct; notes stay editable); extended stats with charts (volume by exercise, sets by muscle doughnut, effort breakdown, best sets / est-1RM).
 - **Suggestions** (`suggest.js`): next-set target from last session, modulated by effort AND whether target reps were hit (miss → back off; beat → push). Surfaced as a chip (Use) + prefill; also on exercise detail.
 - **Progress**: Day/Week/Month/Year selector scoping tiles + volume chart; sets by muscle group; est-1RM trend; avg effort. Chart.js if vendored, else built-in fallback.
-- **Profile**: body params + auto metrics (max HR + zones, 1RM, BMI/body-fat, BMR/TDEE); JSON export/import; theme; language.
+- **Profile**: body params + auto metrics (max HR + zones, 1RM, BMI/body-fat, BMR/TDEE); JSON export/import; theme; language; **dumbbell weight input** (`settings.dumbbellInput`: `single` default = user logs one dumbbell, counted ×2 in volume/1RM; `pair` = logs combined). Helpers in `js/data/db.js` (`usesDumbbell`, `isPerDumbbell`, `weightFactor`, `effectiveWeight`, `volumeWeightOf`); `calc.sessionVolume(session, weightOf)` takes an optional resolver so it stays pure. A `2×` badge (`.x2-badge`) shows on dumbbell weight fields in single mode.
 - **Cloud sync** (optional, OFF by default): see below.
 
 ## Layout

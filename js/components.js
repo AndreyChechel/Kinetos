@@ -45,12 +45,14 @@ export function confirmDialog(message, { danger = false, okText, cancelText } = 
 }
 
 /** Promise-based text/password prompt. Resolves to the string or null.
- *  Pass multiline:true for a textarea (used by notes). value pre-fills it. */
-export function promptDialog(message, { password = false, placeholder = '', value = '', okText, cancelText, multiline = false } = {}) {
+ *  Pass multiline:true for a textarea (used by notes). value pre-fills it.
+ *  Pass type (e.g. 'datetime-local', 'number') for a typed single-line input. */
+export function promptDialog(message, { password = false, placeholder = '', value = '', okText, cancelText, multiline = false, type } = {}) {
   return new Promise((resolve) => {
+    const inputType = password ? 'password' : (type || 'text');
     const input = multiline
       ? h('textarea', { class: 'textarea', placeholder, style: 'margin-bottom:16px' }, [value])
-      : h('input', { class: 'input', type: password ? 'password' : 'text', placeholder, value, style: 'margin-bottom:16px' });
+      : h('input', { class: 'input', type: inputType, placeholder, value, style: 'margin-bottom:16px' });
     const panel = h('div', { class: 'dialog__panel' }, [
       h('p', { class: 'dialog__msg', text: message }),
       input,
@@ -186,17 +188,10 @@ export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) 
   return { close };
 }
 
-/** Rep-count chooser popover: 6 / 8 / 10 / 12 / 15 / custom. */
+/** Rep-count chooser popover: 6 / 8 / 10 / 12 / 15 / 20.
+ *  (No "custom" entry — a custom value can just be typed into the field.) */
 export function repChooser(anchorEl, current, onPick) {
-  const items = [6, 8, 10, 12, 15].map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
-  items.push({
-    label: t('session.customReps'),
-    onClick: async () => {
-      const s = await promptDialog(t('session.customReps'), { value: current != null ? String(current) : '', placeholder: t('common.reps') });
-      const n = parseInt(s, 10);
-      if (!isNaN(n) && n >= 0) onPick(n);
-    }
-  });
+  const items = [6, 8, 10, 12, 15, 20].map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
   popoverMenu(anchorEl, items, { title: t('common.reps'), grid: true });
 }
 
