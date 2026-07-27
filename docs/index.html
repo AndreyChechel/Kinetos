@@ -18,11 +18,13 @@
 
 <h2>What it does</h2>
 <ul>
-  <li><b>Exercises</b> — ~38 built-in exercises grouped by muscle group, each with an inline SVG "muscle map" illustration and how-to cues. Users can add custom exercises.</li>
-  <li><b>Plan</b> — create planned sessions (name, date, exercises with target sets/reps/weight).</li>
-  <li><b>Session logging</b> — start a session (empty or from a plan), log sets with weight/reps/time/distance; each completed set records a timestamp for timing analysis; live elapsed timer.</li>
-  <li><b>Progress</b> — week stats, volume over time, sets by muscle group, estimated 1RM trend, recent sessions. Uses Chart.js if present, else a built-in fallback.</li>
+  <li><b>Exercises</b> — 42 built-in exercises across groups (incl. a <b>Warm-up</b> group), each with an inline SVG "muscle map" illustration and how-to cues (all in 5 languages). Users can add custom ones. Equipment includes a resistance <b>band</b>.</li>
+  <li><b>Plan</b> — create planned sessions (name, date, exercises with target sets/reps/weight); reorder exercises.</li>
+  <li><b>Session logging</b> — log sets with weight/reps, time, or distance; per-set <b>effort</b> rating (easy/medium/hard); completion timestamps (seconds); add/remove sets; collapse &amp; reorder exercises; live timer; target shown on the row.</li>
+  <li><b>Suggestions</b> — effort- and performance-aware next-set targets (miss reps → back off, beat them → push); shown as a chip you can apply, and on the exercise detail. See <a href="extending.html">Extending</a>.</li>
+  <li><b>Progress</b> — Day/Week/Month/Year selector scoping stats + volume chart; sets by muscle group; estimated 1RM trend; average effort. Uses Chart.js if present, else a built-in fallback.</li>
   <li><b>Profile</b> — name, photo, sex, birthdate, height, weight, resting HR, activity level; auto-calculated metrics: max HR + HR zones, BMI + body-fat, BMR + TDEE, 1RM. JSON export/import + reset.</li>
+  <li><b>Cloud sync</b> (optional, off by default) — back up to your own Google Drive. See <a href="sync.html">Cloud sync</a>.</li>
   <li><b>Cross-cutting</b> — 5 languages (EN/DE/FR/ES/RU), light/dark themes, installable, fully offline via a service worker.</li>
 </ul>
 

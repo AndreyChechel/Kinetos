@@ -30,12 +30,15 @@
 <tr><td><code>i18n.js</code></td><td>Loads <code>locales/&lt;code&gt;.json</code>, <code>t(key, params)</code>, <code>pick(map)</code> for localized data fields, <code>applyDOM()</code> for <code>data-i18n</code> attributes, <code>SUPPORTED</code> list.</td></tr>
 <tr><td><code>router.js</code></td><td>Hash router. <code>defineRoutes(table,opts)</code>, patterns like <code>/plan/:id</code>, <code>navigate()</code>, <code>back()</code>.</td></tr>
 <tr><td><code>calc.js</code></td><td>Pure calculation functions (see <a href="extending.html">Extending</a>).</td></tr>
-<tr><td><code>workout.js</code></td><td>Session helpers: create empty/from-plan, active session, last-set lookup, week stats, duration.</td></tr>
-<tr><td><code>components.js</code></td><td>Reusable UI: bottom <code>sheet()</code>, <code>confirmDialog()</code>, <code>exercisePicker()</code>, <code>stepper()</code>.</td></tr>
+<tr><td><code>workout.js</code></td><td>Session helpers: create empty/from-plan, active session, last-set lookup, <code>historyFor()</code>, week stats, duration.</td></tr>
+<tr><td><code>suggest.js</code></td><td>Effort- and performance-aware next-set target suggestions (see <a href="extending.html">Extending</a>).</td></tr>
+<tr><td><code>components.js</code></td><td>Reusable UI: bottom <code>sheet()</code>, <code>confirmDialog()</code>, <code>promptDialog()</code>, <code>exercisePicker()</code>, <code>stepper()</code>.</td></tr>
 <tr><td><code>ui.js</code></td><td>DOM helpers: <code>h()</code> element factory, <code>esc()</code>, <code>toast()</code>, date/time/duration formatters, <code>uid()</code>.</td></tr>
 <tr><td><code>svg.js</code></td><td><code>injectSVG(el,path)</code> — fetch + inline an SVG so it inherits theme colors.</td></tr>
 <tr><td><code>pwa.js</code></td><td>Service-worker registration + install prompt handling.</td></tr>
 <tr><td><code>data/db.js</code></td><td>Loads exercise/muscle JSON, merges custom exercises, query helpers (<code>byGroup</code>, <code>getExercise</code>, <code>exName</code>, <code>svgPath</code>).</td></tr>
+<tr><td><code>config.js</code></td><td>Cloud-sync config (Client IDs, scopes, secret). Sync is off until filled. See <a href="sync.html">Cloud sync</a>.</td></tr>
+<tr><td><code>sync/{manager,providers,secret}.js</code></td><td>Optional cloud sync: orchestration, OAuth + file I/O, client-secret handling. Only Google Drive enabled.</td></tr>
 <tr><td><code>views/*.js</code></td><td>One module per screen. Each exports a render function <code>(root, params, ctx)</code>.</td></tr>
 </table>
 
