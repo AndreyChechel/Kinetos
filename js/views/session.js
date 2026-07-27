@@ -1,5 +1,8 @@
-// Active workout logging (sets, reps, weight, timestamps) + finished summary.
-import { h, uid, toast, fmtDuration, fmtTime, fmtDate } from '../ui.js';
+// Active workout logging + finished summary.
+// Features: live timer, per-set weight/reps/time/distance, effort rating,
+// completion timestamps (with seconds), add/remove sets, reorder & collapse
+// exercises.
+import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession } from '../store.js';
 import { getExercise, exName, svgPath } from '../data/db.js';
@@ -7,14 +10,20 @@ import { injectSVG } from '../svg.js';
 import { exercisePicker, confirmDialog } from '../components.js';
 import { lastSetFor, sessionDurationMs } from '../workout.js';
 import { sessionVolume } from '../calc.js';
+import { suggestNext, formatSuggestion, suggestionReason, applyToSet } from '../suggest.js';
 
 let timer = null;
+let collapsed = new Set();      // entry ids currently collapsed (UI-only)
+let collapsedFor = null;        // session id the set belongs to
 window.addEventListener('hashchange', () => { if (timer) { clearInterval(timer); timer = null; } });
+
+const EFFORT = { 1: { label: 'effortEasy', cls: 'eff-1' }, 2: { label: 'effortMedium', cls: 'eff-2' }, 3: { label: 'effortHard', cls: 'eff-3' } };
 
 export default function renderSession(root, params, ctx) {
   if (timer) { clearInterval(timer); timer = null; }
   const s = getSession(params.id);
   if (!s) { ctx.navigate('/'); return; }
+  if (collapsedFor !== s.id) { collapsed = new Set(); collapsedFor = s.id; }
   const lang = getLang();
   const finished = !!s.endedAt;
   const persist = () => saveSession(s);
@@ -38,14 +47,15 @@ export default function renderSession(root, params, ctx) {
   ]));
   if (!finished) timer = setInterval(() => { elapsed.textContent = fmtDuration(sessionDurationMs(s)); }, 1000);
 
-  // Summary (finished)
+  // Summary tiles (finished)
   if (finished) {
     const v = sessionVolume(s);
+    const eff = avgEffort(s);
     wrap.appendChild(h('div', { class: 'grid2' }, [
       tile(fmtDuration(sessionDurationMs(s)), t('session.duration')),
       tile(v.sets, t('session.totalSets')),
       tile(v.volume.toLocaleString(lang) + ' ' + t('units.kg'), t('session.volume')),
-      tile(v.reps, t('common.reps'))
+      eff ? tile(eff.toFixed(1) + ' / 3', t('session.effort')) : tile(v.reps, t('common.reps'))
     ]));
   }
 
@@ -65,64 +75,99 @@ export default function renderSession(root, params, ctx) {
   function entryCard(entry, idx) {
     const ex = getExercise(entry.exerciseId);
     const metric = ex ? ex.metric : 'reps';
+    const isCollapsed = collapsed.has(entry.id);
     const thumb = h('div', { class: 'list__thumb' }); thumb.textContent = '🏋️';
     if (ex) injectSVG(thumb, svgPath(ex));
 
-    const table = h('table', { class: 'sets' });
-    const head = { reps: [t('session.set'), t('session.weight'), t('session.reps'), ''],
-      time: [t('session.set'), t('session.time') + ' (' + t('common.sec') + ')', '', ''],
-      distance: [t('session.set'), t('session.distance') + ' (' + t('units.km') + ')', t('session.time') + ' (' + t('common.min') + ')', ''] }[metric];
-    table.appendChild(h('tr', {}, head.map((th) => h('th', { text: th }))));
+    const doneCount = entry.sets.filter((x) => x.done).length;
 
-    entry.sets.forEach((set, si) => table.appendChild(setRow(entry, set, si, metric)));
-
-    const card = h('div', { class: 'card' }, [
-      h('div', { class: 'row', style: 'margin-bottom:6px' }, [
-        thumb,
-        h('div', { class: 'list__body' }, [
-          h('div', { class: 'list__title', text: ex ? exName(ex) : entry.exerciseId }),
-          prevHint(entry.exerciseId)
-        ]),
-        finished ? null : h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('session.removeExercise'),
-          onclick: () => { s.entries.splice(idx, 1); persist(); renderExercises(); } }, ['🗑'])
+    // Header (click to collapse/expand)
+    const header = h('div', { class: 'row', style: 'cursor:pointer; gap:10px', onclick: (e) => {
+      if (e.target.closest('.entry-tools')) return;
+      if (isCollapsed) collapsed.delete(entry.id); else collapsed.add(entry.id);
+      renderExercises();
+    } }, [
+      h('span', { class: 'chev' + (isCollapsed ? '' : ' chev--open'), text: '▸' }),
+      thumb,
+      h('div', { class: 'list__body' }, [
+        h('div', { class: 'list__title', text: ex ? exName(ex) : entry.exerciseId }),
+        isCollapsed
+          ? h('div', { class: 'list__sub', text: `${doneCount}/${entry.sets.length} ${t('common.sets')}` })
+          : prevHint(entry.exerciseId)
       ]),
-      table,
-      finished ? null : h('button', { class: 'btn btn--sm btn--block', style: 'margin-top:8px',
-        onclick: () => { entry.sets.push(nextSet(entry)); persist(); renderExercises(); } }, ['＋ ' + t('session.addSet')])
+      h('div', { class: 'entry-tools row', style: 'gap:2px' }, [
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveUp'), disabled: idx === 0 ? true : null,
+          onclick: () => move(idx, -1) }, ['↑']),
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveDown'), disabled: idx === s.entries.length - 1 ? true : null,
+          onclick: () => move(idx, 1) }, ['↓']),
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'),
+          onclick: () => { s.entries.splice(idx, 1); persist(); renderExercises(); } }, ['🗑'])
+      ])
     ]);
-    return card;
+
+    const body = h('div', { class: 'stack', style: 'margin-top:10px' });
+    if (!isCollapsed) {
+      if (!finished) {
+        const sug = suggestNext(entry.exerciseId, s.id);
+        if (sug) body.appendChild(suggestionChip(entry, sug, metric));
+      }
+      entry.sets.forEach((set, si) => body.appendChild(setRow(entry, set, si, metric)));
+      body.appendChild(h('button', { class: 'btn btn--sm btn--block', style: 'margin-top:4px',
+        onclick: () => { entry.sets.push(nextSet(entry)); persist(); renderExercises(); } }, ['＋ ' + t('session.addSet')]));
+    }
+
+    return h('div', { class: 'card' }, [header, isCollapsed ? null : body]);
+  }
+
+  function move(idx, dir) {
+    const j = idx + dir;
+    if (j < 0 || j >= s.entries.length) return;
+    const [it] = s.entries.splice(idx, 1);
+    s.entries.splice(j, 0, it);
+    persist(); renderExercises();
   }
 
   function setRow(entry, set, si, metric) {
     const numInput = (val, key, opts = {}) => {
-      const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', value: val ?? '', ...opts, style: 'min-height:38px;padding:6px' });
-      inp.disabled = finished && false; // allow editing even finished
+      const inp = h('input', { class: 'input set__in', type: 'number', inputmode: 'decimal', value: val ?? '', ...opts });
       inp.addEventListener('change', () => { const n = parseFloat(inp.value); set[key] = isNaN(n) ? null : n; persist(); });
       return inp;
     };
-    const cells = [h('td', { text: '#' + set.n })];
+    const fields = h('div', { class: 'set__fields' });
     if (metric === 'reps') {
-      cells.push(h('td', {}, [numInput(set.weightKg, 'weightKg', { step: '2.5' })]));
-      cells.push(h('td', {}, [numInput(set.reps, 'reps', { step: '1' })]));
+      const wLabel = t('units.kg') + (set.targetWeightKg ? ' /' + set.targetWeightKg : '');
+      const rLabel = t('common.reps') + (set.targetReps ? ' /' + set.targetReps : '');
+      fields.append(unit(numInput(set.weightKg, 'weightKg', { step: '2.5', placeholder: t('units.kg') }), wLabel),
+        unit(numInput(set.reps, 'reps', { step: '1', placeholder: t('session.reps') }), rLabel));
     } else if (metric === 'time') {
-      cells.push(h('td', { colspan: 2 }, [numInput(set.seconds, 'seconds', { step: '5' })]));
+      fields.append(unit(numInput(set.seconds, 'seconds', { step: '5', placeholder: t('common.sec') }), t('common.sec')));
     } else {
-      cells.push(h('td', {}, [numInput(set.distanceKm, 'distanceKm', { step: '0.1' })]));
-      cells.push(h('td', {}, [numInput(set.minutes, 'minutes', { step: '1' })]));
+      fields.append(unit(numInput(set.distanceKm, 'distanceKm', { step: '0.1', placeholder: t('units.km') }), t('units.km')),
+        unit(numInput(set.minutes, 'minutes', { step: '1', placeholder: t('common.min') }), t('common.min')));
     }
+
+    // Effort pill: cycles none -> easy -> medium -> hard -> none
+    const effBtn = h('button', { class: 'effort', 'aria-label': t('session.effort'),
+      onclick: () => { set.effort = !set.effort ? 1 : (set.effort >= 3 ? null : set.effort + 1); persist(); renderExercises(); } });
+    styleEffort(effBtn, set.effort);
+
     const doneBtn = h('button', {
       class: 'btn btn--icon btn--sm ' + (set.done ? 'btn--primary' : ''),
       'aria-label': t('session.done'),
-      onclick: () => {
-        set.done = !set.done;
-        set.timestamp = set.done ? new Date().toISOString() : null;
-        persist(); renderExercises();
-      }
+      onclick: () => { set.done = !set.done; set.timestamp = set.done ? new Date().toISOString() : null; persist(); renderExercises(); }
     }, [set.done ? '✓' : '○']);
-    const tdDone = h('td', {}, [doneBtn]);
-    if (set.done && set.timestamp) tdDone.appendChild(h('div', { class: 'small muted', text: fmtTime(set.timestamp, lang) }));
-    cells.push(tdDone);
-    return h('tr', {}, cells);
+
+    const rm = h('button', { class: 'btn btn--icon btn--ghost btn--sm set__rm', 'aria-label': t('session.removeSet'),
+      onclick: () => { entry.sets.splice(si, 1); entry.sets.forEach((x, i) => x.n = i + 1); persist(); renderExercises(); } }, ['×']);
+
+    const row = h('div', { class: 'set' + (set.done ? ' set--done' : '') }, [
+      h('span', { class: 'set__n', text: String(set.n) }),
+      fields, effBtn, doneBtn, rm
+    ]);
+    if (set.done && set.timestamp) {
+      row.appendChild(h('div', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) }));
+    }
+    return row;
   }
 
   function prevHint(exerciseId) {
@@ -135,16 +180,40 @@ export default function renderSession(root, params, ctx) {
   function nextSet(entry) {
     const prev = entry.sets[entry.sets.length - 1] || {};
     return { n: entry.sets.length + 1, reps: prev.reps ?? null, weightKg: prev.weightKg ?? null,
-      seconds: prev.seconds ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null, done: false, timestamp: null };
+      seconds: prev.seconds ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
+      effort: null, done: false, timestamp: null };
+  }
+
+  function suggestionChip(entry, sug, metric) {
+    return h('div', { class: 'suggest' }, [
+      h('span', { text: '💡' }),
+      h('div', { class: 'suggest__txt' }, [
+        h('span', { class: 'suggest__val', text: t('session.suggested') + ': ' + formatSuggestion(sug, metric) }),
+        h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })
+      ]),
+      h('button', { class: 'btn btn--sm btn--primary', onclick: () => applySuggestion(entry, sug, metric) }, [t('session.use')])
+    ]);
+  }
+
+  function applySuggestion(entry, sug, metric) {
+    const filled = (st) => metric === 'time' ? st.seconds : metric === 'distance' ? (st.distanceKm || st.minutes) : (st.weightKg || st.reps);
+    let target = entry.sets.find((st) => !st.done && !filled(st));
+    if (!target) { target = nextSet(entry); entry.sets.push(target); }
+    applyToSet(target, sug);
+    persist(); renderExercises();
   }
 
   renderExercises();
 
-  // Footer actions
+  // Footer
+  wrap.appendChild(h('button', { class: 'btn btn--block', onclick: () => exercisePicker((ex) => {
+    const set0 = freshSet();
+    const sug = suggestNext(ex.id, s.id);
+    if (sug) applyToSet(set0, sug);
+    s.entries.push({ id: uid('en'), exerciseId: ex.id, sets: [set0] });
+    persist(); renderExercises();
+  }) }, ['＋ ' + t('session.addExercise')]));
   if (!finished) {
-    wrap.appendChild(h('button', { class: 'btn btn--block', onclick: () => exercisePicker((ex) => {
-      s.entries.push({ id: uid('en'), exerciseId: ex.id, sets: [nextSetFor(ex)] }); persist(); renderExercises();
-    }) }, ['＋ ' + t('session.addExercise')]));
     wrap.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: finish }, [t('session.finish')]));
     wrap.appendChild(h('button', { class: 'btn btn--ghost btn--block', style: 'color:var(--danger)', onclick: discard }, [t('session.discard')]));
   } else {
@@ -153,8 +222,8 @@ export default function renderSession(root, params, ctx) {
 
   root.appendChild(wrap);
 
-  function nextSetFor(ex) {
-    return { n: 1, reps: ex.metric === 'reps' ? null : null, weightKg: null, seconds: null, distanceKm: null, minutes: null, done: false, timestamp: null };
+  function freshSet() {
+    return { n: 1, reps: null, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, done: false, timestamp: null };
   }
   async function finish() {
     if (await confirmDialog(t('session.finishConfirm'), { okText: t('session.finish') })) {
@@ -174,11 +243,22 @@ export default function renderSession(root, params, ctx) {
       deleteSession(s.id); toast(t('toast.deleted')); ctx.navigate('/');
     }
   }
+
+  function styleEffort(btn, effort) {
+    btn.className = 'effort' + (effort ? ' effort--' + effort : '');
+    btn.textContent = effort ? t('session.' + EFFORT[effort].label).slice(0, 1) : '–';
+    btn.title = effort ? t('session.' + EFFORT[effort].label) : t('session.effort');
+  }
 }
 
+function avgEffort(s) {
+  const vals = [];
+  (s.entries || []).forEach((e) => (e.sets || []).forEach((x) => { if (x.done && x.effort) vals.push(x.effort); }));
+  return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+}
+function unit(input, label) {
+  return h('div', { class: 'set__unit' }, [input, h('span', { class: 'set__unit-label', text: label })]);
+}
 function tile(value, label) {
-  return h('div', { class: 'stat' }, [
-    h('div', { class: 'stat__value', text: String(value) }),
-    h('div', { class: 'stat__label', text: label })
-  ]);
+  return h('div', { class: 'stat' }, [h('div', { class: 'stat__value', text: String(value) }), h('div', { class: 'stat__label', text: label })]);
 }

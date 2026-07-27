@@ -13,7 +13,9 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
 index.html  sw.js  manifest.webmanifest  docker-compose.yml  nginx.conf  run.bat
 css/styles.css                 all styles (mobile-first; desktop @media >=900px = sidebar)
 js/app.js                      bootstrap: theme, i18n, routes, chrome
-js/{store,i18n,router,calc,workout,components,ui,svg,pwa}.js
+js/{store,i18n,router,calc,workout,components,ui,svg,pwa,suggest}.js   suggest.js = effort-aware next-set targets
+js/config.js                   cloud-sync config (Client IDs); sync is OFF until filled
+js/sync/{manager,providers}.js optional cloud sync (Google Drive/OneDrive/Yandex, OAuth PKCE)
 js/data/{db.js, exercises.json, muscles.json}   exercises.json = single source of truth
 js/views/{home,exercises,plan,session,progress,profile}.js
 locales/{en,de,fr,es,ru}.json  en.json is the key reference; keep all 5 in sync

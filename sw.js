@@ -1,6 +1,6 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates. */
-const CACHE = 'kinetos-v1';
+const CACHE = 'kinetos-v6';
 
 const CORE = [
   './',
@@ -8,7 +8,8 @@ const CORE = [
   'manifest.webmanifest',
   'css/styles.css',
   'js/app.js', 'js/ui.js', 'js/store.js', 'js/i18n.js', 'js/calc.js', 'js/router.js',
-  'js/svg.js', 'js/components.js', 'js/pwa.js', 'js/workout.js',
+  'js/svg.js', 'js/components.js', 'js/pwa.js', 'js/workout.js', 'js/suggest.js', 'js/config.js',
+  'js/sync/manager.js', 'js/sync/providers.js', 'js/sync/secret.js',
   'js/data/db.js', 'js/data/exercises.json', 'js/data/muscles.json',
   'js/views/home.js', 'js/views/exercises.js', 'js/views/plan.js',
   'js/views/session.js', 'js/views/progress.js', 'js/views/profile.js',

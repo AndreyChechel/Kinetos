@@ -7,6 +7,7 @@ const VERSION = 1;
 function defaultState() {
   return {
     version: VERSION,
+    updatedAt: null,        // ISO of last local change; drives sync conflict resolution
     profile: {
       name: '',
       photo: '',            // dataURL
@@ -20,7 +21,8 @@ function defaultState() {
     settings: {
       lang: '',             // '' => auto-detect from browser
       theme: 'system',      // system|light|dark
-      units: 'metric'
+      units: 'metric',
+      sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
     plans: [],              // planned sessions (templates/scheduled)
     sessions: [],           // logged workouts
@@ -72,11 +74,46 @@ export function getState() { return state; }
 export function getProfile() { return state.profile; }
 export function getSettings() { return state.settings; }
 
-/** Mutate via updater(draft) then persist + notify. */
-export function update(mutator) {
+/** Mutate via updater(draft) then persist + notify.
+ *  opts.internal = true skips bumping updatedAt (used by sync merges). */
+export function update(mutator, opts = {}) {
   mutator(state);
+  if (!opts.internal) state.updatedAt = new Date().toISOString();
   persist();
   notify();
+}
+
+export function getUpdatedAt() { return state.updatedAt; }
+
+/** Full state as a JSON string (for cloud upload). */
+export function serialize() { return JSON.stringify(state); }
+
+/** Merge a remote snapshot: union collections by id, last-write-wins on scalars. */
+export function mergeRemote(remote) {
+  if (!remote || typeof remote !== 'object') return;
+  update((s) => {
+    const remoteNewer = !!remote.updatedAt && (!s.updatedAt || remote.updatedAt > s.updatedAt);
+    const mergeArr = (local, incoming) => {
+      const map = new Map();
+      const first = remoteNewer ? (local || []) : (incoming || []);
+      const second = remoteNewer ? (incoming || []) : (local || []);
+      first.forEach((x) => x && x.id && map.set(x.id, x));
+      second.forEach((x) => x && x.id && map.set(x.id, x)); // newer side overrides on conflict
+      return [...map.values()];
+    };
+    s.plans = mergeArr(s.plans, remote.plans);
+    s.sessions = mergeArr(s.sessions, remote.sessions);
+    s.customExercises = mergeArr(s.customExercises, remote.customExercises);
+    if (remoteNewer) {
+      s.profile = { ...s.profile, ...(remote.profile || {}) };
+      s.settings = { ...s.settings, ...(remote.settings || {}) };
+    } else {
+      s.profile = { ...(remote.profile || {}), ...s.profile };
+      s.settings = { ...(remote.settings || {}), ...s.settings };
+    }
+    const a = s.updatedAt || '', b = remote.updatedAt || '';
+    s.updatedAt = a > b ? a : b;
+  }, { internal: true });
 }
 
 export function setProfile(patch) { update((s) => { s.profile = { ...s.profile, ...patch }; }); }

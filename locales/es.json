@@ -25,11 +25,12 @@
     "addCustom": "Añadir ejercicio propio", "targets": "Músculos", "primary": "Principales", "secondary": "Secundarios",
     "equipment": "Equipo", "howto": "Cómo hacerlo", "addToPlan": "Añadir al plan", "logNow": "Registrar",
     "customName": "Nombre del ejercicio", "customGroup": "Grupo muscular", "customSaved": "Ejercicio añadido",
+    "suggestedNext": "Siguiente sugerido",
     "none": "No se encontraron ejercicios"
   },
   "groups": {
     "chest": "Pecho", "back": "Espalda", "legs": "Piernas", "shoulders": "Hombros",
-    "biceps": "Bíceps", "triceps": "Tríceps", "core": "Core", "cardio": "Cardio", "_other": "Otros"
+    "biceps": "Bíceps", "triceps": "Tríceps", "core": "Core", "cardio": "Cardio", "warmup": "Calentamiento", "_other": "Otros"
   },
   "muscles": {
     "chest": "Pecho", "lats": "Dorsales", "traps": "Trapecio", "reardelt": "Deltoides post.", "delts": "Hombros",
@@ -38,7 +39,7 @@
   },
   "equipment": {
     "barbell": "Barra", "dumbbell": "Mancuernas", "cable": "Polea", "machine": "Máquina",
-    "bodyweight": "Peso corporal", "cardio": "Cardio"
+    "bodyweight": "Peso corporal", "cardio": "Cardio", "band": "Banda elástica"
   },
   "plan": {
     "title": "Plan", "new": "Nueva sesión", "namePlaceholder": "p. ej. Día de empuje", "exercises": "Ejercicios",
@@ -56,7 +57,12 @@
     "summary": "Resumen", "volume": "Volumen", "totalSets": "Series totales", "saved": "Sesión guardada",
     "discard": "Descartar", "discardConfirm": "¿Descartar esta sesión? No se guardará nada.",
     "previous": "Última vez", "time": "Tiempo", "distance": "Distancia", "sec": "s",
-    "quickAdd": "Añadir rápido", "removeExercise": "Quitar ejercicio", "logging": "Registro"
+    "quickAdd": "Añadir rápido", "removeExercise": "Quitar ejercicio", "logging": "Registro",
+    "removeSet": "Quitar serie", "effort": "Esfuerzo", "effortEasy": "Fácil", "effortMedium": "Medio", "effortHard": "Difícil",
+    "moveUp": "Subir", "moveDown": "Bajar", "toggle": "Contraer / expandir",
+    "suggested": "Sugerido", "use": "Usar",
+    "reasonUp": "Fue fácil la última vez", "reasonDown": "Fue duro la última vez", "reasonSteady": "Progresión constante",
+    "reasonMissed": "No alcanzaste el objetivo", "reasonBeat": "Superaste el objetivo — sube"
   },
   "progress": {
     "title": "Progreso", "empty": "Aún no hay datos", "emptyHint": "Registra algunas sesiones para ver tendencias.",
@@ -64,7 +70,8 @@
     "avgDuration": "Duración media", "volumeOverTime": "Volumen en el tiempo", "byMuscle": "Series por grupo",
     "frequency": "Sesiones por semana", "recentSessions": "Sesiones recientes", "est1rm": "1RM estimado",
     "pickExercise": "Elige un ejercicio", "noData": "Datos insuficientes", "last30": "Últimos 30 días",
-    "allTime": "Total"
+    "allTime": "Total", "day": "Día", "week": "Semana", "month": "Mes", "year": "Año",
+    "period": "Período", "avgEffort": "Esfuerzo medio"
   },
   "profile": {
     "title": "Perfil", "namePlaceholder": "Tu nombre", "photo": "Foto", "changePhoto": "Cambiar foto",
@@ -87,6 +94,15 @@
     "saved": "Perfil guardado", "install": "Instalar app", "about": "Acerca de",
     "aboutText": "Kinetos es un planificador de entrenamientos sin conexión. Tus datos permanecen en este dispositivo.",
     "backupReminder": "Consejo: exporta tus datos con regularidad para no perderlos."
+  },
+  "sync": {
+    "title": "Sincronización en la nube", "about": "Haz copia y sincroniza tus datos en tu propia nube.",
+    "provider": "Proveedor", "off": "Desactivado", "connect": "Conectar", "disconnect": "Desconectar", "syncNow": "Sincronizar",
+    "notConfigured": "Añade tu Client ID en js/config.js — ver docs/sync.html",
+    "auto": "Sincroniza cada {n} min y al abrir", "lastSynced": "Última sincronización: {when}", "never": "nunca",
+    "statusIdle": "Desactivado", "statusSyncing": "Sincronizando…", "statusOk": "Al día", "statusError": "Error de sincronización",
+    "statusNeedsAuth": "Conéctate para sincronizar", "statusOffline": "Sin conexión",
+    "passphrasePrompt": "Introduce tu frase de contraseña para desbloquear la sincronización", "passphraseError": "Frase de contraseña incorrecta"
   },
   "bmi": { "under": "Bajo peso", "normal": "Normal", "over": "Sobrepeso", "obese": "Obesidad" },
   "calc": { "disclaimer": "Estimaciones solo para planificar — no es consejo médico." },

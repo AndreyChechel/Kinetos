@@ -43,6 +43,28 @@ export function confirmDialog(message, { danger = false, okText, cancelText } = 
   });
 }
 
+/** Promise-based text/password prompt. Resolves to the string or null. */
+export function promptDialog(message, { password = false, placeholder = '', okText, cancelText } = {}) {
+  return new Promise((resolve) => {
+    const input = h('input', { class: 'input', type: password ? 'password' : 'text', placeholder, style: 'margin-bottom:16px' });
+    const panel = h('div', { class: 'dialog__panel' }, [
+      h('p', { class: 'dialog__msg', text: message }),
+      input,
+      h('div', { class: 'dialog__actions' }, [
+        h('button', { class: 'btn btn--ghost', onclick: () => done(null) }, [cancelText || t('common.cancel')]),
+        h('button', { class: 'btn btn--primary', onclick: () => done(input.value) }, [okText || t('common.ok')])
+      ])
+    ]);
+    const overlay = h('div', { class: 'dialog' }, [panel]);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) done(null); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') done(input.value); });
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+    setTimeout(() => input.focus(), 60);
+    function done(v) { overlay.classList.remove('is-open'); setTimeout(() => overlay.remove(), 180); resolve(v == null ? null : v); }
+  });
+}
+
 /** Exercise picker sheet. Calls onPick(exercise) when one is chosen. */
 export function exercisePicker(onPick) {
   const search = h('input', { class: 'input', type: 'search', placeholder: t('exercises.searchPlaceholder') });

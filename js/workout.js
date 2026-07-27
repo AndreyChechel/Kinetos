@@ -40,6 +40,10 @@ export function createSessionFromPlan(planId) {
         weightKg: pe.targetWeightKg || null,
         seconds: null,
         distanceKm: null,
+        minutes: null,
+        effort: null,
+        targetReps: pe.targetReps || null,        // planned target, for hit/miss autoregulation
+        targetWeightKg: pe.targetWeightKg || null,
         done: false,
         timestamp: null
       }))
@@ -51,17 +55,20 @@ export function createSessionFromPlan(planId) {
 
 /** Most recent completed set data for an exercise (for "last time" prefill). */
 export function lastSetFor(exerciseId, excludeSessionId) {
-  const sessions = getSessions()
-    .filter((s) => s.id !== excludeSessionId && s.endedAt)
-    .sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
-  for (const s of sessions) {
-    const e = (s.entries || []).find((x) => x.exerciseId === exerciseId);
-    if (e) {
-      const done = (e.sets || []).filter((st) => st.reps || st.seconds || st.distanceKm);
-      if (done.length) return { session: s, sets: done };
-    }
-  }
-  return null;
+  return historyFor(exerciseId, excludeSessionId)[0] || null;
+}
+
+/** Completed performances for an exercise, newest first: [{session, sets}]. */
+export function historyFor(exerciseId, excludeSessionId) {
+  return completedSessions()
+    .filter((s) => s.id !== excludeSessionId)
+    .map((s) => {
+      const e = (s.entries || []).find((x) => x.exerciseId === exerciseId);
+      if (!e) return null;
+      const sets = (e.sets || []).filter((st) => st.reps || st.seconds || st.distanceKm);
+      return sets.length ? { session: s, sets } : null;
+    })
+    .filter(Boolean);
 }
 
 export function startOfWeek(d = new Date()) {

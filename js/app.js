@@ -4,6 +4,7 @@ import { initI18n, setLang, applyDOM, t } from './i18n.js';
 import { loadDB } from './data/db.js';
 import { defineRoutes, startRouter, back, navigate } from './router.js';
 import { initPWA } from './pwa.js';
+import * as sync from './sync/manager.js';
 import { qs, qsa } from './ui.js';
 
 import renderHome from './views/home.js';
@@ -85,6 +86,7 @@ async function boot() {
   initPWA();
   await Promise.all([initI18n(getSettings().lang), loadDB()]);
   applyDOM();
+  try { await sync.init(); } catch (e) { console.warn('sync init failed', e); }
   routes();
   startRouter();
   // React to store changes that affect theme/lang globally is handled per-view.

@@ -104,6 +104,7 @@ def equipment_badge(equip):
         "machine": '<rect x="7" y="7" width="26" height="26" rx="3"/><line x1="14" y1="7" x2="14" y2="33"/><circle cx="24" cy="16" r="3"/>',
         "bodyweight": '<circle cx="20" cy="11" r="4"/><path d="M20,15 v10 M20,18 l-7,-3 M20,18 l7,-3 M20,25 l-6,8 M20,25 l6,8"/>',
         "cardio": '<path d="M20,31 C6,22 8,10 15,10 C19,10 20,13 20,13 C20,13 21,10 25,10 C32,10 34,22 20,31 Z"/>',
+        "band": '<ellipse cx="20" cy="20" rx="13" ry="8"/><ellipse cx="20" cy="20" rx="6" ry="3.5"/>',
     }
     g = glyphs.get(equip, glyphs["machine"])
     return f"""

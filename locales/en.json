@@ -25,11 +25,12 @@
     "addCustom": "Add custom exercise", "targets": "Targets", "primary": "Primary", "secondary": "Secondary",
     "equipment": "Equipment", "howto": "How to", "addToPlan": "Add to plan", "logNow": "Log now",
     "customName": "Exercise name", "customGroup": "Muscle group", "customSaved": "Custom exercise added",
+    "suggestedNext": "Suggested next",
     "none": "No exercises match your search"
   },
   "groups": {
     "chest": "Chest", "back": "Back", "legs": "Legs", "shoulders": "Shoulders",
-    "biceps": "Biceps", "triceps": "Triceps", "core": "Core", "cardio": "Cardio", "_other": "Other"
+    "biceps": "Biceps", "triceps": "Triceps", "core": "Core", "cardio": "Cardio", "warmup": "Warm-up", "_other": "Other"
   },
   "muscles": {
     "chest": "Chest", "lats": "Lats", "traps": "Traps", "reardelt": "Rear delts", "delts": "Shoulders",
@@ -38,7 +39,7 @@
   },
   "equipment": {
     "barbell": "Barbell", "dumbbell": "Dumbbell", "cable": "Cable", "machine": "Machine",
-    "bodyweight": "Bodyweight", "cardio": "Cardio"
+    "bodyweight": "Bodyweight", "cardio": "Cardio", "band": "Resistance band"
   },
   "plan": {
     "title": "Plan", "new": "New session", "namePlaceholder": "e.g. Push day", "exercises": "Exercises",
@@ -56,7 +57,12 @@
     "summary": "Summary", "volume": "Volume", "totalSets": "Total sets", "saved": "Session saved",
     "discard": "Discard", "discardConfirm": "Discard this session? Nothing will be saved.",
     "previous": "Last time", "time": "Time", "distance": "Distance", "sec": "s",
-    "quickAdd": "Quick add exercise", "removeExercise": "Remove exercise", "logging": "Logging"
+    "quickAdd": "Quick add exercise", "removeExercise": "Remove exercise", "logging": "Logging",
+    "removeSet": "Remove set", "effort": "Effort", "effortEasy": "Easy", "effortMedium": "Medium", "effortHard": "Hard",
+    "moveUp": "Move up", "moveDown": "Move down", "toggle": "Collapse / expand",
+    "suggested": "Suggested", "use": "Use",
+    "reasonUp": "Felt easy last time", "reasonDown": "Was tough last time", "reasonSteady": "Building steadily",
+    "reasonMissed": "Missed target last time", "reasonBeat": "Beat your target — level up"
   },
   "progress": {
     "title": "Progress", "empty": "No data yet", "emptyHint": "Log a few sessions to see your trends.",
@@ -64,7 +70,8 @@
     "avgDuration": "Avg duration", "volumeOverTime": "Volume over time", "byMuscle": "Sets by muscle group",
     "frequency": "Sessions per week", "recentSessions": "Recent sessions", "est1rm": "Estimated 1RM",
     "pickExercise": "Pick an exercise", "noData": "Not enough data", "last30": "Last 30 days",
-    "allTime": "All time"
+    "allTime": "All time", "day": "Day", "week": "Week", "month": "Month", "year": "Year",
+    "period": "Period", "avgEffort": "Avg effort"
   },
   "profile": {
     "title": "Profile", "namePlaceholder": "Your name", "photo": "Photo", "changePhoto": "Change photo",
@@ -87,6 +94,15 @@
     "saved": "Profile saved", "install": "Install app", "about": "About",
     "aboutText": "Kinetos is an offline-first workout planner. Your data stays on this device.",
     "backupReminder": "Tip: export your data regularly so it is never lost."
+  },
+  "sync": {
+    "title": "Cloud sync", "about": "Back up and sync your data to your own cloud storage.",
+    "provider": "Provider", "off": "Off", "connect": "Connect", "disconnect": "Disconnect", "syncNow": "Sync now",
+    "notConfigured": "Add your Client ID in js/config.js — see docs/sync.html",
+    "auto": "Auto-syncs every {n} min and when the app opens", "lastSynced": "Last synced: {when}", "never": "never",
+    "statusIdle": "Off", "statusSyncing": "Syncing…", "statusOk": "Up to date", "statusError": "Sync failed",
+    "statusNeedsAuth": "Connect to sync", "statusOffline": "Offline",
+    "passphrasePrompt": "Enter your passphrase to unlock cloud sync", "passphraseError": "Wrong passphrase"
   },
   "bmi": { "under": "Underweight", "normal": "Normal", "over": "Overweight", "obese": "Obese" },
   "calc": { "disclaimer": "Estimates for planning only — not medical advice." },

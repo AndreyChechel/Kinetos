@@ -53,8 +53,11 @@
       reps, weightKg,      // strength
       seconds,             // time-based (plank, jump rope)
       distanceKm, minutes, // cardio
+      effort,              // 1=easy | 2=medium | 3=hard | null (RPE-style feedback)
+      targetReps,          // planned/suggested reps — drives hit/miss autoregulation
+      targetWeightKg,      // planned/suggested load
       done,                // boolean
-      timestamp            // ISO when marked done (for timing analysis)
+      timestamp            // ISO when marked done (seconds precision; for timing analysis)
     } ]
   } ]
 }</pre>

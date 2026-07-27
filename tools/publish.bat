@@ -16,7 +16,7 @@ setlocal EnableDelayedExpansion
 cd /d "%~dp0.."
 
 REM ----------------------- CONFIG (edit these) ------------------------------
-set "REPO_URL=https://github.com/USERNAME/REPO.git"
+set "REPO_URL=https://github.com/AndreyChechel/Kinetos"
 set "BRANCH=gh-pages"
 set "COMMIT_MSG=Deploy Kinetos"
 REM --------------------------------------------------------------------------

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Cloud sync</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Cloud sync</h1>
+<nav>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="data-model.html">Data model</a>
+  <a href="extending.html">Extending</a>
+  <a href="deploy.html">Run &amp; deploy</a>
+</nav>
+
+<p>Sync is <b>optional and off by default</b>. It backs up the whole app state to a single <code>kinetos.json</code> file in your own cloud drive. Because Kinetos has no backend, it uses the provider's OAuth from the browser and stores tokens only in this browser's <code>localStorage</code> — they are never uploaded.</p>
+<p><b>Currently only Google Drive is enabled.</b> OneDrive and Yandex adapters exist but are switched off via <code>enabled: false</code> in <code>js/config.js</code> — flip them on to use them.</p>
+
+<h2>How it works</h2>
+<ul>
+  <li>State carries an <code>updatedAt</code> timestamp. Sync <b>pulls</b> the remote file, merges it (union of plans/sessions/exercises by id; last-write-wins on profile/settings), then <b>pushes</b> the result to <code>kinetos.json</code>.</li>
+  <li>Triggers: on app open, when you tap <b>Sync now</b>, and automatically every <code>autoEveryMinutes</code> (default 10) if something changed. It also pushes when the tab is hidden and when the network comes back.</li>
+  <li>Everything still works fully offline; sync simply resumes when you're back online and connected.</li>
+</ul>
+
+<h2>Setup (once per provider)</h2>
+<p>Fill in the <code>clientId</code> for the provider(s) you want in <code>js/config.js</code>. The <b>redirect URI</b> to register is your app's own URL, e.g. <code>https://USER.github.io/REPO/</code> (or <code>http://localhost:8080/</code> for local Docker). It must match <code>SYNC.redirectUri</code> exactly.</p>
+
+<h3>Google Drive (enabled)</h3>
+<ol>
+  <li>Google Cloud Console → create a project → <em>APIs &amp; Services</em>. Enable the <em>Google Drive API</em>.</li>
+  <li><em>Credentials → Create OAuth client ID</em> (type: Web application). Add your redirect URI (e.g. <code>https://USER.github.io/REPO/</code>) as an Authorized redirect URI.</li>
+  <li>Scope: <code>https://www.googleapis.com/auth/drive.file</code> — the app can only see files it creates. Kinetos creates one file, <code>kinetos.json</code>, in your Drive and remembers its id locally.</li>
+  <li>Paste the <b>Client ID</b> into <code>providers.google.clientId</code>, and provide the <b>secret</b> one of two ways (below).</li>
+</ol>
+
+<h3>The client secret</h3>
+<p>A "Web application" Google client requires a secret at token exchange. A static app can't truly hide it, so pick your trade-off:</p>
+<ul>
+  <li><b>Encrypted (recommended for public repos)</b> — open <code>tools/encrypt-secret.html</code> in a browser, enter the secret + a passphrase, and paste the result into <code>providers.google.clientSecretEnc</code>. The app asks for the passphrase once per session (kept in <code>sessionStorage</code>) to unlock it. The passphrase is never stored.</li>
+  <li><b>Plaintext</b> — put it in <code>providers.google.clientSecret</code>. Simplest, but readable by anyone who can load the deployed JS. Only for private deployments.</li>
+</ul>
+<p>If both are set, <code>clientSecret</code> wins. (A PKCE public client with no secret is the most secure option overall, but requires a client type that omits the secret.)</p>
+
+<h3>OneDrive / Yandex (disabled)</h3>
+<p>Set <code>enabled: true</code> for <code>providers.onedrive</code> / <code>providers.yandex</code> in <code>js/config.js</code> and fill in their <code>clientId</code>. OneDrive uses Graph <code>Files.ReadWrite.AppFolder</code> + <code>offline_access</code>; Yandex uses <code>cloud_api:disk.app_folder</code> with the implicit token flow (no secret).</p>
+
+<h2>Using it</h2>
+<p>Profile → <b>Cloud sync</b> → pick a provider → <b>Connect</b> (you're redirected to sign in and come back). After that it syncs automatically; <b>Sync now</b> forces it. <b>Disconnect</b> clears the local tokens. Status and last-synced time are shown there.</p>
+
+<h2>Code map</h2>
+<table>
+<tr><th>File</th><th>Role</th></tr>
+<tr><td><code>js/config.js</code></td><td>Your Client IDs, endpoints, scopes, redirect URI, interval.</td></tr>
+<tr><td><code>js/sync/providers.js</code></td><td>OAuth (PKCE/implicit), token storage/refresh, per-provider upload/download.</td></tr>
+<tr><td><code>js/sync/secret.js</code></td><td>Resolves the client secret: plaintext or passphrase-decrypted (AES-GCM). Tool: <code>tools/encrypt-secret.html</code>.</td></tr>
+<tr><td><code>js/sync/manager.js</code></td><td>Pull+merge+push orchestration, dirty tracking, scheduling, status events.</td></tr>
+<tr><td><code>js/store.js</code></td><td><code>serialize()</code>, <code>mergeRemote()</code>, <code>updatedAt</code>.</td></tr>
+</table>
+
+<h2>Notes &amp; limits</h2>
+<ul>
+  <li>A static site can't keep OAuth secrets private — that's why you register your own app. Tokens stay on-device.</li>
+  <li>Conflict handling is intentionally simple (union + last-write-wins). Fine for one person across devices; not a multi-user CRDT.</li>
+  <li>If a provider requires a confidential client (secret), that's not truly secret in a browser app — acceptable only for personal, self-hosted use.</li>
+</ul>
+
+<footer><a href="index.html">← Back to overview</a></footer>
+</main></body></html>

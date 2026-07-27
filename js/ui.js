@@ -55,6 +55,12 @@ export function fmtTime(iso, lang) {
     return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
   } catch { return iso; }
 }
+/** Time including seconds, e.g. 14:03:27. */
+export function fmtTimeSec(iso, lang) {
+  try {
+    return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(iso));
+  } catch { return iso; }
+}
 /** mm:ss from milliseconds. */
 export function fmtDuration(ms) {
   const s = Math.max(0, Math.round(ms / 1000));

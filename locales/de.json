@@ -25,11 +25,12 @@
     "addCustom": "Eigene Übung hinzufügen", "targets": "Zielmuskeln", "primary": "Primär", "secondary": "Sekundär",
     "equipment": "Ausrüstung", "howto": "Ausführung", "addToPlan": "Zum Plan hinzufügen", "logNow": "Jetzt erfassen",
     "customName": "Übungsname", "customGroup": "Muskelgruppe", "customSaved": "Eigene Übung hinzugefügt",
+    "suggestedNext": "Nächster Vorschlag",
     "none": "Keine Übungen gefunden"
   },
   "groups": {
     "chest": "Brust", "back": "Rücken", "legs": "Beine", "shoulders": "Schultern",
-    "biceps": "Bizeps", "triceps": "Trizeps", "core": "Rumpf", "cardio": "Cardio", "_other": "Sonstige"
+    "biceps": "Bizeps", "triceps": "Trizeps", "core": "Rumpf", "cardio": "Cardio", "warmup": "Aufwärmen", "_other": "Sonstige"
   },
   "muscles": {
     "chest": "Brust", "lats": "Latissimus", "traps": "Trapez", "reardelt": "Hintere Schulter", "delts": "Schultern",
@@ -38,7 +39,7 @@
   },
   "equipment": {
     "barbell": "Langhantel", "dumbbell": "Kurzhantel", "cable": "Kabelzug", "machine": "Maschine",
-    "bodyweight": "Körpergewicht", "cardio": "Cardio"
+    "bodyweight": "Körpergewicht", "cardio": "Cardio", "band": "Widerstandsband"
   },
   "plan": {
     "title": "Plan", "new": "Neue Einheit", "namePlaceholder": "z. B. Push-Tag", "exercises": "Übungen",
@@ -56,7 +57,12 @@
     "summary": "Zusammenfassung", "volume": "Volumen", "totalSets": "Sätze gesamt", "saved": "Einheit gespeichert",
     "discard": "Verwerfen", "discardConfirm": "Diese Einheit verwerfen? Es wird nichts gespeichert.",
     "previous": "Letztes Mal", "time": "Zeit", "distance": "Distanz", "sec": "s",
-    "quickAdd": "Übung schnell hinzufügen", "removeExercise": "Übung entfernen", "logging": "Erfassung"
+    "quickAdd": "Übung schnell hinzufügen", "removeExercise": "Übung entfernen", "logging": "Erfassung",
+    "removeSet": "Satz entfernen", "effort": "Anstrengung", "effortEasy": "Leicht", "effortMedium": "Mittel", "effortHard": "Schwer",
+    "moveUp": "Nach oben", "moveDown": "Nach unten", "toggle": "Ein-/ausklappen",
+    "suggested": "Vorschlag", "use": "Übernehmen",
+    "reasonUp": "War letztes Mal leicht", "reasonDown": "War letztes Mal schwer", "reasonSteady": "Stetiger Aufbau",
+    "reasonMissed": "Ziel letztes Mal verfehlt", "reasonBeat": "Ziel übertroffen — steigern"
   },
   "progress": {
     "title": "Fortschritt", "empty": "Noch keine Daten", "emptyHint": "Erfasse ein paar Einheiten, um Trends zu sehen.",
@@ -64,7 +70,8 @@
     "avgDuration": "Ø Dauer", "volumeOverTime": "Volumen im Verlauf", "byMuscle": "Sätze nach Muskelgruppe",
     "frequency": "Einheiten pro Woche", "recentSessions": "Letzte Einheiten", "est1rm": "Geschätztes 1RM",
     "pickExercise": "Übung wählen", "noData": "Nicht genug Daten", "last30": "Letzte 30 Tage",
-    "allTime": "Gesamt"
+    "allTime": "Gesamt", "day": "Tag", "week": "Woche", "month": "Monat", "year": "Jahr",
+    "period": "Zeitraum", "avgEffort": "Ø Anstrengung"
   },
   "profile": {
     "title": "Profil", "namePlaceholder": "Dein Name", "photo": "Foto", "changePhoto": "Foto ändern",
@@ -87,6 +94,15 @@
     "saved": "Profil gespeichert", "install": "App installieren", "about": "Über",
     "aboutText": "Kinetos ist ein Offline-Trainingsplaner. Deine Daten bleiben auf diesem Gerät.",
     "backupReminder": "Tipp: Exportiere deine Daten regelmäßig, damit nichts verloren geht."
+  },
+  "sync": {
+    "title": "Cloud-Sync", "about": "Sichere und synchronisiere deine Daten in deiner eigenen Cloud.",
+    "provider": "Anbieter", "off": "Aus", "connect": "Verbinden", "disconnect": "Trennen", "syncNow": "Jetzt synchronisieren",
+    "notConfigured": "Client-ID in js/config.js eintragen — siehe docs/sync.html",
+    "auto": "Synchronisiert alle {n} Min und beim Öffnen", "lastSynced": "Zuletzt synchronisiert: {when}", "never": "nie",
+    "statusIdle": "Aus", "statusSyncing": "Synchronisiert…", "statusOk": "Aktuell", "statusError": "Sync fehlgeschlagen",
+    "statusNeedsAuth": "Zum Sync verbinden", "statusOffline": "Offline",
+    "passphrasePrompt": "Passphrase eingeben, um Cloud-Sync zu entsperren", "passphraseError": "Falsche Passphrase"
   },
   "bmi": { "under": "Untergewicht", "normal": "Normal", "over": "Übergewicht", "obese": "Adipös" },
   "calc": { "disclaimer": "Schätzwerte nur zur Planung — keine medizinische Beratung." },

@@ -207,6 +207,37 @@ p { line-height: 1.5; }
 .sets td:first-child, .sets th:first-child { text-align: left; }
 .set-done { color: var(--success); font-weight: 800; }
 
+/* Set-logging rows (flex-based, wraps on narrow screens) */
+.set { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.set:last-of-type { border-bottom: none; }
+.set__n { width: 20px; flex: none; text-align: center; font-weight: 800; color: var(--text-muted); }
+.set--done .set__n { color: var(--success); }
+.set__fields { display: flex; gap: 8px; flex: 1; min-width: 130px; }
+.set__unit { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.set__unit-label { font-size: .58rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); padding-left: 2px; }
+.set__in { width: 100%; min-height: 40px; padding: 7px 6px; text-align: center; }
+.set__rm { color: var(--text-muted); font-size: 1.2rem; }
+.set__ts { width: 100%; text-align: right; }
+
+/* Effort pill: none / easy / medium / hard */
+.effort { width: 36px; height: 40px; flex: none; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); font-weight: 800; color: var(--text-muted); cursor: pointer; }
+.effort:active { transform: scale(.94); }
+.effort--1 { background: color-mix(in srgb, var(--success) 22%, transparent); color: var(--success); border-color: transparent; }
+.effort--2 { background: color-mix(in srgb, #f0b429 26%, transparent); color: #b9820a; border-color: transparent; }
+.effort--3 { background: color-mix(in srgb, var(--danger) 22%, transparent); color: var(--danger); border-color: transparent; }
+[data-theme="dark"] .effort--2 { color: #f0b429; }
+
+/* Effort-aware suggestion chip */
+.suggest { display: flex; align-items: center; gap: 8px; padding: 9px 11px; border-radius: 12px; background: color-mix(in srgb, var(--primary) 12%, transparent); font-size: .85rem; margin-bottom: 8px; flex-wrap: wrap; }
+.suggest__txt { flex: 1; min-width: 130px; line-height: 1.35; }
+.suggest__val { font-weight: 800; }
+.suggest__reason { color: var(--text-muted); }
+
+/* Collapse chevron on exercise cards */
+.chev { display: inline-block; width: 14px; flex: none; color: var(--text-muted); transition: transform .15s ease; }
+.chev--open { transform: rotate(90deg); }
+.entry-tools .btn { color: var(--text-muted); }
+
 /* FAB */
 .fab {
   position: fixed; right: 18px; bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 16px);

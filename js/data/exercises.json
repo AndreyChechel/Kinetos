@@ -4,272 +4,545 @@
     "equipment": "barbell", "metric": "reps",
     "primary": ["chest"], "secondary": ["triceps", "delts"],
     "names": { "en": "Bench Press", "de": "Bankdrücken", "fr": "Développé couché", "es": "Press de banca", "ru": "Жим лёжа" },
-    "cues": { "en": ["Lie flat, grip just wider than shoulders.", "Lower the bar to mid-chest, press up until arms are straight."] }
+    "cues": {
+      "en": ["Lie flat, grip just wider than shoulders.", "Lower the bar to mid-chest, press up until arms are straight."],
+      "de": ["Flach liegen, Griff etwas breiter als schulterbreit.", "Stange zur Brustmitte senken, hochdrücken bis die Arme gestreckt sind."],
+      "fr": ["Allongé à plat, prise un peu plus large que les épaules.", "Descendre la barre au milieu de la poitrine, pousser bras tendus."],
+      "es": ["Túmbate plano, agarre algo más ancho que los hombros.", "Baja la barra al centro del pecho y empuja hasta estirar los brazos."],
+      "ru": ["Лягте ровно, хват чуть шире плеч.", "Опустите штангу к середине груди, выжмите до полного выпрямления рук."]
+    }
   },
   {
     "id": "incline-db-press", "group": "chest", "view": "front", "category": "pushHorizontal",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["chest"], "secondary": ["delts", "triceps"],
     "names": { "en": "Incline Dumbbell Press", "de": "Schrägbankdrücken (Kurzhantel)", "fr": "Développé incliné haltères", "es": "Press inclinado con mancuernas", "ru": "Жим гантелей на наклонной" },
-    "cues": { "en": ["Set bench to ~30°, dumbbells at chest.", "Press up and slightly together, control the descent."] }
+    "cues": {
+      "en": ["Set bench to ~30°, dumbbells at chest.", "Press up and slightly together, control the descent."],
+      "de": ["Bank auf ~30° stellen, Kurzhanteln auf Brusthöhe.", "Nach oben und leicht zusammen drücken, kontrolliert absenken."],
+      "fr": ["Banc à ~30°, haltères au niveau de la poitrine.", "Pousser vers le haut en rapprochant légèrement, descente contrôlée."],
+      "es": ["Banco a ~30°, mancuernas a la altura del pecho.", "Empuja arriba juntándolas un poco, baja de forma controlada."],
+      "ru": ["Скамья под ~30°, гантели у груди.", "Выжмите вверх, слегка сводя, опускайте под контролем."]
+    }
   },
   {
     "id": "push-up", "group": "chest", "view": "front", "category": "pushHorizontal",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["chest"], "secondary": ["triceps", "abs"],
     "names": { "en": "Push-Up", "de": "Liegestütze", "fr": "Pompes", "es": "Flexiones", "ru": "Отжимания" },
-    "cues": { "en": ["Hands under shoulders, body in a straight line.", "Lower until elbows ~90°, push back up."] }
+    "cues": {
+      "en": ["Hands under shoulders, body in a straight line.", "Lower until elbows ~90°, push back up."],
+      "de": ["Hände unter den Schultern, Körper in einer Linie.", "Absenken bis Ellenbogen ~90°, wieder hochdrücken."],
+      "fr": ["Mains sous les épaules, corps aligné.", "Descendre jusqu'à ~90° aux coudes, remonter."],
+      "es": ["Manos bajo los hombros, cuerpo en línea recta.", "Baja hasta ~90° de codo y empuja hacia arriba."],
+      "ru": ["Ладони под плечами, тело прямой линией.", "Опуститесь до угла ~90° в локтях, отожмитесь вверх."]
+    }
   },
   {
     "id": "chest-fly", "group": "chest", "view": "front", "category": "pushHorizontal",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["chest"], "secondary": [],
     "names": { "en": "Chest Fly", "de": "Fliegende (Kurzhantel)", "fr": "Écarté couché", "es": "Aperturas", "ru": "Разведение гантелей" },
-    "cues": { "en": ["Lie back, slight elbow bend.", "Open arms wide, squeeze chest to bring them together."] }
+    "cues": {
+      "en": ["Lie back, slight elbow bend.", "Open arms wide, squeeze chest to bring them together."],
+      "de": ["Zurücklehnen, Ellenbogen leicht gebeugt.", "Arme weit öffnen, über die Brust wieder zusammenführen."],
+      "fr": ["Allongé, coudes légèrement fléchis.", "Ouvrir grand les bras, resserrer en contractant la poitrine."],
+      "es": ["Túmbate, codos ligeramente flexionados.", "Abre los brazos y júntalos apretando el pecho."],
+      "ru": ["Лягте, локти слегка согнуты.", "Разведите руки широко, сведите за счёт грудных."]
+    }
   },
   {
     "id": "cable-crossover", "group": "chest", "view": "front", "category": "pushHorizontal",
     "equipment": "cable", "metric": "reps",
     "primary": ["chest"], "secondary": ["delts"],
     "names": { "en": "Cable Crossover", "de": "Kabelzug-Crossover", "fr": "Crossover à la poulie", "es": "Cruce de poleas", "ru": "Сведение в кроссовере" },
-    "cues": { "en": ["High pulleys, step forward, slight lean.", "Draw hands down and together in front of hips."] }
+    "cues": {
+      "en": ["High pulleys, step forward, slight lean.", "Draw hands down and together in front of hips."],
+      "de": ["Obere Züge, ein Schritt nach vorn, leicht vorgebeugt.", "Hände nach unten und vor den Hüften zusammenführen."],
+      "fr": ["Poulies hautes, un pas en avant, léger buste penché.", "Amener les mains vers le bas et l'avant des hanches."],
+      "es": ["Poleas altas, un paso al frente, ligera inclinación.", "Lleva las manos abajo y juntas frente a las caderas."],
+      "ru": ["Верхние блоки, шаг вперёд, лёгкий наклон.", "Сведите руки вниз перед бёдрами."]
+    }
   },
-
   {
     "id": "pull-up", "group": "back", "view": "back", "category": "pullVertical",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["lats"], "secondary": ["biceps"],
     "names": { "en": "Pull-Up", "de": "Klimmzüge", "fr": "Tractions", "es": "Dominadas", "ru": "Подтягивания" },
-    "cues": { "en": ["Hang with overhand grip.", "Pull chin over the bar, lower under control."] }
+    "cues": {
+      "en": ["Hang with overhand grip.", "Pull chin over the bar, lower under control."],
+      "de": ["Im Obergriff hängen.", "Kinn über die Stange ziehen, kontrolliert absenken."],
+      "fr": ["Suspendu en prise pronation.", "Tirer le menton au-dessus de la barre, descendre contrôlé."],
+      "es": ["Cuelga con agarre prono.", "Sube la barbilla sobre la barra y baja controlado."],
+      "ru": ["Вис прямым хватом.", "Подтянитесь подбородком выше перекладины, опуститесь под контролем."]
+    }
   },
   {
     "id": "lat-pulldown", "group": "back", "view": "back", "category": "pullVertical",
     "equipment": "cable", "metric": "reps",
     "primary": ["lats"], "secondary": ["biceps"],
     "names": { "en": "Lat Pulldown", "de": "Latzug", "fr": "Tirage vertical", "es": "Jalón al pecho", "ru": "Тяга верхнего блока" },
-    "cues": { "en": ["Wide grip, chest up.", "Pull the bar to your upper chest, squeeze the back."] }
+    "cues": {
+      "en": ["Wide grip, chest up.", "Pull the bar to your upper chest, squeeze the back."],
+      "de": ["Weiter Griff, Brust raus.", "Stange zur oberen Brust ziehen, Rücken anspannen."],
+      "fr": ["Prise large, poitrine haute.", "Tirer la barre vers le haut de la poitrine, serrer le dos."],
+      "es": ["Agarre ancho, pecho arriba.", "Lleva la barra al pecho alto y aprieta la espalda."],
+      "ru": ["Широкий хват, грудь вперёд.", "Тяните к верху груди, сводя лопатки."]
+    }
   },
   {
     "id": "bent-over-row", "group": "back", "view": "back", "category": "pullHorizontal",
     "equipment": "barbell", "metric": "reps",
     "primary": ["lats"], "secondary": ["traps", "biceps"],
     "names": { "en": "Bent-Over Row", "de": "Langhantelrudern vorgebeugt", "fr": "Rowing barre buste penché", "es": "Remo con barra", "ru": "Тяга штанги в наклоне" },
-    "cues": { "en": ["Hinge to ~45°, flat back.", "Row the bar to your lower ribs, elbows close."] }
+    "cues": {
+      "en": ["Hinge to ~45°, flat back.", "Row the bar to your lower ribs, elbows close."],
+      "de": ["Auf ~45° vorbeugen, flacher Rücken.", "Stange zu den unteren Rippen ziehen, Ellenbogen eng."],
+      "fr": ["Buste à ~45°, dos plat.", "Tirer la barre vers les côtes basses, coudes serrés."],
+      "es": ["Inclínate a ~45°, espalda plana.", "Rema la barra a las costillas bajas, codos cerca."],
+      "ru": ["Наклон ~45°, спина прямая.", "Тяните штангу к низу рёбер, локти близко."]
+    }
   },
   {
     "id": "seated-cable-row", "group": "back", "view": "back", "category": "pullHorizontal",
     "equipment": "cable", "metric": "reps",
     "primary": ["lats", "traps"], "secondary": ["biceps"],
     "names": { "en": "Seated Cable Row", "de": "Rudern am Kabelzug (sitzend)", "fr": "Rowing assis à la poulie", "es": "Remo sentado en polea", "ru": "Горизонтальная тяга сидя" },
-    "cues": { "en": ["Sit tall, slight knee bend.", "Pull handle to your stomach, squeeze shoulder blades."] }
+    "cues": {
+      "en": ["Sit tall, slight knee bend.", "Pull handle to your stomach, squeeze shoulder blades."],
+      "de": ["Aufrecht sitzen, Knie leicht gebeugt.", "Griff zum Bauch ziehen, Schulterblätter zusammen."],
+      "fr": ["Assis droit, genoux légèrement fléchis.", "Tirer la poignée au ventre, serrer les omoplates."],
+      "es": ["Siéntate erguido, rodillas algo flexionadas.", "Lleva el agarre al abdomen, junta las escápulas."],
+      "ru": ["Сядьте прямо, колени слегка согнуты.", "Тяните рукоять к животу, сводя лопатки."]
+    }
   },
   {
     "id": "deadlift", "group": "back", "view": "back", "category": "hinge",
     "equipment": "barbell", "metric": "reps",
     "primary": ["hamstrings", "lowerback", "glutes"], "secondary": ["traps", "quads"],
     "names": { "en": "Deadlift", "de": "Kreuzheben", "fr": "Soulevé de terre", "es": "Peso muerto", "ru": "Становая тяга" },
-    "cues": { "en": ["Bar over mid-foot, flat back, hips back.", "Drive through the floor, stand tall, lock hips."] }
+    "cues": {
+      "en": ["Bar over mid-foot, flat back, hips back.", "Drive through the floor, stand tall, lock hips."],
+      "de": ["Stange über Mittelfuß, flacher Rücken, Hüfte zurück.", "Durch den Boden drücken, aufrichten, Hüfte strecken."],
+      "fr": ["Barre au-dessus du milieu du pied, dos plat, hanches en arrière.", "Pousser dans le sol, se redresser, verrouiller les hanches."],
+      "es": ["Barra sobre el medio pie, espalda plana, cadera atrás.", "Empuja el suelo, ponte de pie y bloquea la cadera."],
+      "ru": ["Гриф над серединой стопы, спина прямая, таз назад.", "Оттолкнитесь от пола, выпрямитесь, разогните таз."]
+    }
   },
-
   {
     "id": "back-squat", "group": "legs", "view": "front", "category": "squat",
     "equipment": "barbell", "metric": "reps",
     "primary": ["quads"], "secondary": ["glutes", "hamstrings"],
     "names": { "en": "Back Squat", "de": "Kniebeuge", "fr": "Squat (barre)", "es": "Sentadilla", "ru": "Приседания со штангой" },
-    "cues": { "en": ["Bar on upper back, brace core.", "Sit down between hips to depth, drive up."] }
+    "cues": {
+      "en": ["Bar on upper back, brace core.", "Sit down between hips to depth, drive up."],
+      "de": ["Stange auf oberem Rücken, Rumpf anspannen.", "In die Tiefe setzen, wieder nach oben drücken."],
+      "fr": ["Barre sur le haut du dos, gainer.", "Descendre en profondeur, remonter en poussant."],
+      "es": ["Barra en la espalda alta, aprieta el core.", "Baja en profundidad y empuja hacia arriba."],
+      "ru": ["Гриф на верх спины, напрягите кор.", "Сядьте вниз до глубины, мощно встаньте."]
+    }
   },
   {
     "id": "leg-press", "group": "legs", "view": "front", "category": "squat",
     "equipment": "machine", "metric": "reps",
     "primary": ["quads"], "secondary": ["glutes"],
     "names": { "en": "Leg Press", "de": "Beinpresse", "fr": "Presse à cuisses", "es": "Prensa de piernas", "ru": "Жим ногами" },
-    "cues": { "en": ["Feet shoulder-width on the platform.", "Lower to ~90° knees, press without locking hard."] }
+    "cues": {
+      "en": ["Feet shoulder-width on the platform.", "Lower to ~90° knees, press without locking hard."],
+      "de": ["Füße schulterbreit auf der Plattform.", "Bis ~90° Kniewinkel senken, drücken ohne hartes Durchstrecken."],
+      "fr": ["Pieds largeur d'épaules sur la plateforme.", "Descendre à ~90° aux genoux, pousser sans tout verrouiller."],
+      "es": ["Pies a la anchura de hombros en la plataforma.", "Baja a ~90° de rodilla y empuja sin bloquear fuerte."],
+      "ru": ["Стопы на ширине плеч на платформе.", "Опустите до ~90° в коленях, выжмите без жёсткой блокировки."]
+    }
   },
   {
     "id": "lunge", "group": "legs", "view": "front", "category": "lunge",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["quads"], "secondary": ["glutes", "hamstrings"],
     "names": { "en": "Lunge", "de": "Ausfallschritte", "fr": "Fentes", "es": "Zancadas", "ru": "Выпады" },
-    "cues": { "en": ["Step forward, torso upright.", "Drop back knee toward floor, push back to start."] }
+    "cues": {
+      "en": ["Step forward, torso upright.", "Drop back knee toward floor, push back to start."],
+      "de": ["Schritt nach vorn, Oberkörper aufrecht.", "Hinteres Knie Richtung Boden senken, zurückdrücken."],
+      "fr": ["Un pas en avant, buste droit.", "Descendre le genou arrière vers le sol, revenir."],
+      "es": ["Da un paso al frente, torso erguido.", "Baja la rodilla trasera hacia el suelo y vuelve."],
+      "ru": ["Шаг вперёд, корпус прямой.", "Опустите заднее колено к полу, вернитесь назад."]
+    }
   },
   {
     "id": "leg-extension", "group": "legs", "view": "front", "category": "isolation",
     "equipment": "machine", "metric": "reps",
     "primary": ["quads"], "secondary": [],
     "names": { "en": "Leg Extension", "de": "Beinstrecker", "fr": "Extension des jambes", "es": "Extensión de cuádriceps", "ru": "Разгибание ног" },
-    "cues": { "en": ["Pad on lower shins, sit back.", "Extend knees fully, lower slowly."] }
+    "cues": {
+      "en": ["Pad on lower shins, sit back.", "Extend knees fully, lower slowly."],
+      "de": ["Polster an den unteren Schienbeinen, zurücklehnen.", "Knie voll strecken, langsam absenken."],
+      "fr": ["Coussin sur le bas des tibias, calé au dossier.", "Étendre les genoux à fond, redescendre lentement."],
+      "es": ["Rodillo en las espinillas, apóyate atrás.", "Extiende las rodillas del todo y baja despacio."],
+      "ru": ["Валик на голенях, откиньтесь назад.", "Полностью разогните колени, опускайте медленно."]
+    }
   },
   {
     "id": "leg-curl", "group": "legs", "view": "back", "category": "isolation",
     "equipment": "machine", "metric": "reps",
     "primary": ["hamstrings"], "secondary": ["calves"],
     "names": { "en": "Leg Curl", "de": "Beinbeuger", "fr": "Leg curl (ischios)", "es": "Curl femoral", "ru": "Сгибание ног" },
-    "cues": { "en": ["Pad above heels, hips down.", "Curl heels toward glutes, control the return."] }
+    "cues": {
+      "en": ["Pad above heels, hips down.", "Curl heels toward glutes, control the return."],
+      "de": ["Polster über den Fersen, Hüfte unten.", "Fersen zum Gesäß ziehen, kontrolliert zurück."],
+      "fr": ["Coussin au-dessus des talons, hanches à plat.", "Ramener les talons vers les fessiers, retour contrôlé."],
+      "es": ["Rodillo sobre los talones, cadera abajo.", "Lleva los talones a los glúteos y controla la vuelta."],
+      "ru": ["Валик над пятками, таз прижат.", "Подтяните пятки к ягодицам, вернитесь под контролем."]
+    }
   },
   {
     "id": "romanian-deadlift", "group": "legs", "view": "back", "category": "hinge",
     "equipment": "barbell", "metric": "reps",
     "primary": ["hamstrings", "glutes"], "secondary": ["lowerback"],
     "names": { "en": "Romanian Deadlift", "de": "Rumänisches Kreuzheben", "fr": "Soulevé de terre roumain", "es": "Peso muerto rumano", "ru": "Румынская тяга" },
-    "cues": { "en": ["Soft knees, push hips back.", "Lower bar along legs to a stretch, drive hips forward."] }
+    "cues": {
+      "en": ["Soft knees, push hips back.", "Lower bar along legs to a stretch, drive hips forward."],
+      "de": ["Knie leicht gebeugt, Hüfte nach hinten.", "Stange an den Beinen bis zur Dehnung senken, Hüfte nach vorn."],
+      "fr": ["Genoux souples, hanches en arrière.", "Descendre la barre le long des jambes jusqu'à l'étirement, pousser les hanches."],
+      "es": ["Rodillas blandas, empuja la cadera atrás.", "Baja la barra pegada a las piernas hasta estirar, empuja la cadera."],
+      "ru": ["Колени мягкие, таз назад.", "Опустите штангу вдоль ног до растяжения, подайте таз вперёд."]
+    }
   },
   {
     "id": "calf-raise", "group": "legs", "view": "back", "category": "calf",
     "equipment": "machine", "metric": "reps",
     "primary": ["calves"], "secondary": [],
     "names": { "en": "Calf Raise", "de": "Wadenheben", "fr": "Extension des mollets", "es": "Elevación de gemelos", "ru": "Подъём на носки" },
-    "cues": { "en": ["Balls of feet on the edge.", "Rise onto toes fully, lower for a stretch."] }
+    "cues": {
+      "en": ["Balls of feet on the edge.", "Rise onto toes fully, lower for a stretch."],
+      "de": ["Fußballen auf der Kante.", "Voll auf die Zehen, für Dehnung absenken."],
+      "fr": ["Pointes des pieds sur le bord.", "Monter à fond sur les orteils, descendre pour étirer."],
+      "es": ["Puntas de los pies en el borde.", "Sube del todo de puntillas y baja estirando."],
+      "ru": ["Носки на краю платформы.", "Поднимитесь на носки полностью, опуститесь до растяжения."]
+    }
   },
-
   {
     "id": "overhead-press", "group": "shoulders", "view": "front", "category": "pushVertical",
     "equipment": "barbell", "metric": "reps",
     "primary": ["delts"], "secondary": ["triceps"],
     "names": { "en": "Overhead Press", "de": "Schulterdrücken", "fr": "Développé militaire", "es": "Press militar", "ru": "Жим над головой" },
-    "cues": { "en": ["Bar at collarbone, brace.", "Press overhead, lock out, lower to start."] }
+    "cues": {
+      "en": ["Bar at collarbone, brace.", "Press overhead, lock out, lower to start."],
+      "de": ["Stange am Schlüsselbein, anspannen.", "Über Kopf drücken, ausstrecken, zurück absenken."],
+      "fr": ["Barre à la clavicule, gainer.", "Pousser au-dessus de la tête, verrouiller, redescendre."],
+      "es": ["Barra en la clavícula, aprieta.", "Empuja sobre la cabeza, bloquea y baja al inicio."],
+      "ru": ["Гриф у ключиц, напрягитесь.", "Выжмите над головой, зафиксируйте, опустите назад."]
+    }
   },
   {
     "id": "lateral-raise", "group": "shoulders", "view": "front", "category": "raise",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["delts"], "secondary": [],
     "names": { "en": "Lateral Raise", "de": "Seitheben", "fr": "Élévations latérales", "es": "Elevaciones laterales", "ru": "Махи в стороны" },
-    "cues": { "en": ["Slight elbow bend, lean forward a touch.", "Raise to shoulder height, lead with elbows."] }
+    "cues": {
+      "en": ["Slight elbow bend, lean forward a touch.", "Raise to shoulder height, lead with elbows."],
+      "de": ["Ellenbogen leicht gebeugt, minimal vorlehnen.", "Bis Schulterhöhe heben, Ellenbogen führen."],
+      "fr": ["Coudes légèrement fléchis, léger buste en avant.", "Monter à hauteur d'épaules, guider avec les coudes."],
+      "es": ["Codos algo flexionados, ligera inclinación.", "Sube a la altura de los hombros, guía con los codos."],
+      "ru": ["Локти слегка согнуты, чуть наклонитесь.", "Поднимите до уровня плеч, ведите локтями."]
+    }
   },
   {
     "id": "front-raise", "group": "shoulders", "view": "front", "category": "raise",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["delts"], "secondary": [],
     "names": { "en": "Front Raise", "de": "Frontheben", "fr": "Élévations frontales", "es": "Elevaciones frontales", "ru": "Подъём перед собой" },
-    "cues": { "en": ["Dumbbells in front of thighs.", "Raise to shoulder height, lower under control."] }
+    "cues": {
+      "en": ["Dumbbells in front of thighs.", "Raise to shoulder height, lower under control."],
+      "de": ["Kurzhanteln vor den Oberschenkeln.", "Bis Schulterhöhe heben, kontrolliert absenken."],
+      "fr": ["Haltères devant les cuisses.", "Monter à hauteur d'épaules, descendre contrôlé."],
+      "es": ["Mancuernas frente a los muslos.", "Sube a la altura de los hombros y baja controlado."],
+      "ru": ["Гантели перед бёдрами.", "Поднимите до уровня плеч, опустите под контролем."]
+    }
   },
   {
     "id": "rear-delt-fly", "group": "shoulders", "view": "back", "category": "raise",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["reardelt"], "secondary": ["traps"],
     "names": { "en": "Rear Delt Fly", "de": "Reverse Butterfly", "fr": "Oiseau (deltoïdes postérieurs)", "es": "Pájaro (deltoides posterior)", "ru": "Разведение в наклоне" },
-    "cues": { "en": ["Hinge forward, arms hanging.", "Open arms wide, squeeze rear shoulders."] }
+    "cues": {
+      "en": ["Hinge forward, arms hanging.", "Open arms wide, squeeze rear shoulders."],
+      "de": ["Vorbeugen, Arme hängen lassen.", "Arme weit öffnen, hintere Schultern anspannen."],
+      "fr": ["Buste penché, bras pendants.", "Ouvrir grand les bras, serrer l'arrière des épaules."],
+      "es": ["Inclínate, brazos colgando.", "Abre los brazos y aprieta los hombros posteriores."],
+      "ru": ["Наклонитесь, руки свисают.", "Разведите руки, сводя задние дельты."]
+    }
   },
   {
     "id": "face-pull", "group": "shoulders", "view": "back", "category": "pullHorizontal",
     "equipment": "cable", "metric": "reps",
     "primary": ["reardelt", "traps"], "secondary": [],
     "names": { "en": "Face Pull", "de": "Face Pull", "fr": "Face pull", "es": "Face pull", "ru": "Тяга к лицу" },
-    "cues": { "en": ["Rope at eye level.", "Pull toward your face, elbows high and wide."] }
+    "cues": {
+      "en": ["Rope at eye level.", "Pull toward your face, elbows high and wide."],
+      "de": ["Seil auf Augenhöhe.", "Zum Gesicht ziehen, Ellenbogen hoch und weit."],
+      "fr": ["Corde à hauteur des yeux.", "Tirer vers le visage, coudes hauts et écartés."],
+      "es": ["Cuerda a la altura de los ojos.", "Tira hacia la cara, codos altos y abiertos."],
+      "ru": ["Канат на уровне глаз.", "Тяните к лицу, локти высоко и в стороны."]
+    }
   },
-
   {
     "id": "barbell-curl", "group": "biceps", "view": "front", "category": "curl",
     "equipment": "barbell", "metric": "reps",
     "primary": ["biceps"], "secondary": ["forearms"],
     "names": { "en": "Barbell Curl", "de": "Langhantel-Curl", "fr": "Curl à la barre", "es": "Curl con barra", "ru": "Подъём штанги на бицепс" },
-    "cues": { "en": ["Elbows at sides, shoulder-width grip.", "Curl to the top, lower slowly, no swinging."] }
+    "cues": {
+      "en": ["Elbows at sides, shoulder-width grip.", "Curl to the top, lower slowly, no swinging."],
+      "de": ["Ellenbogen am Körper, schulterbreiter Griff.", "Nach oben curlen, langsam senken, kein Schwung."],
+      "fr": ["Coudes au corps, prise largeur d'épaules.", "Curl jusqu'en haut, descendre lentement, sans élan."],
+      "es": ["Codos pegados, agarre a la anchura de hombros.", "Sube en curl, baja despacio, sin balanceo."],
+      "ru": ["Локти у корпуса, хват на ширине плеч.", "Согните до верха, опустите медленно, без раскачки."]
+    }
   },
   {
     "id": "dumbbell-curl", "group": "biceps", "view": "front", "category": "curl",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["biceps"], "secondary": ["forearms"],
     "names": { "en": "Dumbbell Curl", "de": "Kurzhantel-Curl", "fr": "Curl haltères", "es": "Curl con mancuernas", "ru": "Подъём гантелей на бицепс" },
-    "cues": { "en": ["Palms forward, elbows pinned.", "Curl one or both, squeeze, lower fully."] }
+    "cues": {
+      "en": ["Palms forward, elbows pinned.", "Curl one or both, squeeze, lower fully."],
+      "de": ["Handflächen nach vorn, Ellenbogen fixiert.", "Eine oder beide curlen, anspannen, ganz absenken."],
+      "fr": ["Paumes vers l'avant, coudes fixes.", "Curl d'un ou des deux bras, contracter, descendre à fond."],
+      "es": ["Palmas al frente, codos fijos.", "Sube uno o ambos, aprieta y baja del todo."],
+      "ru": ["Ладони вперёд, локти зафиксированы.", "Сгибайте одной или двумя, сожмите, опустите полностью."]
+    }
   },
   {
     "id": "hammer-curl", "group": "biceps", "view": "front", "category": "curl",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["biceps", "forearms"], "secondary": [],
     "names": { "en": "Hammer Curl", "de": "Hammer-Curl", "fr": "Curl marteau", "es": "Curl martillo", "ru": "Молотковый подъём" },
-    "cues": { "en": ["Neutral grip (palms facing in).", "Curl up keeping thumbs high, lower slowly."] }
+    "cues": {
+      "en": ["Neutral grip (palms facing in).", "Curl up keeping thumbs high, lower slowly."],
+      "de": ["Neutraler Griff (Handflächen zueinander).", "Hochcurlen, Daumen oben, langsam senken."],
+      "fr": ["Prise neutre (paumes face à face).", "Curl en gardant les pouces hauts, descendre lentement."],
+      "es": ["Agarre neutro (palmas enfrentadas).", "Sube manteniendo los pulgares arriba, baja despacio."],
+      "ru": ["Нейтральный хват (ладони внутрь).", "Сгибайте, держа большие пальцы вверх, опускайте медленно."]
+    }
   },
-
   {
     "id": "tricep-pushdown", "group": "triceps", "view": "back", "category": "tricepPush",
     "equipment": "cable", "metric": "reps",
     "primary": ["triceps"], "secondary": [],
     "names": { "en": "Triceps Pushdown", "de": "Trizepsdrücken am Kabel", "fr": "Extension triceps à la poulie", "es": "Extensión de tríceps en polea", "ru": "Разгибание на трицепс на блоке" },
-    "cues": { "en": ["Elbows tight to your sides.", "Push down to full lockout, control the return."] }
+    "cues": {
+      "en": ["Elbows tight to your sides.", "Push down to full lockout, control the return."],
+      "de": ["Ellenbogen eng am Körper.", "Bis zur vollen Streckung drücken, kontrolliert zurück."],
+      "fr": ["Coudes serrés au corps.", "Pousser jusqu'à l'extension complète, retour contrôlé."],
+      "es": ["Codos pegados al cuerpo.", "Empuja hasta la extensión total, controla la vuelta."],
+      "ru": ["Локти прижаты к бокам.", "Разгибайте до конца, возврат под контролем."]
+    }
   },
   {
     "id": "overhead-tricep-ext", "group": "triceps", "view": "back", "category": "tricepPush",
     "equipment": "dumbbell", "metric": "reps",
     "primary": ["triceps"], "secondary": [],
     "names": { "en": "Overhead Triceps Extension", "de": "Trizeps-Überkopfdrücken", "fr": "Extension triceps au-dessus de la tête", "es": "Extensión de tríceps sobre la cabeza", "ru": "Французский жим стоя" },
-    "cues": { "en": ["One dumbbell overhead, elbows high.", "Lower behind the head, extend to the top."] }
+    "cues": {
+      "en": ["One dumbbell overhead, elbows high.", "Lower behind the head, extend to the top."],
+      "de": ["Eine Kurzhantel über Kopf, Ellenbogen hoch.", "Hinter den Kopf senken, nach oben strecken."],
+      "fr": ["Un haltère au-dessus de la tête, coudes hauts.", "Descendre derrière la tête, étendre vers le haut."],
+      "es": ["Una mancuerna sobre la cabeza, codos altos.", "Baja detrás de la cabeza y extiende arriba."],
+      "ru": ["Гантель над головой, локти вверх.", "Опустите за голову, разогните вверх."]
+    }
   },
   {
     "id": "dips", "group": "triceps", "view": "back", "category": "tricepPush",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["triceps"], "secondary": ["chest"],
     "names": { "en": "Dips", "de": "Dips", "fr": "Dips", "es": "Fondos", "ru": "Отжимания на брусьях" },
-    "cues": { "en": ["Support on bars, slight forward lean.", "Lower to ~90° elbows, press back up."] }
+    "cues": {
+      "en": ["Support on bars, slight forward lean.", "Lower to ~90° elbows, press back up."],
+      "de": ["An den Barren stützen, leicht vorbeugen.", "Bis ~90° Ellenbogen senken, hochdrücken."],
+      "fr": ["En appui sur les barres, léger buste en avant.", "Descendre à ~90° aux coudes, remonter."],
+      "es": ["Apóyate en las barras, ligera inclinación.", "Baja a ~90° de codo y empuja hacia arriba."],
+      "ru": ["Упор на брусьях, лёгкий наклон вперёд.", "Опуститесь до ~90° в локтях, отожмитесь."]
+    }
   },
   {
     "id": "close-grip-bench", "group": "triceps", "view": "back", "category": "tricepPush",
     "equipment": "barbell", "metric": "reps",
     "primary": ["triceps"], "secondary": ["chest"],
     "names": { "en": "Close-Grip Bench Press", "de": "Enges Bankdrücken", "fr": "Développé couché prise serrée", "es": "Press de banca agarre cerrado", "ru": "Жим узким хватом" },
-    "cues": { "en": ["Grip inside shoulder-width.", "Lower to lower chest, keep elbows tucked, press."] }
+    "cues": {
+      "en": ["Grip inside shoulder-width.", "Lower to lower chest, keep elbows tucked, press."],
+      "de": ["Griff enger als schulterbreit.", "Zur unteren Brust senken, Ellenbogen eng, drücken."],
+      "fr": ["Prise plus serrée que les épaules.", "Descendre au bas de la poitrine, coudes serrés, pousser."],
+      "es": ["Agarre más estrecho que los hombros.", "Baja al pecho bajo, codos pegados, empuja."],
+      "ru": ["Хват уже ширины плеч.", "Опустите к низу груди, локти прижаты, выжмите."]
+    }
   },
-
   {
     "id": "plank", "group": "core", "view": "front", "category": "coreStatic",
     "equipment": "bodyweight", "metric": "time",
     "primary": ["abs"], "secondary": ["obliques"],
     "names": { "en": "Plank", "de": "Unterarmstütz (Plank)", "fr": "Planche", "es": "Plancha", "ru": "Планка" },
-    "cues": { "en": ["Forearms down, body straight.", "Brace abs and glutes, hold for time."] }
+    "cues": {
+      "en": ["Forearms down, body straight.", "Brace abs and glutes, hold for time."],
+      "de": ["Unterarme ab, Körper gerade.", "Bauch und Gesäß anspannen, auf Zeit halten."],
+      "fr": ["Avant-bras au sol, corps droit.", "Gainer abdos et fessiers, tenir la position."],
+      "es": ["Antebrazos abajo, cuerpo recto.", "Aprieta abdomen y glúteos, aguanta el tiempo."],
+      "ru": ["Предплечья на полу, тело прямое.", "Напрягите пресс и ягодицы, держите на время."]
+    }
   },
   {
     "id": "crunch", "group": "core", "view": "front", "category": "coreCrunch",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["abs"], "secondary": [],
     "names": { "en": "Crunch", "de": "Crunches", "fr": "Crunch", "es": "Abdominales (crunch)", "ru": "Скручивания" },
-    "cues": { "en": ["Knees bent, hands by head.", "Curl shoulders off the floor, don't pull the neck."] }
+    "cues": {
+      "en": ["Knees bent, hands by head.", "Curl shoulders off the floor, don't pull the neck."],
+      "de": ["Knie gebeugt, Hände am Kopf.", "Schultern vom Boden lösen, nicht am Nacken ziehen."],
+      "fr": ["Genoux fléchis, mains près de la tête.", "Décoller les épaules, sans tirer sur la nuque."],
+      "es": ["Rodillas flexionadas, manos junto a la cabeza.", "Despega los hombros del suelo, sin tirar del cuello."],
+      "ru": ["Колени согнуты, руки у головы.", "Оторвите плечи от пола, не тяните шею."]
+    }
   },
   {
     "id": "russian-twist", "group": "core", "view": "front", "category": "coreRotation",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["obliques"], "secondary": ["abs"],
     "names": { "en": "Russian Twist", "de": "Russian Twist", "fr": "Russian twist", "es": "Giro ruso", "ru": "Русский твист" },
-    "cues": { "en": ["Lean back, feet up, hold a weight.", "Rotate side to side, touch near each hip."] }
+    "cues": {
+      "en": ["Lean back, feet up, hold a weight.", "Rotate side to side, touch near each hip."],
+      "de": ["Zurücklehnen, Füße hoch, Gewicht halten.", "Von Seite zu Seite drehen, neben der Hüfte tippen."],
+      "fr": ["Incliné en arrière, pieds levés, un poids en main.", "Pivoter d'un côté à l'autre, toucher près de chaque hanche."],
+      "es": ["Inclínate atrás, pies arriba, sostén un peso.", "Gira de lado a lado, toca junto a cada cadera."],
+      "ru": ["Отклонитесь назад, ноги вверх, возьмите вес.", "Поворачивайтесь из стороны в сторону, касаясь у бёдер."]
+    }
   },
   {
     "id": "hanging-leg-raise", "group": "core", "view": "front", "category": "coreCrunch",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["abs"], "secondary": ["forearms"],
     "names": { "en": "Hanging Leg Raise", "de": "Hängendes Beinheben", "fr": "Relevé de jambes suspendu", "es": "Elevación de piernas colgado", "ru": "Подъём ног в висе" },
-    "cues": { "en": ["Hang from the bar, no swinging.", "Raise legs toward the bar, lower with control."] }
+    "cues": {
+      "en": ["Hang from the bar, no swinging.", "Raise legs toward the bar, lower with control."],
+      "de": ["An der Stange hängen, kein Schwung.", "Beine zur Stange heben, kontrolliert senken."],
+      "fr": ["Suspendu à la barre, sans balancer.", "Lever les jambes vers la barre, descendre contrôlé."],
+      "es": ["Cuelga de la barra, sin balanceo.", "Sube las piernas hacia la barra, baja con control."],
+      "ru": ["Вис на перекладине, без раскачки.", "Поднимите ноги к перекладине, опустите под контролем."]
+    }
   },
   {
     "id": "cable-woodchop", "group": "core", "view": "front", "category": "coreRotation",
     "equipment": "cable", "metric": "reps",
     "primary": ["obliques"], "secondary": ["abs"],
     "names": { "en": "Cable Woodchop", "de": "Holzfäller am Kabel", "fr": "Bûcheron à la poulie", "es": "Leñador en polea", "ru": "Дровосек на блоке" },
-    "cues": { "en": ["Grab high pulley, arms extended.", "Rotate and pull diagonally down across the body."] }
+    "cues": {
+      "en": ["Grab high pulley, arms extended.", "Rotate and pull diagonally down across the body."],
+      "de": ["Oberen Zug greifen, Arme gestreckt.", "Drehen und diagonal quer nach unten ziehen."],
+      "fr": ["Saisir la poulie haute, bras tendus.", "Pivoter et tirer en diagonale vers le bas."],
+      "es": ["Agarra la polea alta, brazos extendidos.", "Gira y tira en diagonal hacia abajo cruzando el cuerpo."],
+      "ru": ["Возьмите верхний блок, руки прямые.", "Поворачивайтесь и тяните по диагонали вниз через корпус."]
+    }
   },
-
   {
     "id": "treadmill-run", "group": "cardio", "view": "front", "category": "cardio",
     "equipment": "cardio", "metric": "distance",
     "primary": ["quads"], "secondary": ["calves", "hamstrings"],
     "names": { "en": "Treadmill Run", "de": "Laufband", "fr": "Course sur tapis", "es": "Cinta de correr", "ru": "Бег на дорожке" },
-    "cues": { "en": ["Set pace and incline.", "Relaxed posture, midfoot strike, steady breathing."] }
+    "cues": {
+      "en": ["Set pace and incline.", "Relaxed posture, midfoot strike, steady breathing."],
+      "de": ["Tempo und Steigung einstellen.", "Entspannte Haltung, Mittelfußaufsatz, ruhige Atmung."],
+      "fr": ["Régler l'allure et l'inclinaison.", "Posture détendue, attaque médio-pied, respiration régulière."],
+      "es": ["Ajusta ritmo e inclinación.", "Postura relajada, pisada de medio pie, respiración constante."],
+      "ru": ["Задайте темп и наклон.", "Расслабленная осанка, приземление на середину стопы, ровное дыхание."]
+    }
   },
   {
     "id": "cycling", "group": "cardio", "view": "front", "category": "cardio",
     "equipment": "cardio", "metric": "distance",
     "primary": ["quads"], "secondary": ["calves"],
     "names": { "en": "Cycling", "de": "Radfahren (Ergometer)", "fr": "Vélo", "es": "Bicicleta", "ru": "Велотренажёр" },
-    "cues": { "en": ["Adjust seat to slight knee bend.", "Keep a steady cadence, adjust resistance."] }
+    "cues": {
+      "en": ["Adjust seat to slight knee bend.", "Keep a steady cadence, adjust resistance."],
+      "de": ["Sattel auf leichte Kniebeugung einstellen.", "Gleichmäßige Trittfrequenz halten, Widerstand anpassen."],
+      "fr": ["Régler la selle pour une légère flexion du genou.", "Garder une cadence régulière, ajuster la résistance."],
+      "es": ["Ajusta el sillín a una ligera flexión de rodilla.", "Mantén una cadencia constante, ajusta la resistencia."],
+      "ru": ["Настройте седло на лёгкий сгиб колена.", "Держите ровный каденс, регулируйте сопротивление."]
+    }
   },
   {
     "id": "rowing-machine", "group": "cardio", "view": "back", "category": "cardio",
     "equipment": "cardio", "metric": "distance",
     "primary": ["lats"], "secondary": ["quads", "biceps"],
     "names": { "en": "Rowing Machine", "de": "Rudergerät", "fr": "Rameur", "es": "Máquina de remo", "ru": "Гребной тренажёр" },
-    "cues": { "en": ["Drive with legs, then lean back, then pull.", "Return arms, body, legs — smooth rhythm."] }
+    "cues": {
+      "en": ["Drive with legs, then lean back, then pull.", "Return arms, body, legs — smooth rhythm."],
+      "de": ["Erst Beine, dann zurücklehnen, dann ziehen.", "Arme, Körper, Beine zurück — gleichmäßiger Rhythmus."],
+      "fr": ["Pousser jambes, puis buste, puis tirer.", "Revenir bras, buste, jambes — rythme fluide."],
+      "es": ["Empuja con piernas, luego inclínate, luego tira.", "Vuelve brazos, cuerpo, piernas — ritmo fluido."],
+      "ru": ["Толчок ногами, затем наклон, затем тяга.", "Возврат: руки, корпус, ноги — плавный ритм."]
+    }
   },
   {
     "id": "jump-rope", "group": "cardio", "view": "front", "category": "cardio",
     "equipment": "cardio", "metric": "time",
     "primary": ["calves"], "secondary": ["quads"],
     "names": { "en": "Jump Rope", "de": "Seilspringen", "fr": "Corde à sauter", "es": "Comba (saltar)", "ru": "Прыжки на скакалке" },
-    "cues": { "en": ["Small, quick jumps on the balls of feet.", "Turn the rope from the wrists."] }
+    "cues": {
+      "en": ["Small, quick jumps on the balls of feet.", "Turn the rope from the wrists."],
+      "de": ["Kleine, schnelle Sprünge auf den Fußballen.", "Das Seil aus den Handgelenken drehen."],
+      "fr": ["Petits sauts rapides sur la pointe des pieds.", "Faire tourner la corde avec les poignets."],
+      "es": ["Saltos pequeños y rápidos sobre las puntas.", "Gira la cuerda con las muñecas."],
+      "ru": ["Мелкие быстрые прыжки на носках.", "Вращайте скакалку кистями."]
+    }
+  },
+  {
+    "id": "back-extension", "group": "warmup", "view": "back", "category": "hinge",
+    "equipment": "bodyweight", "metric": "reps",
+    "primary": ["lowerback"], "secondary": ["glutes", "hamstrings"],
+    "names": { "en": "Back Extension", "de": "Rückenstrecker (Hyperextension)", "fr": "Extension du dos (lombaires)", "es": "Extensión de espalda (hiperextensión)", "ru": "Гиперэкстензия" },
+    "cues": {
+      "en": ["Hips on the pad, feet anchored.", "Lower your torso, then extend up to a straight line."],
+      "de": ["Hüfte auf dem Polster, Füße fixiert.", "Oberkörper senken, dann bis zur geraden Linie aufrichten."],
+      "fr": ["Hanches sur le coussin, pieds bloqués.", "Descendre le buste, puis remonter jusqu'à l'alignement."],
+      "es": ["Cadera sobre el soporte, pies fijos.", "Baja el torso y sube hasta alinear el cuerpo."],
+      "ru": ["Бёдра на подушке, стопы зафиксированы.", "Опустите корпус, затем поднимите до прямой линии."]
+    }
+  },
+  {
+    "id": "horizontal-back-extension", "group": "warmup", "view": "back", "category": "hinge",
+    "equipment": "machine", "metric": "reps",
+    "primary": ["lowerback"], "secondary": ["glutes", "hamstrings"],
+    "names": { "en": "Horizontal Back Extension", "de": "Horizontaler Rückenstrecker", "fr": "Extension du dos horizontale", "es": "Extensión de espalda horizontal", "ru": "Горизонтальная гиперэкстензия" },
+    "cues": {
+      "en": ["Body horizontal, hinge at the hips.", "Raise your torso to level, squeeze, lower slowly."],
+      "de": ["Körper horizontal, aus der Hüfte beugen.", "Oberkörper bis waagerecht heben, anspannen, langsam senken."],
+      "fr": ["Corps à l'horizontale, charnière aux hanches.", "Lever le buste à l'horizontale, contracter, redescendre lentement."],
+      "es": ["Cuerpo horizontal, bisagra en la cadera.", "Sube el torso hasta la horizontal, aprieta y baja despacio."],
+      "ru": ["Тело горизонтально, движение в тазобедренном суставе.", "Поднимите корпус до горизонтали, сожмите, медленно опустите."]
+    }
+  },
+  {
+    "id": "band-arm-warmup", "group": "warmup", "view": "front", "category": "raise",
+    "equipment": "band", "metric": "reps",
+    "primary": ["delts"], "secondary": ["biceps", "triceps"],
+    "names": { "en": "Resistance Band Arm Warm-up", "de": "Arm-Aufwärmen mit Band", "fr": "Échauffement des bras à l'élastique", "es": "Calentamiento de brazos con banda", "ru": "Разминка рук с резинкой" },
+    "cues": {
+      "en": ["Hold a resistance band with both hands.", "Do easy curls, presses and pull-aparts to warm arms and shoulders."],
+      "de": ["Widerstandsband mit beiden Händen halten.", "Leichte Curls, Drücken und Auseinanderziehen für Arme und Schultern."],
+      "fr": ["Tenir un élastique à deux mains.", "Curls, poussées et écartés légers pour échauffer bras et épaules."],
+      "es": ["Sujeta una banda elástica con ambas manos.", "Haz curls, presses y aperturas suaves para calentar brazos y hombros."],
+      "ru": ["Держите резинку двумя руками.", "Лёгкие сгибания, жимы и разведения для разминки рук и плеч."]
+    }
+  },
+  {
+    "id": "stair-stepper", "group": "warmup", "view": "front", "category": "cardio",
+    "equipment": "cardio", "metric": "time",
+    "primary": ["quads"], "secondary": ["glutes", "calves"],
+    "names": { "en": "Stair Stepper", "de": "Stepper", "fr": "Stepper (escaliers)", "es": "Escaladora (stepper)", "ru": "Степпер" },
+    "cues": {
+      "en": ["Stand tall, light grip on the handles.", "Step at a steady pace, drive through the whole foot."],
+      "de": ["Aufrecht stehen, lockerer Griff an den Griffen.", "Gleichmäßig steppen, über den ganzen Fuß abdrücken."],
+      "fr": ["Se tenir droit, prise légère sur les poignées.", "Monter à un rythme régulier, pousser avec tout le pied."],
+      "es": ["Ponte erguido, agarre suave en los apoyos.", "Sube a ritmo constante, empuja con todo el pie."],
+      "ru": ["Держитесь прямо, лёгкий хват за поручни.", "Шагайте в ровном темпе, отталкивайтесь всей стопой."]
+    }
   }
 ]

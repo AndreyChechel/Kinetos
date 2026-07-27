@@ -79,8 +79,14 @@ export function renderPlanEditor(root, params, ctx) {
         h('div', { class: 'row', style: 'margin-bottom:10px' }, [
           thumb,
           h('div', { class: 'list__body' }, [h('div', { class: 'list__title', text: exName(ex) })]),
-          h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.remove'),
-            onclick: () => { plan.exercises.splice(idx, 1); renderExercises(); } }, ['🗑'])
+          h('div', { class: 'row', style: 'gap:2px' }, [
+            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveUp'), disabled: idx === 0 ? true : null,
+              onclick: () => moveExercise(idx, -1) }, ['↑']),
+            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveDown'), disabled: idx === plan.exercises.length - 1 ? true : null,
+              onclick: () => moveExercise(idx, 1) }, ['↓']),
+            h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.remove'),
+              onclick: () => { plan.exercises.splice(idx, 1); renderExercises(); } }, ['🗑'])
+          ])
         ]),
         h('div', { class: 'row', style: 'gap:8px' }, [
           labeled(t('plan.targetSets'), sets.el),
@@ -89,6 +95,14 @@ export function renderPlanEditor(root, params, ctx) {
         ])
       ]));
     });
+  }
+
+  function moveExercise(idx, dir) {
+    const j = idx + dir;
+    if (j < 0 || j >= plan.exercises.length) return;
+    const [it] = plan.exercises.splice(idx, 1);
+    plan.exercises.splice(j, 0, it);
+    renderExercises();
   }
 
   const actions = h('div', { class: 'stack', style: 'margin-top:8px' }, [

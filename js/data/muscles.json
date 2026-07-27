@@ -1,5 +1,5 @@
 {
-  "groups": ["chest", "back", "legs", "shoulders", "biceps", "triceps", "core", "cardio"],
+  "groups": ["warmup", "chest", "back", "legs", "shoulders", "biceps", "triceps", "core", "cardio"],
   "muscles": [
     "chest", "lats", "traps", "reardelt", "delts", "biceps", "triceps",
     "forearms", "abs", "obliques", "quads", "hamstrings", "glutes", "calves", "lowerback"

@@ -7,6 +7,7 @@ import { sheet } from '../components.js';
 import { addCustomExercise, getPlans, savePlan } from '../store.js';
 import { activeSession, createEmptySession } from '../workout.js';
 import { saveSession, getSession } from '../store.js';
+import { suggestNext, formatSuggestion, suggestionReason } from '../suggest.js';
 
 let filter = 'all';
 let query = '';
@@ -81,7 +82,7 @@ export function renderExerciseDetail(root, params, ctx) {
   const muscleTags = (arr, cls) => h('div', { class: 'row wrap', style: 'gap:6px' },
     (arr || []).map((m) => h('span', { class: 'tag ' + cls, text: t('muscles.' + m) })));
 
-  const cues = (ex.cues && (ex.cues[/* localized */ pickLangKey(ex.cues)])) || [];
+  const cues = pick(ex.cues) || [];
 
   root.appendChild(h('div', { class: 'ex-detail' }, [
     h('div', { class: 'ex-detail__media' }, [
@@ -101,17 +102,13 @@ export function renderExerciseDetail(root, params, ctx) {
         h('div', { class: 'card__title', text: t('exercises.howto') }),
         h('ol', { style: 'margin:0; padding-left:18px; line-height:1.6' }, cues.map((c) => h('li', { text: c })))
       ]) : null,
+      suggestionCard(ex),
       h('div', { class: 'grid2' }, [
         h('button', { class: 'btn', onclick: () => addToPlan(ex, ctx) }, [t('exercises.addToPlan')]),
         h('button', { class: 'btn btn--primary', onclick: () => logNow(ex, ctx) }, [t('exercises.logNow')])
       ])
     ])
   ]));
-}
-
-function pickLangKey(map) {
-  const l = document.documentElement.lang || 'en';
-  return map[l] ? l : (map.en ? 'en' : Object.keys(map)[0]);
 }
 
 function addToPlan(ex, ctx) {
@@ -160,6 +157,21 @@ function openCustomSheet(onDone) {
     close();
     onDone && onDone();
   }
+}
+
+function suggestionCard(ex) {
+  const sug = suggestNext(ex.id);
+  if (!sug) return null;
+  return h('div', { class: 'card' }, [
+    h('div', { class: 'card__title', text: t('exercises.suggestedNext') }),
+    h('div', { class: 'suggest', style: 'margin:0' }, [
+      h('span', { text: '💡' }),
+      h('div', { class: 'suggest__txt' }, [
+        h('span', { class: 'suggest__val', text: formatSuggestion(sug, ex.metric) }),
+        h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })
+      ])
+    ])
+  ]);
 }
 
 function field(label, input) {

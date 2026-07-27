@@ -25,11 +25,12 @@
     "addCustom": "Ajouter un exercice", "targets": "Muscles ciblés", "primary": "Principaux", "secondary": "Secondaires",
     "equipment": "Matériel", "howto": "Comment faire", "addToPlan": "Ajouter au plan", "logNow": "Enregistrer",
     "customName": "Nom de l'exercice", "customGroup": "Groupe musculaire", "customSaved": "Exercice ajouté",
+    "suggestedNext": "Prochain objectif",
     "none": "Aucun exercice trouvé"
   },
   "groups": {
     "chest": "Pectoraux", "back": "Dos", "legs": "Jambes", "shoulders": "Épaules",
-    "biceps": "Biceps", "triceps": "Triceps", "core": "Gainage", "cardio": "Cardio", "_other": "Autres"
+    "biceps": "Biceps", "triceps": "Triceps", "core": "Gainage", "cardio": "Cardio", "warmup": "Échauffement", "_other": "Autres"
   },
   "muscles": {
     "chest": "Pectoraux", "lats": "Grand dorsal", "traps": "Trapèzes", "reardelt": "Deltoïdes post.", "delts": "Épaules",
@@ -38,7 +39,7 @@
   },
   "equipment": {
     "barbell": "Barre", "dumbbell": "Haltères", "cable": "Poulie", "machine": "Machine",
-    "bodyweight": "Poids du corps", "cardio": "Cardio"
+    "bodyweight": "Poids du corps", "cardio": "Cardio", "band": "Élastique"
   },
   "plan": {
     "title": "Plan", "new": "Nouvelle séance", "namePlaceholder": "ex. Jour Push", "exercises": "Exercices",
@@ -56,7 +57,12 @@
     "summary": "Résumé", "volume": "Volume", "totalSets": "Total séries", "saved": "Séance enregistrée",
     "discard": "Abandonner", "discardConfirm": "Abandonner cette séance ? Rien ne sera enregistré.",
     "previous": "Dernière fois", "time": "Temps", "distance": "Distance", "sec": "s",
-    "quickAdd": "Ajout rapide", "removeExercise": "Retirer l'exercice", "logging": "Enregistrement"
+    "quickAdd": "Ajout rapide", "removeExercise": "Retirer l'exercice", "logging": "Enregistrement",
+    "removeSet": "Retirer la série", "effort": "Effort", "effortEasy": "Facile", "effortMedium": "Moyen", "effortHard": "Difficile",
+    "moveUp": "Monter", "moveDown": "Descendre", "toggle": "Replier / déplier",
+    "suggested": "Suggéré", "use": "Utiliser",
+    "reasonUp": "Facile la dernière fois", "reasonDown": "Difficile la dernière fois", "reasonSteady": "Progression régulière",
+    "reasonMissed": "Objectif manqué la dernière fois", "reasonBeat": "Objectif dépassé — on monte"
   },
   "progress": {
     "title": "Progrès", "empty": "Pas encore de données", "emptyHint": "Enregistrez quelques séances pour voir vos tendances.",
@@ -64,7 +70,8 @@
     "avgDuration": "Durée moy.", "volumeOverTime": "Volume dans le temps", "byMuscle": "Séries par groupe",
     "frequency": "Séances par semaine", "recentSessions": "Séances récentes", "est1rm": "1RM estimé",
     "pickExercise": "Choisir un exercice", "noData": "Données insuffisantes", "last30": "30 derniers jours",
-    "allTime": "Total"
+    "allTime": "Total", "day": "Jour", "week": "Semaine", "month": "Mois", "year": "Année",
+    "period": "Période", "avgEffort": "Effort moyen"
   },
   "profile": {
     "title": "Profil", "namePlaceholder": "Votre nom", "photo": "Photo", "changePhoto": "Changer la photo",
@@ -87,6 +94,15 @@
     "saved": "Profil enregistré", "install": "Installer l'app", "about": "À propos",
     "aboutText": "Kinetos est un planificateur d'entraînement hors ligne. Vos données restent sur cet appareil.",
     "backupReminder": "Astuce : exportez vos données régulièrement pour ne rien perdre."
+  },
+  "sync": {
+    "title": "Sync cloud", "about": "Sauvegardez et synchronisez vos données sur votre propre cloud.",
+    "provider": "Fournisseur", "off": "Désactivé", "connect": "Connecter", "disconnect": "Déconnecter", "syncNow": "Synchroniser",
+    "notConfigured": "Ajoutez votre Client ID dans js/config.js — voir docs/sync.html",
+    "auto": "Synchronise toutes les {n} min et à l'ouverture", "lastSynced": "Dernière sync : {when}", "never": "jamais",
+    "statusIdle": "Désactivé", "statusSyncing": "Synchronisation…", "statusOk": "À jour", "statusError": "Échec de la sync",
+    "statusNeedsAuth": "Se connecter pour synchroniser", "statusOffline": "Hors ligne",
+    "passphrasePrompt": "Saisissez votre phrase secrète pour déverrouiller la sync", "passphraseError": "Phrase secrète incorrecte"
   },
   "bmi": { "under": "Insuffisance", "normal": "Normal", "over": "Surpoids", "obese": "Obésité" },
   "calc": { "disclaimer": "Estimations pour la planification — pas un avis médical." },

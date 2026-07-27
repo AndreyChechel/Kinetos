@@ -6,6 +6,9 @@ import { age, maxHR, hrZones, bmi, bodyFat, bmr, tdee } from '../calc.js';
 import { sheet, confirmDialog } from '../components.js';
 import { applyTheme, changeLanguage } from '../app.js';
 import { canInstall, onInstallAvailability, promptInstall } from '../pwa.js';
+import * as sync from '../sync/manager.js';
+import { SYNC } from '../config.js';
+import { fmtDate, fmtTime } from '../ui.js';
 
 const ZONE_COLORS = ['#4b9cff', '#23a55a', '#f0b429', '#f5871f', '#e5484d'];
 
@@ -123,6 +126,50 @@ export default function renderProfile(root, params, ctx) {
       field(t('profile.units'), unitSel)
     ])
   ]));
+
+  // ---------- Cloud sync ----------
+  const syncCard = h('div', { class: 'card' });
+  root.appendChild(syncCard);
+  const unsub = sync.onStatus(() => { if (document.body.contains(syncCard)) renderSync(); else unsub(); });
+  renderSync();
+  function renderSync() {
+    const st = sync.getStatus();
+    syncCard.innerHTML = '';
+    syncCard.appendChild(h('div', { class: 'card__title', text: t('sync.title') }));
+    syncCard.appendChild(h('p', { class: 'small muted', style: 'margin-top:-4px', text: t('sync.about') }));
+
+    const provOpts = [['', t('sync.off')]];
+    Object.entries(SYNC.providers).forEach(([id, cfg]) => { if (cfg.enabled !== false) provOpts.push([id, cfg.label]); });
+    const providerSel = select(provOpts, st.provider,
+      (v) => { if (!v) sync.disconnect(); else setSettings({ sync: { provider: v } }); renderSync(); });
+    syncCard.appendChild(field(t('sync.provider'), providerSel));
+
+    if (st.provider) {
+      if (!st.configured) {
+        syncCard.appendChild(h('p', { class: 'small', style: 'color:var(--danger)', text: t('sync.notConfigured') }));
+      } else if (!st.connected) {
+        syncCard.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: () => sync.connect(st.provider) }, [t('sync.connect')]));
+      } else {
+        syncCard.appendChild(h('div', { class: 'row', style: 'gap:8px' }, [
+          h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.syncNow() }, ['⟳ ' + t('sync.syncNow')]),
+          h('button', { class: 'btn', onclick: () => { sync.disconnect(); renderSync(); } }, [t('sync.disconnect')])
+        ]));
+      }
+    }
+
+    const statusText = {
+      idle: t('sync.statusIdle'), syncing: t('sync.statusSyncing'), ok: t('sync.statusOk'),
+      error: t('sync.statusError'), needsAuth: t('sync.statusNeedsAuth'), offline: t('sync.statusOffline')
+    }[st.status] || '';
+    const when = st.lastSyncedAt ? (fmtDate(st.lastSyncedAt, lang) + ' ' + fmtTime(st.lastSyncedAt, lang)) : t('sync.never');
+    syncCard.appendChild(h('div', { class: 'row row--between small muted', style: 'margin-top:8px' }, [
+      h('span', { text: statusText }),
+      h('span', { text: t('sync.lastSynced', { when }) })
+    ]));
+    if (st.provider && st.configured) {
+      syncCard.appendChild(h('div', { class: 'small muted', text: t('sync.auto', { n: SYNC.autoEveryMinutes }) }));
+    }
+  }
 
   // ---------- Data ----------
   const dataCard = h('div', { class: 'card' }, [

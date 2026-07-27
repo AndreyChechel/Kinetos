@@ -13,6 +13,7 @@
   <a href="data-model.html">Data model</a>
   <a href="extending.html">Extending</a>
   <a href="deploy.html">Run &amp; deploy</a>
+  <a href="sync.html">Cloud sync</a>
 </nav>
 
 <h2>What it does</h2>
@@ -41,6 +42,8 @@ manifest.webmanifest  PWA manifest
 sw.js                 service worker (offline cache)
 css/styles.css        all styles (mobile-first, light/dark vars)
 js/                   application code (see Architecture)
+js/config.js          cloud-sync config (Client IDs) — see Cloud sync
+js/sync/              optional cloud sync (manager + providers)
 locales/              en, de, fr, es, ru JSON
 assets/exercises/     generated per-exercise SVGs (&lt;id&gt;.svg)
 assets/icons/         app icons (svg + png)
