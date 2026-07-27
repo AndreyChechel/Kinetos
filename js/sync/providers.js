@@ -133,6 +133,21 @@ async function authed(provider, url, opts = {}) {
   return res;
 }
 
+/** Throw a descriptive error for a non-OK response (404 optionally allowed). */
+async function ensureOk(res, { allow404 = false } = {}) {
+  if (res.ok) return res;
+  if (allow404 && res.status === 404) return res;
+  if (res.status === 401) throw authError();
+  let detail = '';
+  try {
+    const body = await res.clone().json();
+    detail = (body && body.error && (body.error.message || body.error.error_description)) || '';
+  } catch { try { detail = (await res.clone().text()).slice(0, 200); } catch {} }
+  const e = new Error(`${res.status} ${res.statusText}${detail ? ' — ' + detail : ''}`);
+  e.code = res.status === 403 ? 'forbidden' : 'http';
+  throw e;
+}
+
 // ---- file adapters: download() -> {text|null}, upload(text) ----
 const FILE = () => SYNC.fileName;
 
@@ -144,52 +159,55 @@ const adapters = {
     if (id) {
       const res = await authed(p, `https://www.googleapis.com/drive/v3/files/${id}?alt=media`);
       if (res.status === 404) { clearFileId(); id = ''; }
-      else if (res.ok) return { text: await res.text(), id };
+      else { await ensureOk(res); return { text: await res.text(), id }; }
     }
     const q = encodeURIComponent(`name='${FILE()}' and trashed=false`);
-    const list = await authed(p, `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)&pageSize=1`);
+    const list = await ensureOk(await authed(p, `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)&pageSize=1`));
     const j = await list.json();
     const found = j.files && j.files[0] && j.files[0].id;
     if (!found) return { text: null, id: null };
     setFileId(found);
-    const res = await authed(p, `https://www.googleapis.com/drive/v3/files/${found}?alt=media`);
+    const res = await ensureOk(await authed(p, `https://www.googleapis.com/drive/v3/files/${found}?alt=media`));
     return { text: await res.text(), id: found };
   },
   async googleUpload(p, text) {
     const { id } = await adapters.googleDownload(p);
     if (id) {
-      await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,
-        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text });
+      await ensureOk(await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,
+        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text }));
     } else {
-      const meta = await authed(p, 'https://www.googleapis.com/drive/v3/files',
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: FILE() }) });
+      const meta = await ensureOk(await authed(p, 'https://www.googleapis.com/drive/v3/files',
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: FILE() }) }));
       const created = await meta.json();
+      if (!created.id) throw new Error('Drive create returned no file id');
       setFileId(created.id);
-      await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${created.id}?uploadType=media`,
-        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text });
+      await ensureOk(await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${created.id}?uploadType=media`,
+        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text }));
     }
   },
   async onedriveDownload(p) {
     const res = await authed(p, `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${FILE()}:/content`);
     if (res.status === 404) return { text: null };
+    await ensureOk(res);
     return { text: await res.text() };
   },
   async onedriveUpload(p, text) {
-    await authed(p, `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${FILE()}:/content`,
-      { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: text });
+    await ensureOk(await authed(p, `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${FILE()}:/content`,
+      { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: text }));
   },
   async yandexDownload(p) {
     const meta = await authed(p, `https://cloud-api.yandex.net/v1/disk/resources/download?path=${encodeURIComponent('app:/' + FILE())}`);
     if (meta.status === 404) return { text: null };
+    await ensureOk(meta);
     const { href } = await meta.json();
     const res = await fetch(href);           // href is pre-signed, no auth header
     if (!res.ok) return { text: null };
     return { text: await res.text() };
   },
   async yandexUpload(p, text) {
-    const meta = await authed(p, `https://cloud-api.yandex.net/v1/disk/resources/upload?path=${encodeURIComponent('app:/' + FILE())}&overwrite=true`);
+    const meta = await ensureOk(await authed(p, `https://cloud-api.yandex.net/v1/disk/resources/upload?path=${encodeURIComponent('app:/' + FILE())}&overwrite=true`));
     const { href } = await meta.json();
-    await fetch(href, { method: 'PUT', body: text });
+    await ensureOk(await fetch(href, { method: 'PUT', body: text }));
   }
 };
 

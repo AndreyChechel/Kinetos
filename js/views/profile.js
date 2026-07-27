@@ -9,6 +9,7 @@ import { canInstall, onInstallAvailability, promptInstall } from '../pwa.js';
 import * as sync from '../sync/manager.js';
 import { SYNC } from '../config.js';
 import { fmtDate, fmtTime } from '../ui.js';
+import { APP_VERSION } from '../version.js';
 
 const ZONE_COLORS = ['#4b9cff', '#23a55a', '#f0b429', '#f5871f', '#e5484d'];
 
@@ -166,6 +167,9 @@ export default function renderProfile(root, params, ctx) {
       h('span', { text: statusText }),
       h('span', { text: t('sync.lastSynced', { when }) })
     ]));
+    if (st.status === 'error' && st.message) {
+      syncCard.appendChild(h('div', { class: 'small', style: 'color:var(--danger); margin-top:4px; word-break:break-word', text: st.message }));
+    }
     if (st.provider && st.configured) {
       syncCard.appendChild(h('div', { class: 'small muted', text: t('sync.auto', { n: SYNC.autoEveryMinutes }) }));
     }
@@ -192,7 +196,11 @@ export default function renderProfile(root, params, ctx) {
   // About
   root.appendChild(h('div', { class: 'card small muted' }, [
     h('div', { class: 'card__title', text: t('profile.about') }),
-    h('p', { style: 'margin:0', text: t('profile.aboutText') })
+    h('p', { style: 'margin:0', text: t('profile.aboutText') }),
+    h('p', { class: 'row row--between', style: 'margin:8px 0 0; font-weight:700; color:var(--text)' }, [
+      h('span', { text: t('profile.version') }),
+      h('span', { text: 'v' + APP_VERSION })
+    ])
   ]));
 
   // ---- data actions ----

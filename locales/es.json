@@ -91,7 +91,7 @@
     "data": "Tus datos", "exportData": "Exportar datos (copia)", "importData": "Importar datos",
     "importMerge": "Combinar", "importReplace": "Reemplazar todo", "importPrompt": "¿Cómo importar?",
     "resetApp": "Borrar todos los datos", "resetConfirm": "¿Borrar TODOS los datos? No se puede deshacer.",
-    "saved": "Perfil guardado", "install": "Instalar app", "about": "Acerca de",
+    "saved": "Perfil guardado", "install": "Instalar app", "about": "Acerca de", "version": "Versión",
     "aboutText": "Kinetos es un planificador de entrenamientos sin conexión. Tus datos permanecen en este dispositivo.",
     "backupReminder": "Consejo: exporta tus datos con regularidad para no perderlos."
   },

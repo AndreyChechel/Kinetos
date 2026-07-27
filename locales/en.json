@@ -91,7 +91,7 @@
     "data": "Your data", "exportData": "Export data (backup)", "importData": "Import data",
     "importMerge": "Merge with current", "importReplace": "Replace everything", "importPrompt": "How should we import?",
     "resetApp": "Erase all data", "resetConfirm": "Erase ALL data? This cannot be undone.",
-    "saved": "Profile saved", "install": "Install app", "about": "About",
+    "saved": "Profile saved", "install": "Install app", "about": "About", "version": "Version",
     "aboutText": "Kinetos is an offline-first workout planner. Your data stays on this device.",
     "backupReminder": "Tip: export your data regularly so it is never lost."
   },

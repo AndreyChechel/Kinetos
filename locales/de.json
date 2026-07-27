@@ -91,7 +91,7 @@
     "data": "Deine Daten", "exportData": "Daten exportieren (Backup)", "importData": "Daten importieren",
     "importMerge": "Mit aktuellen zusammenführen", "importReplace": "Alles ersetzen", "importPrompt": "Wie importieren?",
     "resetApp": "Alle Daten löschen", "resetConfirm": "ALLE Daten löschen? Kann nicht rückgängig gemacht werden.",
-    "saved": "Profil gespeichert", "install": "App installieren", "about": "Über",
+    "saved": "Profil gespeichert", "install": "App installieren", "about": "Über", "version": "Version",
     "aboutText": "Kinetos ist ein Offline-Trainingsplaner. Deine Daten bleiben auf diesem Gerät.",
     "backupReminder": "Tipp: Exportiere deine Daten regelmäßig, damit nichts verloren geht."
   },

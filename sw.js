@@ -1,13 +1,14 @@
 /* Kinetos service worker — offline-first.
-   Bump CACHE when you change app files so clients pick up updates. */
-const CACHE = 'kinetos-v6';
+   Bump CACHE when you change app files so clients pick up updates.
+   Keep the version in sync with js/version.js (APP_VERSION). */
+const CACHE = 'kinetos-1.1.0';
 
 const CORE = [
   './',
   'index.html',
   'manifest.webmanifest',
   'css/styles.css',
-  'js/app.js', 'js/ui.js', 'js/store.js', 'js/i18n.js', 'js/calc.js', 'js/router.js',
+  'js/app.js', 'js/version.js', 'js/ui.js', 'js/store.js', 'js/i18n.js', 'js/calc.js', 'js/router.js',
   'js/svg.js', 'js/components.js', 'js/pwa.js', 'js/workout.js', 'js/suggest.js', 'js/config.js',
   'js/sync/manager.js', 'js/sync/providers.js', 'js/sync/secret.js',
   'js/data/db.js', 'js/data/exercises.json', 'js/data/muscles.json',

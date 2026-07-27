@@ -70,6 +70,7 @@ export async function syncNow() {
     await push();
     setStatus('ok');
   } catch (e) {
+    console.error('Kinetos sync error:', e);
     setStatus(e && e.code === 'auth' ? 'needsAuth' : 'error', (e && e.message) || '');
   }
 }

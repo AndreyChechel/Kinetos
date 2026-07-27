@@ -22,7 +22,7 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
 index.html  sw.js  manifest.webmanifest  docker-compose.yml  nginx.conf  run.bat
 css/styles.css                 all styles (mobile-first; desktop @media >=900px = sidebar)
 js/app.js                      bootstrap: theme, i18n, routes, chrome, sync.init()
-js/{store,i18n,router,calc,workout,components,ui,svg,pwa,suggest}.js
+js/{store,i18n,router,calc,workout,components,ui,svg,pwa,suggest,version}.js   version.js = APP_VERSION (shown in Profile→About)
 js/config.js                   sync config (Client IDs/secret); sync OFF until clientId set
 js/sync/{manager,providers,secret}.js   optional cloud sync (Google Drive; OneDrive/Yandex disabled)
 js/data/{db.js, exercises.json, muscles.json}   exercises.json = single source of truth
@@ -52,7 +52,8 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 ## When you change things
 - New exercise → add to `exercises.json`, then `python tools/generate_svgs.py`. (SW auto-precaches every id.)
 - New locale key → add to **all** `locales/*.json` (parity is verified; en is the reference).
-- New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** (currently `kinetos-v6`) or clients won't update.
+- New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** or clients won't update.
+- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.1.0`). The version shows in Profile → About so you can confirm the loaded build.
 
 ## Verify (no browser here; do this)
 ```
