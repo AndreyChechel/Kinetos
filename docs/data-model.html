@@ -30,8 +30,15 @@
   settings: { lang, theme, units },   // lang "" = auto-detect
   plans:    [ Plan ],
   sessions: [ Session ],
-  customExercises: [ Exercise ]       // same schema as built-in
+  customExercises: [ Exercise ],      // same schema as built-in
+  tombstones: {                       // deletion registry — makes deletes propagate on sync
+    plans:    { [id]: isoDeletedAt },
+    sessions: { [id]: isoDeletedAt },
+    templates:{ [id]: isoDeletedAt },
+    customExercises: { [id]: isoDeletedAt }
+  }
 }</pre>
+<p>When an entity is deleted, its id + deletion time is recorded in <code>tombstones</code>. Sync unions tombstones (latest time wins) and drops any re-appearing id whose tombstone is newer than the entity's own last-modified time — so a delete on one device is not resurrected from another device's stale copy. Saving/re-adding an id clears its tombstone. Tombstones older than ~6 months are pruned.</p>
 
 <h3>Plan</h3>
 <pre>{

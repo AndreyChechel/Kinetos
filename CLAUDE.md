@@ -44,7 +44,7 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 - Only **Google Drive** is `enabled` in `config.js`; OneDrive/Yandex adapters exist but `enabled:false`.
 - Scope `drive.file`: app creates/updates one `kinetos.json`, remembers its id in `localStorage`.
 - OAuth code+PKCE in the browser; tokens in `localStorage` (never uploaded). Secret via `clientSecret` (plaintext) OR `clientSecretEnc` (AES-GCM, passphrase-unlocked once per session; make blob with `tools/encrypt-secret.html`). `secret.js` resolves it.
-- Triggers: on open, manual "Sync now", and every `autoEveryMinutes` (10) if dirty. Merge = union collections by id + last-write-wins scalars via top-level `updatedAt` (`store.mergeRemote`).
+- Triggers: on open, manual "Sync now", and every `autoEveryMinutes` (10) if dirty. Merge = union collections by id + last-write-wins scalars via top-level `updatedAt` (`store.mergeRemote`). **Deletes propagate via `store.tombstones`** (`{collection:{id:isoDeletedAt}}`): delete fns record a tombstone, save/add fns clear it, and `mergeRemote` unions tombstones (latest wins) and drops any re-appearing id unless it was edited after the deletion (`lastModOf` > tombstone). Without this, a union would re-add entities deleted on another device. Tombstones prune after `TOMBSTONE_TTL_MS` (~6mo).
 - NOTE: `config.js` currently holds the user's real clientId + an encrypted secret and IS published (encrypted-at-rest by design). `publish.bat` excludes `*.bat` but ships `config.js`.
 - Can't be end-to-end tested in the sandbox (needs real OAuth + https origin); crypto & merge are unit-tested.
 
