@@ -13,6 +13,7 @@ import {
 } from '../store.js';
 import { activeSession, createEmptySession, recentExercises, lastPerformedMap, exerciseUsedInHistory } from '../workout.js';
 import { suggestNext, formatSuggestion, suggestionReason } from '../suggest.js';
+import { icon } from '../icons.js';
 
 let filter = 'all';
 let query = '';
@@ -36,7 +37,7 @@ export function renderExerciseList(root, params, ctx) {
     chips.appendChild(h('button', {
       class: 'chip' + (showHidden ? ' is-active' : ''),
       onclick: () => { showHidden = !showHidden; render(); }
-    }, ['👁 ' + t('exercises.showHidden')]));
+    }, [icon('eye', { size: 16 }), ' ' + t('exercises.showHidden')]));
   }
 
   function renderRecent() {
@@ -82,7 +83,7 @@ export function renderExerciseList(root, params, ctx) {
   render();
 
   root.appendChild(h('button', { class: 'fab', 'aria-label': t('exercises.addCustom'), title: t('exercises.addCustom'),
-    onclick: () => openCustomSheet(render) }, ['＋']));
+    onclick: () => openCustomSheet(render) }, [icon('plus', { size: 28 })]));
 }
 
 function rowMenu(ex, anchor, refresh) {
@@ -109,7 +110,7 @@ export function exerciseRow(ex, { onOpen, onLongPress, lastISO } = {}) {
   const row = h('li', { class: 'list__item' + (hidden ? ' is-hidden-ex' : '') }, [
     thumb,
     h('div', { class: 'list__body' }, [title, h('div', { class: 'list__sub', text: sub })]),
-    h('span', { class: 'list__chev', text: '›' })
+    h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
   ]);
   attachLongPress(row, { onTap: () => onOpen && onOpen(), onLongPress: () => onLongPress && onLongPress(row) });
   return row;
@@ -170,18 +171,20 @@ export function renderExerciseDetail(root, params, ctx) {
     notesHost.innerHTML = '';
     const notes = getExerciseNotes(ex.id);
     const list = h('div', { class: 'stack' });
-    notes.forEach((n) => list.appendChild(h('div', { class: 'note' }, [
-      h('div', { class: 'note__text', text: n.text }),
+    notes.forEach((n) => list.appendChild(h('div', { class: 'note-item' }, [
+      h('div', { class: 'note' }, [
+        h('div', { class: 'note__text', text: n.text })
+      ]),
       h('div', { class: 'note__row' }, [
         h('span', { class: 'note__date small muted', text: fmtDate(n.ts, getLang(), { month: 'short', day: 'numeric' }) }),
-        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.edit'), onclick: () => editNote(n) }, ['✎']),
-        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.delete'), onclick: () => delNote(n) }, ['🗑'])
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.edit'), onclick: () => editNote(n) }, [icon('pencil', { size: 16 })]),
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.delete'), onclick: () => delNote(n) }, [icon('trash', { size: 16 })])
       ])
     ])));
     notesHost.appendChild(h('div', { class: 'card' }, [
       h('div', { class: 'row row--between', style: 'margin-bottom:8px' }, [
         h('div', { class: 'card__title', style: 'margin:0', text: t('exercises.notes') }),
-        h('button', { class: 'btn btn--sm', onclick: addNote }, ['＋ ' + t('common.add')])
+        h('button', { class: 'btn btn--sm', onclick: addNote }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
       ]),
       notes.length ? list : h('p', { class: 'muted small', style: 'margin:0', text: t('exercises.noNotes') })
     ]));
@@ -279,7 +282,7 @@ function suggestionCard(ex) {
   return h('div', { class: 'card' }, [
     h('div', { class: 'card__title', text: t('exercises.suggestedNext') }),
     h('div', { class: 'suggest', style: 'margin:0' }, [
-      h('span', { text: '💡' }),
+      h('span', { class: 'suggest__ico' }, [icon('bulb', { size: 18 })]),
       h('div', { class: 'suggest__txt' }, [
         h('span', { class: 'suggest__val', text: formatSuggestion(sug, ex.metric) }),
         h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })

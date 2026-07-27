@@ -23,6 +23,8 @@ function defaultState() {
       theme: 'system',      // system|light|dark
       units: 'metric',
       dumbbellInput: 'single', // 'single' => user logs ONE dumbbell (counted x2); 'pair' => logs both (total)
+      barbellInput: 'included', // 'included' => logged weight already includes the bar; 'added' => log plates only, add the chosen bar
+      barbellWeights: [20, 10, 5], // selectable bar weights (kg) when barbellInput==='added'; first is the default
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
     templates: [],          // reusable, dateless workout blueprints

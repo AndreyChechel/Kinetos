@@ -204,7 +204,6 @@
     "quickAdd": "Quick add exercise",
     "removeExercise": "Remove exercise",
     "logging": "Logging",
-    "removeSet": "Remove set",
     "effort": "Effort",
     "effortEasy": "Easy",
     "effortMedium": "Medium",
@@ -230,7 +229,8 @@
     "effortBreakdown": "Effort breakdown",
     "bestSets": "Best sets",
     "dumbbellX2Hint": "Per-dumbbell weight — counted ×2 in totals",
-    "editTime": "Edit time"
+    "editTime": "Edit time",
+    "barWeight": "Bar weight"
   },
   "progress": {
     "title": "Progress",
@@ -315,7 +315,14 @@
     "dumbbellInput": "Dumbbell weight",
     "dumbbellSingle": "Per dumbbell (×2)",
     "dumbbellPair": "Both dumbbells (total)",
-    "dumbbellHint": "How you enter dumbbell weight. “Per dumbbell” logs one hand’s weight and counts it ×2 in volume and 1RM totals."
+    "dumbbellHint": "How you enter dumbbell weight. “Per dumbbell” logs one hand’s weight and counts it ×2 in volume and 1RM totals.",
+    "barbellInput": "Barbell weight",
+    "barbellIncluded": "Included in entry",
+    "barbellAdded": "Add bar weight",
+    "barbellHint": "Whether the weight you log already includes the bar. “Add bar weight” logs plates only and adds the bar you pick per set in volume and 1RM.",
+    "barbellWeights": "Bar weights (kg)",
+    "barbellWeightsHint": "These are the options you can pick per set; the first is the default. Remove any you don't need, or add your own.",
+    "barbellAddWeight": "e.g. 15"
   },
   "sync": {
     "title": "Cloud sync",
@@ -355,7 +362,8 @@
     "added": "Added",
     "sessionSaved": "Session saved",
     "planSaved": "Plan saved",
-    "photoTooBig": "Image too large"
+    "photoTooBig": "Image too large",
+    "importError": "Import failed"
   },
   "weekday": {
     "mon": "Mon",
@@ -378,6 +386,7 @@
     "startNow": "Start now",
     "scheduleOn": "Schedule on a date",
     "scheduled": "Scheduled",
-    "fromTemplate": "From a template"
+    "fromTemplate": "From a template",
+    "copySuffix": "copy"
   }
 }

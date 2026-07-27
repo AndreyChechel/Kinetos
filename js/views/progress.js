@@ -7,6 +7,7 @@ import { getExercise, exName, effectiveWeight, volumeWeightOf } from '../data/db
 import { completedSessions, sessionDurationMs, startOfWeek } from '../workout.js';
 import { sessionVolume, oneRepMax } from '../calc.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
+import { icon } from '../icons.js';
 
 let period = 'week';           // day | week | month | year — persists across visits
 
@@ -60,7 +61,7 @@ export default function renderProgress(root, params, ctx) {
 
   if (!all.length) {
     root.appendChild(h('div', { class: 'empty' }, [
-      h('div', { class: 'empty__icon', text: '📈' }),
+      h('div', { class: 'empty__icon' }, [icon('trendingUp', { size: 56 })]),
       h('p', { text: t('progress.empty') }),
       h('p', { class: 'small', text: t('progress.emptyHint') })
     ]));
@@ -136,7 +137,7 @@ export default function renderProgress(root, params, ctx) {
           const e = (s.entries || []).find((x) => x.exerciseId === id);
           if (!e) return null;
           let best = 0;
-          (e.sets || []).forEach((x) => { if (x.weightKg && x.reps) { const o = oneRepMax(effectiveWeight(id, x.weightKg), x.reps); if (o && o.avg > best) best = o.avg; } });
+          (e.sets || []).forEach((x) => { if (x.weightKg && x.reps) { const o = oneRepMax(effectiveWeight(id, x.weightKg, x), x.reps); if (o && o.avg > best) best = o.avg; } });
           return best ? { day: s.startedAt.slice(0, 10), val: Math.round(best) } : null;
         }).filter(Boolean);
         if (!pts.length) { chartHost.appendChild(muted(t('progress.noData'))); return; }
@@ -151,12 +152,12 @@ export default function renderProgress(root, params, ctx) {
     all.slice(0, 8).forEach((s) => {
       const v = sessionVolume(s, volumeWeightOf);
       ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
-        h('div', { class: 'list__thumb', text: '🏋️', style: 'font-size:1.3rem' }),
+        h('div', { class: 'list__thumb' }, [icon('dumbbell', { size: 26 })]),
         h('div', { class: 'list__body' }, [
           h('div', { class: 'list__title', text: s.name || fmtDate(s.startedAt, lang) }),
           h('div', { class: 'list__sub', text: `${fmtDate(s.startedAt, lang)} · ${v.sets} ${t('common.sets')} · ${v.volume} ${t('units.kg')}` })
         ]),
-        h('span', { class: 'list__chev', text: '›' })
+        h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
       ]));
     });
     content.appendChild(ul);

@@ -10,6 +10,7 @@ import * as sync from '../sync/manager.js';
 import { SYNC } from '../config.js';
 import { fmtDate, fmtTime } from '../ui.js';
 import { APP_VERSION } from '../version.js';
+import { icon } from '../icons.js';
 
 const ZONE_COLORS = ['#4b9cff', '#23a55a', '#f0b429', '#f5871f', '#e5484d'];
 
@@ -24,7 +25,8 @@ export default function renderProfile(root, params, ctx) {
   function renderAvatar() {
     avatar.innerHTML = '';
     if (p.photo) avatar.appendChild(h('img', { src: p.photo, alt: '', style: 'width:100%;height:100%;object-fit:cover' }));
-    else avatar.textContent = (p.name || '🙂').slice(0, 1).toUpperCase();
+    else if (p.name) avatar.textContent = p.name.slice(0, 1).toUpperCase();
+    else avatar.appendChild(icon('user', { size: 40 }));
   }
   const photoInput = h('input', { type: 'file', accept: 'image/*', style: 'display:none' });
   photoInput.addEventListener('change', async () => {
@@ -123,16 +125,55 @@ export default function renderProfile(root, params, ctx) {
     ['single', t('profile.dumbbellSingle')],
     ['pair', t('profile.dumbbellPair')]
   ], st.dumbbellInput || 'single', (v) => setSettings({ dumbbellInput: v }));
+  const barbellSel = select([
+    ['included', t('profile.barbellIncluded')],
+    ['added', t('profile.barbellAdded')]
+  ], st.barbellInput || 'included', (v) => { setSettings({ barbellInput: v }); drawBarWeights(); });
+  const barWeightsHost = h('div', { style: 'margin-top:10px' });
   root.appendChild(h('div', { class: 'card' }, [
     h('div', { class: 'card__title', text: t('profile.settings') }),
     h('div', { class: 'grid2' }, [
       field(t('profile.language'), langSel),
       field(t('profile.theme'), themeSel),
       field(t('profile.units'), unitSel),
-      field(t('profile.dumbbellInput'), dumbbellSel)
+      field(t('profile.dumbbellInput'), dumbbellSel),
+      field(t('profile.barbellInput'), barbellSel)
     ]),
-    h('div', { class: 'small muted', text: t('profile.dumbbellHint') })
+    h('div', { class: 'small muted', text: t('profile.dumbbellHint') }),
+    h('div', { class: 'small muted', style: 'margin-top:4px', text: t('profile.barbellHint') }),
+    barWeightsHost
   ]));
+
+  // Editable list of bar weights — only relevant in "add bar weight" mode.
+  function drawBarWeights() {
+    barWeightsHost.innerHTML = '';
+    if ((getSettings().barbellInput || 'included') !== 'added') return;
+    const weights = (getSettings().barbellWeights || []).slice();
+    barWeightsHost.appendChild(h('div', { class: 'field__label', style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:6px', text: t('profile.barbellWeights') }));
+    const chips = h('div', { class: 'chips' });
+    weights.forEach((w, i) => {
+      chips.appendChild(h('span', { class: 'tag', style: 'display:inline-flex;align-items:center;gap:6px;padding-right:5px' + (i === 0 ? ';background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)' : '') }, [
+        w + ' ' + t('units.kg'),
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', style: 'width:20px;height:20px;min-height:0;padding:0', 'aria-label': t('common.remove'),
+          onclick: () => { const arr = weights.filter((_, j) => j !== i); setSettings({ barbellWeights: arr }); drawBarWeights(); } }, [icon('x', { size: 14 })])
+      ]));
+    });
+    barWeightsHost.appendChild(chips);
+    const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step: '0.5', min: '0', placeholder: t('profile.barbellAddWeight'), style: 'flex:1' });
+    const add = () => {
+      const n = parseFloat(inp.value);
+      if (isNaN(n) || n <= 0) return;
+      const arr = weights.slice();
+      if (!arr.includes(n)) arr.push(n);
+      setSettings({ barbellWeights: arr }); inp.value = ''; drawBarWeights();
+    };
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+    barWeightsHost.appendChild(h('div', { class: 'row', style: 'gap:8px;margin-top:8px' }, [
+      inp, h('button', { class: 'btn btn--sm', onclick: add }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
+    ]));
+    barWeightsHost.appendChild(h('div', { class: 'small muted', style: 'margin-top:6px', text: t('profile.barbellWeightsHint') }));
+  }
+  drawBarWeights();
 
   // ---------- Cloud sync ----------
   const syncCard = h('div', { class: 'card' });
@@ -158,7 +199,7 @@ export default function renderProfile(root, params, ctx) {
         syncCard.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: () => sync.connect(st.provider) }, [t('sync.connect')]));
       } else {
         syncCard.appendChild(h('div', { class: 'row', style: 'gap:8px' }, [
-          h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.syncNow() }, ['⟳ ' + t('sync.syncNow')]),
+          h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.syncNow() }, [icon('refresh', { size: 16 }), ' ' + t('sync.syncNow')]),
           h('button', { class: 'btn', onclick: () => { sync.disconnect(); renderSync(); } }, [t('sync.disconnect')])
         ]));
       }
@@ -186,15 +227,15 @@ export default function renderProfile(root, params, ctx) {
     h('div', { class: 'card__title', text: t('profile.data') }),
     h('p', { class: 'small muted', text: t('profile.backupReminder') }),
     h('div', { class: 'stack' }, [
-      h('button', { class: 'btn btn--primary btn--block', onclick: doExport }, ['⤓ ' + t('profile.exportData')]),
-      h('button', { class: 'btn btn--block', onclick: doImport }, ['⤒ ' + t('profile.importData')]),
+      h('button', { class: 'btn btn--primary btn--block', onclick: doExport }, [icon('download', { size: 16 }), ' ' + t('profile.exportData')]),
+      h('button', { class: 'btn btn--block', onclick: doImport }, [icon('upload', { size: 16 }), ' ' + t('profile.importData')]),
       h('button', { class: 'btn btn--danger btn--block', onclick: doReset }, [t('profile.resetApp')])
     ])
   ]);
   root.appendChild(dataCard);
 
   // Install button (if available)
-  const installBtn = h('button', { class: 'btn btn--block', onclick: async () => { await promptInstall(); } }, ['⤓ ' + t('profile.install')]);
+  const installBtn = h('button', { class: 'btn btn--block', onclick: async () => { await promptInstall(); } }, [icon('download', { size: 16 }), ' ' + t('profile.install')]);
   const installWrap = h('div', { class: 'card', style: canInstall() ? '' : 'display:none' }, [installBtn]);
   root.appendChild(installWrap);
   onInstallAvailability((ok) => { installWrap.style.display = ok ? '' : 'none'; });
@@ -236,7 +277,7 @@ export default function renderProfile(root, params, ctx) {
           changeLanguage(getSettings().lang); applyTheme();
           toast(t('toast.imported'));
           ctx.navigate('/profile');
-        } catch { toast('⚠︎'); }
+        } catch { toast(t('toast.importError')); }
       }
     });
     fi.click();

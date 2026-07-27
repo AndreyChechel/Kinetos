@@ -6,6 +6,7 @@ import { activeSession, createEmptySession, createSessionFromPlan, completedSess
 import { sessionVolume } from '../calc.js';
 import { volumeWeightOf } from '../data/db.js';
 import { getLang } from '../i18n.js';
+import { icon } from '../icons.js';
 
 export default function renderHome(root, params, ctx) {
   const profile = getProfile();
@@ -30,7 +31,7 @@ export default function renderHome(root, params, ctx) {
     wrap.appendChild(h('div', { class: 'card', style: 'border-color:var(--success)' }, [
       h('div', { class: 'row row--between' }, [
         h('div', {}, [
-          h('span', { class: 'badge badge--live' }, ['● ' + t('home.activeSession')]),
+          h('span', { class: 'badge badge--live' }, [icon('dot', { size: 12 }), ' ' + t('home.activeSession')]),
           h('div', { class: 'small muted', style: 'margin-top:6px', text: active.name || fmtDate(active.startedAt, lang) })
         ]),
         h('button', { class: 'btn btn--primary', onclick: () => ctx.navigate('/session/' + active.id) }, [t('home.continueSession')])
@@ -81,12 +82,12 @@ export default function renderHome(root, params, ctx) {
     recent.forEach((s) => {
       const v = sessionVolume(s, volumeWeightOf);
       ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
-        h('div', { class: 'list__thumb', text: '🏋️', style: 'font-size:1.4rem' }),
+        h('div', { class: 'list__thumb' }, [icon('dumbbell', { size: 26 })]),
         h('div', { class: 'list__body' }, [
           h('div', { class: 'list__title', text: s.name || fmtDate(s.startedAt, lang) }),
           h('div', { class: 'list__sub', text: `${fmtDate(s.startedAt, lang)} · ${v.sets} ${t('common.sets')} · ${fmtDuration(sessionDurationMs(s))}` })
         ]),
-        h('span', { class: 'list__chev', text: '›' })
+        h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
       ]));
     });
     wrap.appendChild(ul);
@@ -97,7 +98,7 @@ export default function renderHome(root, params, ctx) {
   // Quick start FAB
   const fab = h('button', { class: 'fab', 'aria-label': t('home.startEmpty'), title: t('home.startEmpty'),
     disabled: active ? true : null,
-    onclick: () => { const id = createEmptySession(); ctx.navigate('/session/' + id); } }, ['＋']);
+    onclick: () => { const id = createEmptySession(); ctx.navigate('/session/' + id); } }, [icon('plus', { size: 28 })]);
   root.appendChild(wrap);
   if (!active) root.appendChild(fab);
 }

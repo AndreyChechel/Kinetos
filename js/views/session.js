@@ -6,10 +6,10 @@
 import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate } from '../store.js';
-import { getExercise, exName, effectiveWeight, isPerDumbbell, volumeWeightOf } from '../data/db.js';
+import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, barKgOf, barbellWeights, volumeWeightOf } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
-  exercisePicker, confirmDialog, promptDialog, popoverMenu, repChooser,
+  exercisePicker, confirmDialog, promptDialog, popoverMenu, repChooser, barChooser,
   attachLongPress, attachSwipeToDelete
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
@@ -17,6 +17,7 @@ import { lastSetFor, sessionDurationMs, targetsFromSession } from '../workout.js
 import { sessionVolume, oneRepMax } from '../calc.js';
 import { suggestNext, formatSuggestion, suggestionReason, applyToSet } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
+import { icon } from '../icons.js';
 
 let timer = null;
 let collapsed = new Set();      // entry ids currently collapsed (UI-only)
@@ -55,9 +56,9 @@ export default function renderSession(root, params, ctx) {
   wrap.appendChild(h('div', { class: 'card' }, [
     editable ? nameInput : null,
     h('div', { class: 'row row--between', style: editable ? 'margin-top:10px' : '' }, [
-      h('span', { class: 'badge ' + (finished ? '' : 'badge--live') }, [
-        finished ? '✓ ' + fmtDate(s.startedAt, lang) : '● ' + t('session.active')
-      ]),
+      h('span', { class: 'badge ' + (finished ? '' : 'badge--live') },
+        finished ? [icon('check', { size: 14 }), ' ' + fmtDate(s.startedAt, lang)]
+                 : [icon('dot', { size: 12 }), ' ' + t('session.active')]),
       finished
         ? h('button', { class: 'btn btn--sm ' + (editMode ? 'btn--primary' : ''), onclick: toggleEdit }, [editMode ? t('session.doneEditing') : t('common.edit')])
         : h('span', {}, [h('span', { class: 'muted small', text: t('session.elapsed') + ': ' }), elapsed])
@@ -89,25 +90,25 @@ export default function renderSession(root, params, ctx) {
   }
   // Attach drag-reorder once (exWrap persists across re-renders); handles are
   // resolved at drag time so rebuilding children is fine.
-  if (editable) makeSortable(exWrap, { handle: '.drag-handle', onReorder: (from, to) => { const [it] = s.entries.splice(from, 1); s.entries.splice(to, 0, it); persist(); renderExercises(); } });
+  // Reorder by dragging the exercise thumbnail (a tap on it still opens the
+  // exercise); the sortable's movement threshold keeps tap and drag distinct.
+  if (editable) makeSortable(exWrap, { handle: '.list__thumb', onReorder: (from, to) => { const [it] = s.entries.splice(from, 1); s.entries.splice(to, 0, it); persist(); renderExercises(); } });
 
   function entryCard(entry, idx) {
     const ex = getExercise(entry.exerciseId);
     const metric = ex ? ex.metric : 'reps';
     const isCollapsed = collapsed.has(entry.id);
-    const thumb = h('div', { class: 'list__thumb', style: 'cursor:pointer', title: t('exercises.title') });
+    const thumb = h('div', { class: 'list__thumb' + (editable ? ' entry-grip' : ''), style: editable ? '' : 'cursor:pointer', title: t('exercises.title') });
     if (ex) injectExerciseSVG(thumb, ex);
     thumb.addEventListener('click', (e) => { e.stopPropagation(); ctx.navigate('/exercises/' + entry.exerciseId); });
 
     const doneCount = entry.sets.filter((x) => x.done).length;
 
     const header = h('div', { class: 'row', style: 'cursor:pointer; gap:10px', onclick: (e) => {
-      if (e.target.closest('.entry-tools') || e.target.closest('.drag-handle') || e.target.closest('.list__thumb')) return;
+      if (e.target.closest('.entry-tools') || e.target.closest('.list__thumb')) return;
       if (isCollapsed) collapsed.delete(entry.id); else collapsed.add(entry.id);
       renderExercises();
     } }, [
-      editable ? h('span', { class: 'drag-handle', 'aria-label': t('common.reorder'), text: '⋮⋮' }) : null,
-      h('span', { class: 'chev' + (isCollapsed ? '' : ' chev--open'), text: '▸' }),
       thumb,
       h('div', { class: 'list__body' }, [
         h('div', { class: 'list__title', text: ex ? exName(ex) : entry.exerciseId }),
@@ -117,7 +118,7 @@ export default function renderSession(root, params, ctx) {
       ]),
       editable ? h('div', { class: 'entry-tools row', style: 'gap:2px' }, [
         h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'),
-          onclick: () => { s.entries.splice(idx, 1); persist(); renderExercises(); } }, ['🗑'])
+          onclick: () => { s.entries.splice(idx, 1); persist(); renderExercises(); } }, [icon('trash', { size: 18 })])
       ]) : null
     ]);
 
@@ -128,9 +129,10 @@ export default function renderSession(root, params, ctx) {
         if (sug) body.appendChild(suggestionChip(entry, sug, metric));
       }
       const perDb = isPerDumbbell(entry.exerciseId);
-      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb)));
+      const barAdd = isBarbellAdded(entry.exerciseId);
+      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb, barAdd)));
       if (editable) body.appendChild(h('button', { class: 'btn btn--sm btn--block', style: 'margin-top:4px',
-        onclick: () => { entry.sets.push(nextSet(entry, metric)); persist(); renderExercises(); } }, ['＋ ' + t('session.addSet')]));
+        onclick: () => { entry.sets.push(nextSet(entry, metric)); persist(); renderExercises(); } }, [icon('plus', { size: 16 }), ' ' + t('session.addSet')]));
       body.appendChild(entryNoteBlock(entry));
     }
 
@@ -149,6 +151,7 @@ export default function renderSession(root, params, ctx) {
       const repsInp = numInput(set.reps, 'reps', set.targetReps ? String(set.targetReps) : t('common.reps'), { step: '1' });
       attachLongPress(repsInp, { onLongPress: () => repChooser(repsInp, set.reps ?? set.targetReps ?? 12, (v) => { set.reps = v; repsInp.value = v; persist(); }) });
       if (isPerDumbbell(entry.exerciseId)) fields.append(x2Badge());
+      if (isBarbellAdded(entry.exerciseId)) fields.append(barButton(set));
       fields.append(
         numInput(set.weightKg, 'weightKg', set.targetWeightKg ? String(set.targetWeightKg) : t('units.kg'), { step: '2.5' }),
         repsInp
@@ -160,8 +163,7 @@ export default function renderSession(root, params, ctx) {
         numInput(set.minutes, 'minutes', t('common.min'), { step: '1' }));
     }
 
-    const numEl = h('span', { class: 'set__n', title: t('session.removeSet'), text: String(set.n) });
-    attachLongPress(numEl, { onLongPress: () => confirmDeleteSet(entry, si) });
+    const numEl = h('span', { class: 'set__n', text: String(set.n) });
 
     const row = h('div', { class: 'set' + (set.done ? ' set--done' : '') }, [numEl, fields, doneControl(entry, set)]);
     if (set.done && set.timestamp) {
@@ -171,6 +173,14 @@ export default function renderSession(root, params, ctx) {
     }
     attachSwipeToDelete(row, { onDelete: () => deleteSet(entry, si), isEnabled: () => editable });
     return row;
+  }
+
+  // --- barbell bar-weight chooser (only when Profile → Barbell = "add bar") ---
+  function barButton(set) {
+    const cur = barKgOf(set);
+    const btn = h('button', { class: 'barbtn', type: 'button', title: t('session.barWeight'), text: '+' + cur });
+    btn.addEventListener('click', () => barChooser(btn, cur, barbellWeights(), (w) => { set.barKg = w; persist(); renderExercises(); }));
+    return btn;
   }
 
   // --- combined effort + done control (feature 10) ---
@@ -183,7 +193,7 @@ export default function renderSession(root, params, ctx) {
         else markDone(set, 2);
         persist(); renderExercises();
       },
-      onLongPress: () => effortMenu(btn, set)
+      onLongPress: () => effortMenu(btn, entry, set)
     });
     function paint() {
       btn.className = 'donebtn' + (set.done ? ' donebtn--done done-eff--' + (set.effort || 2) : '');
@@ -193,25 +203,27 @@ export default function renderSession(root, params, ctx) {
     return btn;
   }
   function markDone(set, eff) { set.done = true; set.effort = eff; set.timestamp = new Date().toISOString(); }
-  function effortMenu(anchor, set) {
+  function effortMenu(anchor, entry, set) {
     const items = [1, 2, 3].map((e) => ({ label: t('session.' + EFFORT[e].label), color: EFFORT_COLOR[e], active: set.done && set.effort === e,
       onClick: () => { markDone(set, e); persist(); renderExercises(); } }));
     if (set.done) items.push({ label: t('session.markUndone'), onClick: () => { set.done = false; set.effort = null; set.timestamp = null; persist(); renderExercises(); } });
+    items.push({ label: t('common.delete'), onClick: () => confirmDeleteSet(entry, entry.sets.indexOf(set)) });
     popoverMenu(anchor, items, { title: t('session.effort') });
   }
 
   // --- read-only set row ---
-  function setRowRO(set, metric, perDb) {
+  function setRowRO(set, metric, perDb, barAdd) {
     let val;
     if (metric === 'time') val = set.seconds ? `${set.seconds} ${t('common.sec')}` : '—';
     else if (metric === 'distance') val = [set.distanceKm ? `${set.distanceKm} ${t('units.km')}` : null, set.minutes ? `${set.minutes} ${t('common.min')}` : null].filter(Boolean).join(' · ') || '—';
     else val = set.weightKg ? `${set.weightKg} ${t('units.kg')} × ${set.reps ?? '—'}` : (set.reps ? `${set.reps} ${t('common.reps')}` : '—');
     const showX2 = perDb && metric === 'reps' && !!set.weightKg;
+    const showBar = barAdd && metric === 'reps' && set.weightKg != null;
     return h('div', { class: 'set set--ro' + (set.done ? ' set--done' : '') }, [
       h('span', { class: 'set__n', text: String(set.n) }),
-      h('div', { class: 'set__ro-val' }, [val, showX2 ? x2Badge() : null]),
+      h('div', { class: 'set__ro-val' }, [val, showX2 ? x2Badge() : null, showBar ? barBadge(barKgOf(set)) : null]),
       set.effort ? h('span', { class: 'eff-dot done-eff--' + set.effort, title: t('session.' + EFFORT[set.effort].label) }) : null,
-      set.done ? h('span', { class: 'set__done-mark', text: '✓' }) : null,
+      set.done ? h('span', { class: 'set__done-mark', style: 'color:var(--success)' }, [icon('check', { size: 16 })]) : null,
       set.timestamp ? h('span', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) }) : null
     ]);
   }
@@ -235,14 +247,14 @@ export default function renderSession(root, params, ctx) {
       host.innerHTML = '';
       if (entry.note) {
         host.appendChild(h('div', { class: 'note note--inline' }, [
-          h('div', { class: 'note__text', text: entry.note }),
-          h('div', { class: 'note__row' }, [
-            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.edit'), onclick: edit }, ['✎']),
-            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.delete'), onclick: del }, ['🗑'])
-          ])
+          h('div', { class: 'note__text', text: entry.note })
+        ]));
+        host.appendChild(h('div', { class: 'note__row' }, [
+          h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.edit'), onclick: edit }, [icon('pencil', { size: 16 })]),
+          h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.delete'), onclick: del }, [icon('trash', { size: 16 })])
         ]));
       } else {
-        host.appendChild(h('button', { class: 'btn btn--sm btn--ghost', onclick: edit }, ['＋ ' + t('session.addNote')]));
+        host.appendChild(h('button', { class: 'btn btn--sm btn--ghost', onclick: edit }, [icon('plus', { size: 16 }), ' ' + t('session.addNote')]));
       }
     }
     async function edit() {
@@ -263,7 +275,7 @@ export default function renderSession(root, params, ctx) {
       host.appendChild(h('div', { class: 'card' }, [
         h('div', { class: 'row row--between', style: 'margin-bottom:6px' }, [
           h('div', { class: 'card__title', style: 'margin:0', text: t('common.notes') }),
-          h('button', { class: 'btn btn--sm btn--ghost', onclick: edit }, [s.notes ? t('common.edit') : ('＋ ' + t('common.add'))])
+          h('button', { class: 'btn btn--sm btn--ghost', onclick: edit }, s.notes ? [t('common.edit')] : [icon('plus', { size: 16 }), ' ' + t('common.add')])
         ]),
         s.notes ? h('div', { class: 'note__text', text: s.notes }) : h('p', { class: 'muted small', style: 'margin:0', text: t('session.noNotes') })
       ]));
@@ -287,12 +299,12 @@ export default function renderSession(root, params, ctx) {
     const defReps = metric === 'reps' ? 12 : null;
     return { n: entry.sets.length + 1, reps: prev.reps ?? defReps, weightKg: prev.weightKg ?? null,
       seconds: prev.seconds ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
-      effort: null, targetReps: prev.targetReps ?? defReps, done: false, timestamp: null };
+      effort: null, targetReps: prev.targetReps ?? defReps, barKg: prev.barKg ?? null, done: false, timestamp: null };
   }
 
   function suggestionChip(entry, sug, metric) {
     return h('div', { class: 'suggest' }, [
-      h('span', { text: '💡' }),
+      h('span', { class: 'suggest__ico' }, [icon('bulb', { size: 18 })]),
       h('div', { class: 'suggest__txt' }, [
         h('span', { class: 'suggest__val', text: t('session.suggested') + ': ' + formatSuggestion(sug, metric) }),
         h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })
@@ -318,7 +330,7 @@ export default function renderSession(root, params, ctx) {
       if (!finished) { const sug = suggestNext(ex.id, s.id); if (sug) applyToSet(set0, sug); }
       s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [set0] });
       persist(); renderExercises();
-    }) }, ['＋ ' + t('session.addExercise')]));
+    }) }, [icon('plus', { size: 16 }), ' ' + t('session.addExercise')]));
   }
   if (!finished) {
     wrap.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: finish }, [t('session.finish')]));
@@ -332,7 +344,7 @@ export default function renderSession(root, params, ctx) {
 
   function freshSet(metric) {
     const defReps = metric === 'reps' ? 12 : null;
-    return { n: 1, reps: defReps, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, targetReps: defReps, done: false, timestamp: null };
+    return { n: 1, reps: defReps, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, targetReps: defReps, barKg: null, done: false, timestamp: null };
   }
   function toggleEdit() { editMode = !editMode; ctx.navigate('/session/' + s.id); }
   async function finish() {
@@ -383,7 +395,7 @@ async function renderFinishedStats(host, s, lang) {
     (e.sets || []).forEach((st) => {
       const counted = st.done !== false && (st.reps || st.seconds || st.distanceKm);
       if (!counted) return;
-      const effW = effectiveWeight(e.exerciseId, st.weightKg);
+      const effW = effectiveWeight(e.exerciseId, st.weightKg, st);
       if (st.reps) vol += (effW || 0) * st.reps;
       if (st.weightKg && st.reps) {
         const o = oneRepMax(effW, st.reps);
@@ -393,7 +405,7 @@ async function renderFinishedStats(host, s, lang) {
       if (ex) byGroup[ex.group] = (byGroup[ex.group] || 0) + 1;
       if (st.effort) effDist[st.effort - 1]++;
     });
-    perEx.push({ name, volume: Math.round(vol), best, e1rm: Math.round(e1rm), perDumbbell: isPerDumbbell(e.exerciseId) });
+    perEx.push({ name, volume: Math.round(vol), best, e1rm: Math.round(e1rm), perDumbbell: isPerDumbbell(e.exerciseId), barAdd: isBarbellAdded(e.exerciseId) });
   });
 
   const hasChart = await ensureChart();
@@ -419,6 +431,7 @@ async function renderFinishedStats(host, s, lang) {
       h('span', { class: 'small' }, [
         p.best ? h('span', { class: 'muted', text: `${p.best.weightKg} ${t('units.kg')} × ${p.best.reps}  ` }) : null,
         p.best && p.perDumbbell ? x2Badge() : null,
+        p.best && p.barAdd ? barBadge(barKgOf(p.best)) : null,
         h('strong', { text: `${p.e1rm} ${t('units.kg')} ` }),
         h('span', { class: 'muted small', text: t('progress.est1rm') })
       ])
@@ -444,6 +457,11 @@ function localInputToISO(v) {
 /** Small "2×" pill shown on dumbbell exercises when weight is logged per hand. */
 function x2Badge() {
   return h('span', { class: 'x2-badge', title: t('session.dumbbellX2Hint'), text: '2×' });
+}
+
+/** Small "+<bar>" pill shown on barbell exercises when the bar is added on top. */
+function barBadge(barKg) {
+  return h('span', { class: 'x2-badge', title: t('session.barWeight'), text: '+' + barKg });
 }
 
 function avgEffort(s) {

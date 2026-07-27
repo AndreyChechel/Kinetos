@@ -204,7 +204,6 @@
     "quickAdd": "Übung schnell hinzufügen",
     "removeExercise": "Übung entfernen",
     "logging": "Erfassung",
-    "removeSet": "Satz entfernen",
     "effort": "Anstrengung",
     "effortEasy": "Leicht",
     "effortMedium": "Mittel",
@@ -230,7 +229,8 @@
     "effortBreakdown": "Anstrengung",
     "bestSets": "Beste Sätze",
     "dumbbellX2Hint": "Gewicht pro Hantel – in Summen ×2 gezählt",
-    "editTime": "Zeit bearbeiten"
+    "editTime": "Zeit bearbeiten",
+    "barWeight": "Stangengewicht"
   },
   "progress": {
     "title": "Fortschritt",
@@ -315,7 +315,14 @@
     "dumbbellInput": "Hantelgewicht",
     "dumbbellSingle": "Pro Hantel (×2)",
     "dumbbellPair": "Beide Hanteln (gesamt)",
-    "dumbbellHint": "Wie du das Hantelgewicht eingibst. „Pro Hantel“ erfasst das Gewicht einer Hand und zählt es bei Volumen und 1RM ×2."
+    "dumbbellHint": "Wie du das Hantelgewicht eingibst. „Pro Hantel“ erfasst das Gewicht einer Hand und zählt es bei Volumen und 1RM ×2.",
+    "barbellInput": "Langhantel-Gewicht",
+    "barbellIncluded": "In Eingabe enthalten",
+    "barbellAdded": "Stangengewicht addieren",
+    "barbellHint": "Ob das eingegebene Gewicht die Stange bereits enthält. „Stangengewicht addieren“ erfasst nur die Scheiben und addiert die pro Satz gewählte Stange zu Volumen und 1RM.",
+    "barbellWeights": "Stangengewichte (kg)",
+    "barbellWeightsHint": "Diese Optionen kannst du pro Satz wählen; das erste ist die Vorgabe. Entferne nicht benötigte oder füge eigene hinzu.",
+    "barbellAddWeight": "z. B. 15"
   },
   "sync": {
     "title": "Cloud-Sync",
@@ -355,7 +362,8 @@
     "added": "Hinzugefügt",
     "sessionSaved": "Einheit gespeichert",
     "planSaved": "Plan gespeichert",
-    "photoTooBig": "Bild zu groß"
+    "photoTooBig": "Bild zu groß",
+    "importError": "Import fehlgeschlagen"
   },
   "weekday": {
     "mon": "Mo",
@@ -378,6 +386,7 @@
     "startNow": "Jetzt starten",
     "scheduleOn": "Für einen Tag planen",
     "scheduled": "Geplant",
-    "fromTemplate": "Aus Vorlage"
+    "fromTemplate": "Aus Vorlage",
+    "copySuffix": "Kopie"
   }
 }

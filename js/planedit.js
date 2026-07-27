@@ -7,6 +7,7 @@ import { getExercise, exName, isPerDumbbell } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
 import { stepper, repChooser, attachLongPress } from './components.js';
 import { makeSortable } from './sortable.js';
+import { icon } from './icons.js';
 
 const DEFAULT_REPS = 12;
 
@@ -38,11 +39,11 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
 
     const card = h('div', { class: 'card', dataset: { idx } }, [
       h('div', { class: 'row', style: 'margin-bottom:10px' }, [
-        h('span', { class: 'drag-handle', 'aria-label': t('common.reorder'), title: t('common.reorder'), text: '⋮⋮' }),
+        h('span', { class: 'drag-handle', 'aria-label': t('common.reorder'), title: t('common.reorder') }, [icon('grip', { size: 18 })]),
         thumb,
         h('div', { class: 'list__body' }, [h('div', { class: 'list__title', text: exName(ex) })]),
         h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.remove'),
-          onclick: () => { list.splice(idx, 1); onChange && onChange(); } }, ['🗑'])
+          onclick: () => { list.splice(idx, 1); onChange && onChange(); } }, [icon('trash', { size: 18 })])
       ]),
       ex.metric === 'reps'
         ? h('div', { class: 'row', style: 'gap:8px' }, [

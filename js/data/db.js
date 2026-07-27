@@ -56,15 +56,45 @@ export function isPerDumbbell(exOrId) {
 /** Multiplier applied to the ENTERED weight when computing loads (1 or 2). */
 export function weightFactor(exOrId) { return isPerDumbbell(exOrId) ? 2 : 1; }
 
-/** Effective load for calculations from an exercise (or id) + entered weight. */
-export function effectiveWeight(exOrId, weightKg) {
+// --- Barbell weight handling ----------------------------------------------
+// A barbell exercise can be logged two ways (Profile → Barbell weight):
+//   'included' (default): the logged weight already includes the bar. No change.
+//   'added':              the user logs the plates only; the chosen bar weight
+//                         (per set, from the configured list) is ADDED in totals.
+
+/** True if this exercise is loaded on a barbell. */
+export function usesBarbell(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  return !!(ex && ex.equipment === 'barbell');
+}
+
+/** True when the bar weight should be added on top of the entered weight. */
+export function barbellAdded() { return (getSettings().barbellInput || 'included') === 'added'; }
+
+/** True when the per-set bar chooser / +bar rule is active for this exercise. */
+export function isBarbellAdded(exOrId) { return usesBarbell(exOrId) && barbellAdded(); }
+
+/** Configured selectable bar weights (kg); first entry is the default. */
+export function barbellWeights() {
+  const w = getSettings().barbellWeights;
+  return (Array.isArray(w) && w.length) ? w : [20, 10, 5];
+}
+export function defaultBarKg() { return barbellWeights()[0]; }
+
+/** Resolve the bar weight for a set (its stored choice, else the default). */
+export function barKgOf(set) { return (set && set.barKg != null) ? set.barKg : defaultBarKg(); }
+
+/** Effective load for calculations from an exercise (or id) + entered weight.
+ *  `set` is optional but lets the barbell rule read the set's chosen bar. */
+export function effectiveWeight(exOrId, weightKg, set) {
   if (weightKg == null) return weightKg;
+  if (isBarbellAdded(exOrId)) return weightKg + barKgOf(set);
   return weightKg * weightFactor(exOrId);
 }
 
 /** Resolver for calc.js sessionVolume: entry-aware effective set weight. */
 export function volumeWeightOf(set, entry) {
-  return effectiveWeight(entry && entry.exerciseId, set.weightKg) || 0;
+  return effectiveWeight(entry && entry.exerciseId, set.weightKg, set) || 0;
 }
 
 export function groups() { return muscleMeta.groups; }

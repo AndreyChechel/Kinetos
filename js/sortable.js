@@ -3,10 +3,15 @@
 // The dragged item is lifted (position:fixed) and follows the pointer while a
 // placeholder marks the drop slot; on release onReorder(from, to) fires so the
 // caller can mutate its data and re-render.
+//
+// A small movement threshold must be crossed before a drag begins, so a plain
+// tap/click on the handle still behaves normally (e.g. a handle that is also a
+// link can navigate on tap and reorder on drag).
 
-export function makeSortable(listEl, { handle = '.drag-handle', onReorder } = {}) {
+export function makeSortable(listEl, { handle = '.drag-handle', onReorder, threshold = 6 } = {}) {
   if (!listEl) return () => {};
-  let state = null;
+  let state = null;    // active drag (past the threshold)
+  let pending = null;  // pointer is down on a handle but drag not yet started
 
   function onDown(e) {
     if (e.button > 0) return;
@@ -14,13 +19,18 @@ export function makeSortable(listEl, { handle = '.drag-handle', onReorder } = {}
     if (!hdl || !listEl.contains(hdl)) return;
     const el = Array.from(listEl.children).find((c) => c.contains(hdl));
     if (!el) return;
-    e.preventDefault();
+    pending = { el, startX: e.clientX, startY: e.clientY };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onCancel);
+  }
+
+  function begin(el, clientY) {
     const rect = el.getBoundingClientRect();
     const placeholder = document.createElement(el.tagName);
     placeholder.className = 'sortable-placeholder';
     placeholder.style.height = rect.height + 'px';
     const fromIndex = Array.from(listEl.children).indexOf(el);
-
     el.classList.add('is-dragging');
     el.style.width = rect.width + 'px';
     el.style.position = 'fixed';
@@ -29,15 +39,16 @@ export function makeSortable(listEl, { handle = '.drag-handle', onReorder } = {}
     el.style.zIndex = '1000';
     el.style.pointerEvents = 'none';
     listEl.insertBefore(placeholder, el.nextSibling);
-
-    state = { el, placeholder, fromIndex, offsetY: e.clientY - rect.top };
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp, { once: true });
-    window.addEventListener('pointercancel', onUp, { once: true });
+    state = { el, placeholder, fromIndex, offsetY: clientY - rect.top };
   }
 
   function onMove(e) {
-    if (!state) return;
+    if (!state) {
+      if (!pending) return;
+      if (Math.abs(e.clientX - pending.startX) < threshold && Math.abs(e.clientY - pending.startY) < threshold) return;
+      begin(pending.el, e.clientY);
+    }
+    e.preventDefault();
     state.el.style.top = (e.clientY - state.offsetY) + 'px';
     const sibs = Array.from(listEl.children).filter((c) => c !== state.el && c !== state.placeholder);
     let placed = false;
@@ -48,18 +59,42 @@ export function makeSortable(listEl, { handle = '.drag-handle', onReorder } = {}
     if (!placed) listEl.appendChild(state.placeholder);
   }
 
-  function onUp() {
-    if (!state) return;
-    window.removeEventListener('pointermove', onMove);
-    const { el, placeholder, fromIndex } = state;
+  function unlift() {
+    const { el } = state;
     el.classList.remove('is-dragging');
     el.style.width = el.style.position = el.style.left = el.style.top = el.style.zIndex = el.style.pointerEvents = '';
-    listEl.insertBefore(el, placeholder);
-    const finalItems = Array.from(listEl.children).filter((c) => c !== placeholder);
-    const toIndex = finalItems.indexOf(el);
-    placeholder.remove();
-    state = null;
-    if (toIndex !== fromIndex && typeof onReorder === 'function') onReorder(fromIndex, toIndex);
+  }
+
+  function onUp() {
+    if (state) {
+      const { el, placeholder, fromIndex } = state;
+      unlift();
+      listEl.insertBefore(el, placeholder);
+      const finalItems = Array.from(listEl.children).filter((c) => c !== placeholder);
+      const toIndex = finalItems.indexOf(el);
+      placeholder.remove();
+      state = null;
+      if (toIndex !== fromIndex && typeof onReorder === 'function') onReorder(fromIndex, toIndex);
+    }
+    cleanup();
+  }
+
+  function onCancel() {
+    if (state) {
+      const { el, placeholder } = state;
+      unlift();
+      listEl.insertBefore(el, placeholder);
+      placeholder.remove();
+      state = null;
+    }
+    cleanup();
+  }
+
+  function cleanup() {
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onCancel);
+    pending = null;
   }
 
   listEl.addEventListener('pointerdown', onDown);

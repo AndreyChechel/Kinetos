@@ -221,6 +221,8 @@ p { line-height: 1.5; }
 .set__ts--edit { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; text-decoration: underline dotted var(--border); text-underline-offset: 3px; }
 .x2-badge { display: inline-flex; align-items: center; justify-content: center; flex: none; align-self: center; padding: 2px 7px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); font-size: .7rem; font-weight: 800; line-height: 1.4; white-space: nowrap; }
 .set__ro-val .x2-badge, .small .x2-badge { margin-left: 6px; }
+.barbtn { flex: none; align-self: center; min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--accent); font-size: .82rem; font-weight: 800; cursor: pointer; white-space: nowrap; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.barbtn:active { transform: scale(.96); }
 
 /* Effort pill: none / easy / medium / hard */
 .effort { width: 36px; height: 40px; flex: none; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); font-weight: 800; color: var(--text-muted); cursor: pointer; }
@@ -237,8 +239,6 @@ p { line-height: 1.5; }
 .suggest__reason { color: var(--text-muted); }
 
 /* Collapse chevron on exercise cards */
-.chev { display: inline-block; width: 14px; flex: none; color: var(--text-muted); transition: transform .15s ease; }
-.chev--open { transform: rotate(90deg); }
 .entry-tools .btn { color: var(--text-muted); }
 
 /* FAB */
@@ -416,10 +416,11 @@ canvas { max-width: 100%; }
 /* Notes (exercise + session/entry) */
 .note { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
 .note--inline { margin-top: 6px; }
-.note__text { white-space: pre-wrap; line-height: 1.4; font-size: .9rem; }
+.note__text { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; line-height: 1.4; font-size: .9rem; }
 .note__row { display: flex; align-items: center; justify-content: flex-end; gap: 2px; margin-top: 4px; }
 .note__date { margin-right: auto; }
 .entry-note { margin-top: 6px; }
+.note-item + .note-item { margin-top: 10px; }
 .stack > .note + .note { margin-top: 8px; }
 
 /* Combined effort + done control */
@@ -443,6 +444,9 @@ canvas { max-width: 100%; }
 /* Drag-to-reorder */
 .drag-handle { cursor: grab; touch-action: none; color: var(--text-muted); font-size: 1rem; letter-spacing: -3px; padding: 0 4px 0 2px; user-select: none; flex: none; }
 .drag-handle:active { cursor: grabbing; }
+/* Draggable exercise thumbnail (session): reorder by dragging, tap to open. */
+.entry-grip { cursor: grab; touch-action: none; }
+.entry-grip:active { cursor: grabbing; }
 .sortable-placeholder { background: var(--surface-2); border: 2px dashed var(--border); border-radius: var(--radius); margin-bottom: 12px; }
 .is-dragging { box-shadow: 0 12px 34px rgba(0,0,0,.32); opacity: .97; }
 
@@ -457,3 +461,20 @@ canvas { max-width: 100%; }
 .popover__item:active { background: var(--surface-2); }
 .popover__item.is-active { background: color-mix(in srgb, var(--primary) 15%, transparent); }
 .popover__dot { width: 13px; height: 13px; border-radius: 50%; background: var(--swatch, var(--primary)); flex: none; }
+
+/* ============ Custom line icons (js/icons.js) ============ */
+/* Inline SVGs drawn with currentColor; replaces the emoji/glyph icons. */
+.icon { display: inline-block; vertical-align: middle; flex: none; }
+.btn .icon, .chip .icon, .tpl-chip .icon, .badge .icon { vertical-align: -0.14em; }
+/* Icon used inside a small list/empty thumbnail (not an exercise illustration).
+   Overrides the full-bleed `.list__thumb svg { width:100% }` rule. */
+.list__thumb svg.icon { width: 26px; height: 26px; color: var(--text-muted); }
+.list__thumb svg.icon.thumb-done { color: var(--success); }
+.empty__icon svg.icon { width: 56px; height: 56px; color: var(--text-muted); }
+.tabbar__icon svg.icon { width: 24px; height: 24px; }
+.list__chev svg.icon { width: 18px; height: 18px; }
+.set__done-mark svg.icon { display: block; }
+/* Center the +/− icons in number steppers */
+.stepper button { display: grid; place-items: center; }
+/* Suggestion (💡) leading icon: keep the bulb aligned with the text */
+.suggest__ico { display: inline-flex; align-items: center; color: var(--primary); flex: none; }

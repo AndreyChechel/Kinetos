@@ -204,7 +204,6 @@
     "quickAdd": "Ajout rapide",
     "removeExercise": "Retirer l'exercice",
     "logging": "Enregistrement",
-    "removeSet": "Retirer la série",
     "effort": "Effort",
     "effortEasy": "Facile",
     "effortMedium": "Moyen",
@@ -230,7 +229,8 @@
     "effortBreakdown": "Répartition de l’effort",
     "bestSets": "Meilleures séries",
     "dumbbellX2Hint": "Poids par haltère — compté ×2 dans les totaux",
-    "editTime": "Modifier l'heure"
+    "editTime": "Modifier l'heure",
+    "barWeight": "Poids de la barre"
   },
   "progress": {
     "title": "Progrès",
@@ -315,7 +315,14 @@
     "dumbbellInput": "Poids des haltères",
     "dumbbellSingle": "Par haltère (×2)",
     "dumbbellPair": "Les deux haltères (total)",
-    "dumbbellHint": "Comment saisir le poids des haltères. « Par haltère » enregistre le poids d’une main et le compte ×2 dans le volume et le 1RM."
+    "dumbbellHint": "Comment saisir le poids des haltères. « Par haltère » enregistre le poids d’une main et le compte ×2 dans le volume et le 1RM.",
+    "barbellInput": "Poids de la barre",
+    "barbellIncluded": "Inclus dans la saisie",
+    "barbellAdded": "Ajouter le poids de la barre",
+    "barbellHint": "Indique si le poids saisi inclut déjà la barre. « Ajouter le poids de la barre » enregistre seulement les disques et ajoute la barre choisie par série au volume et au 1RM.",
+    "barbellWeights": "Poids de barre (kg)",
+    "barbellWeightsHint": "Ce sont les options disponibles par série ; la première est la valeur par défaut. Supprimez celles dont vous n’avez pas besoin ou ajoutez les vôtres.",
+    "barbellAddWeight": "ex. 15"
   },
   "sync": {
     "title": "Sync cloud",
@@ -355,7 +362,8 @@
     "added": "Ajouté",
     "sessionSaved": "Séance enregistrée",
     "planSaved": "Plan enregistré",
-    "photoTooBig": "Image trop grande"
+    "photoTooBig": "Image trop grande",
+    "importError": "Échec de l’importation"
   },
   "weekday": {
     "mon": "Lun",
@@ -378,6 +386,7 @@
     "startNow": "Commencer",
     "scheduleOn": "Planifier à une date",
     "scheduled": "Planifié",
-    "fromTemplate": "À partir d’un modèle"
+    "fromTemplate": "À partir d’un modèle",
+    "copySuffix": "copie"
   }
 }

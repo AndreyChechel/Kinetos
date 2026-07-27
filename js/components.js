@@ -4,6 +4,7 @@ import { h, qs } from './ui.js';
 import { t } from './i18n.js';
 import { byGroup, groups, exName } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
+import { icon } from './icons.js';
 
 /** Bottom sheet overlay. Returns { close }. */
 export function sheet(titleText, contentNode, { onClose } = {}) {
@@ -11,7 +12,7 @@ export function sheet(titleText, contentNode, { onClose } = {}) {
     h('div', { class: 'sheet__grab' }),
     h('div', { class: 'sheet__head' }, [
       h('h3', { class: 'sheet__title', text: titleText }),
-      h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.close'), onclick: () => close() }, ['✕'])
+      h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.close'), onclick: () => close() }, [icon('x', { size: 18 })])
     ]),
     h('div', { class: 'sheet__body' }, [contentNode])
   ]);
@@ -114,7 +115,7 @@ export function exercisePicker(onPick) {
             h('div', { class: 'list__title', text: exName(ex) }),
             h('div', { class: 'list__sub', text: (ex.primary || []).map((mk) => t('muscles.' + mk)).join(', ') })
           ]),
-          h('span', { class: 'list__chev', text: '＋' })
+          h('span', { class: 'list__chev' }, [icon('plus', { size: 18 })])
         ]));
       });
       listWrap.appendChild(ul);
@@ -131,8 +132,8 @@ export function exercisePicker(onPick) {
 export function stepper(value, { min = 0, max = 999, step = 1, decimals = 0 } = {}) {
   const input = h('input', { class: 'input', type: 'number', inputmode: 'decimal', value: fmt(value), min, max, step });
   function fmt(v) { return decimals ? Number(v).toFixed(decimals).replace(/\.0$/, '') : String(v); }
-  const dec = h('button', { type: 'button', 'aria-label': '−', onclick: () => set(get() - step) }, ['−']);
-  const inc = h('button', { type: 'button', 'aria-label': '+', onclick: () => set(get() + step) }, ['+']);
+  const dec = h('button', { type: 'button', 'aria-label': '−', onclick: () => set(get() - step) }, [icon('minus', { size: 22 })]);
+  const inc = h('button', { type: 'button', 'aria-label': '+', onclick: () => set(get() + step) }, [icon('plus', { size: 22 })]);
   const el = h('div', { class: 'stepper' }, [dec, input, inc]);
   function get() { const n = parseFloat(input.value); return isNaN(n) ? 0 : n; }
   function set(v) { v = Math.max(min, Math.min(max, Math.round(v / step) * step)); input.value = fmt(v); input.dispatchEvent(new Event('change', { bubbles: true })); }
@@ -193,6 +194,13 @@ export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) 
 export function repChooser(anchorEl, current, onPick) {
   const items = [6, 8, 10, 12, 15, 20].map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
   popoverMenu(anchorEl, items, { title: t('common.reps'), grid: true });
+}
+
+/** Bar-weight chooser popover — pick from the configured barbell weights only
+ *  (no free-text entry; custom values are managed in Profile → settings). */
+export function barChooser(anchorEl, current, weights, onPick) {
+  const items = (weights || []).map((w) => ({ label: String(w), active: w === current, onClick: () => onPick(w) }));
+  popoverMenu(anchorEl, items, { title: t('session.barWeight'), grid: true });
 }
 
 /** Swipe a row to the right past a threshold to delete it. Ignores gestures that

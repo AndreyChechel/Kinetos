@@ -204,7 +204,6 @@
     "quickAdd": "Añadir rápido",
     "removeExercise": "Quitar ejercicio",
     "logging": "Registro",
-    "removeSet": "Quitar serie",
     "effort": "Esfuerzo",
     "effortEasy": "Fácil",
     "effortMedium": "Medio",
@@ -230,7 +229,8 @@
     "effortBreakdown": "Distribución del esfuerzo",
     "bestSets": "Mejores series",
     "dumbbellX2Hint": "Peso por mancuerna: contado ×2 en los totales",
-    "editTime": "Editar hora"
+    "editTime": "Editar hora",
+    "barWeight": "Peso de la barra"
   },
   "progress": {
     "title": "Progreso",
@@ -315,7 +315,14 @@
     "dumbbellInput": "Peso de mancuernas",
     "dumbbellSingle": "Por mancuerna (×2)",
     "dumbbellPair": "Ambas mancuernas (total)",
-    "dumbbellHint": "Cómo introduces el peso de las mancuernas. «Por mancuerna» registra el peso de una mano y lo cuenta ×2 en el volumen y el 1RM."
+    "dumbbellHint": "Cómo introduces el peso de las mancuernas. «Por mancuerna» registra el peso de una mano y lo cuenta ×2 en el volumen y el 1RM.",
+    "barbellInput": "Peso de la barra",
+    "barbellIncluded": "Incluido en la entrada",
+    "barbellAdded": "Sumar peso de la barra",
+    "barbellHint": "Si el peso que registras ya incluye la barra. «Sumar peso de la barra» registra solo los discos y añade la barra elegida por serie al volumen y al 1RM.",
+    "barbellWeights": "Pesos de barra (kg)",
+    "barbellWeightsHint": "Estas son las opciones que puedes elegir por serie; la primera es la predeterminada. Elimina las que no necesites o añade las tuyas.",
+    "barbellAddWeight": "p. ej. 15"
   },
   "sync": {
     "title": "Sincronización en la nube",
@@ -355,7 +362,8 @@
     "added": "Añadido",
     "sessionSaved": "Sesión guardada",
     "planSaved": "Plan guardado",
-    "photoTooBig": "Imagen demasiado grande"
+    "photoTooBig": "Imagen demasiado grande",
+    "importError": "Error al importar"
   },
   "weekday": {
     "mon": "Lun",
@@ -378,6 +386,7 @@
     "startNow": "Empezar ahora",
     "scheduleOn": "Programar en una fecha",
     "scheduled": "Programado",
-    "fromTemplate": "Desde una plantilla"
+    "fromTemplate": "Desde una plantilla",
+    "copySuffix": "copia"
   }
 }
