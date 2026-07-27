@@ -173,20 +173,23 @@ const adapters = {
     const res = await ensureOk(await authed(p, `https://www.googleapis.com/drive/v3/files/${found}?alt=media`));
     return { text: await res.text(), id: found };
   },
-  async googleUpload(p, text) {
-    const { id } = await adapters.googleDownload(p);
+  async googleUpload(p, text, remote) {
+    // Reuse the file id resolved by the preceding download (or the cached one)
+    // instead of re-downloading the whole file just to learn its id.
+    let id = (remote && remote.id) || getFileId();
     if (id) {
-      await ensureOk(await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,
-        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text }));
-    } else {
-      const meta = await ensureOk(await authed(p, 'https://www.googleapis.com/drive/v3/files',
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: FILE() }) }));
-      const created = await meta.json();
-      if (!created.id) throw new Error('Drive create returned no file id');
-      setFileId(created.id);
-      await ensureOk(await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${created.id}?uploadType=media`,
-        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text }));
+      const res = await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,
+        { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text });
+      if (res.status === 404) { clearFileId(); id = ''; } // file vanished remotely -> recreate below
+      else { await ensureOk(res); return; }
     }
+    const meta = await ensureOk(await authed(p, 'https://www.googleapis.com/drive/v3/files',
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: FILE() }) }));
+    const created = await meta.json();
+    if (!created.id) throw new Error('Drive create returned no file id');
+    setFileId(created.id);
+    await ensureOk(await authed(p, `https://www.googleapis.com/upload/drive/v3/files/${created.id}?uploadType=media`,
+      { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: text }));
   },
   async onedriveDownload(p) {
     const res = await authed(p, `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${FILE()}:/content`);
@@ -220,8 +223,8 @@ export async function download(provider) {
   if (provider === 'yandex') return adapters.yandexDownload(provider);
   throw new Error('unknown-provider');
 }
-export async function upload(provider, text) {
-  if (provider === 'google') return adapters.googleUpload(provider, text);
+export async function upload(provider, text, remote) {
+  if (provider === 'google') return adapters.googleUpload(provider, text, remote);
   if (provider === 'onedrive') return adapters.onedriveUpload(provider, text);
   if (provider === 'yandex') return adapters.yandexUpload(provider, text);
   throw new Error('unknown-provider');

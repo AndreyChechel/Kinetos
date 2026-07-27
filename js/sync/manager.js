@@ -48,14 +48,21 @@ export function disconnect() {
 
 async function pull() {
   const p = provider();
-  const { text } = await prov.download(p);
+  const remote = await prov.download(p); // { text, id? }
+  const text = remote && remote.text;
   if (text) {
-    let remote; try { remote = JSON.parse(text); } catch { remote = null; }
-    if (remote) { applying = true; try { mergeRemote(remote); } finally { applying = false; } }
+    let parsed; try { parsed = JSON.parse(text); } catch { parsed = null; }
+    if (parsed) { applying = true; try { mergeRemote(parsed); } finally { applying = false; } }
   }
+  return remote || { text: null };
 }
-async function push() {
-  await prov.upload(provider(), serialize());
+async function push(remote) {
+  const text = serialize();
+  // Skip the write when the remote file already holds exactly what we'd upload.
+  // (remote is the result of the pull that just ran; absent on best-effort pushes.)
+  if (!(remote && remote.text === text)) {
+    await prov.upload(provider(), text, remote);
+  }
   dirty = false;
   setMeta({ lastSyncedAt: new Date().toISOString() });
 }
@@ -66,8 +73,8 @@ export async function syncNow() {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) { setStatus('offline'); return; }
   setStatus('syncing');
   try {
-    await pull();
-    await push();
+    const remote = await pull();
+    await push(remote);
     setStatus('ok');
   } catch (e) {
     console.error('Kinetos sync error:', e);
