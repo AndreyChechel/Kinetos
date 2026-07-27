@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Data model</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Data model</h1>
+<nav>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="extending.html">Extending</a>
+  <a href="deploy.html">Run &amp; deploy</a>
+</nav>
+
+<h2>Persistence</h2>
+<p>Everything is stored in one <code>localStorage</code> key: <code>kinetos.v1</code>, as JSON. <code>store.js</code> owns it. <code>migrate()</code> deep-merges older data onto defaults, so adding new fields is backward-compatible. Bump the key/version only for breaking changes.</p>
+
+<h2>State shape</h2>
+<pre>{
+  version: 1,
+  profile: {
+    name, photo,            // photo is a resized data URL (jpeg, max 256px)
+    sex: "male"|"female",
+    birthdate,              // "YYYY-MM-DD"
+    heightCm, weightKg,
+    restingHR,             // optional, improves HR zones
+    activityLevel          // sedentary|light|moderate|active|very
+  },
+  settings: { lang, theme, units },   // lang "" = auto-detect
+  plans:    [ Plan ],
+  sessions: [ Session ],
+  customExercises: [ Exercise ]       // same schema as built-in
+}</pre>
+
+<h3>Plan</h3>
+<pre>{
+  id, name, date,          // date "YYYY-MM-DD"
+  notes,
+  exercises: [ { exerciseId, targetSets, targetReps, targetWeightKg } ]
+}</pre>
+
+<h3>Session</h3>
+<pre>{
+  id, planId|null, name,
+  startedAt,               // ISO datetime
+  endedAt|null,            // null => still active / in progress
+  notes,
+  entries: [ {
+    id, exerciseId,
+    sets: [ {
+      n,                   // set number
+      reps, weightKg,      // strength
+      seconds,             // time-based (plank, jump rope)
+      distanceKm, minutes, // cardio
+      done,                // boolean
+      timestamp            // ISO when marked done (for timing analysis)
+    } ]
+  } ]
+}</pre>
+
+<h2>Exercise schema (<code>js/data/exercises.json</code>)</h2>
+<pre>{
+  id,                      // kebab-case, unique; also the SVG filename
+  group,                   // one of muscles.json "groups"
+  view: "front"|"back",    // which silhouette the SVG uses
+  category,                // movement pattern (informational)
+  equipment,               // barbell|dumbbell|cable|machine|bodyweight|cardio
+  metric: "reps"|"time"|"distance",
+  primary:   [ muscleKey ],  // highlighted strongly in the SVG
+  secondary: [ muscleKey ],  // highlighted lightly
+  names: { en, de, fr, es, ru },
+  cues:  { en: [ "step 1", "step 2" ] }   // how-to; add other langs as needed
+}</pre>
+<p><code>js/data/muscles.json</code> lists valid <code>groups</code> and <code>muscles</code> keys. Their display names live in each <code>locales/*.json</code> under <code>groups.*</code> and <code>muscles.*</code>.</p>
+
+<h2>Export / import</h2>
+<p>Profile → "Export data" downloads the whole state as <code>kinetos-backup-YYYY-MM-DD.json</code>. Import offers <b>merge</b> (adds plans/sessions/custom exercises by id, keeps profile-ish) or <b>replace</b> (overwrites everything). Encourage regular exports — data is device-local only.</p>
+
+<footer><a href="index.html">← Back to overview</a></footer>
+</main></body></html>

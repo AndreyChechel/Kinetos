@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Architecture</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Architecture</h1>
+<nav>
+  <a href="index.html">Overview</a>
+  <a href="data-model.html">Data model</a>
+  <a href="extending.html">Extending</a>
+  <a href="deploy.html">Run &amp; deploy</a>
+</nav>
+
+<h2>Boot flow</h2>
+<p><code>index.html</code> loads <code>js/app.js</code> as a module. <code>app.js</code>:</p>
+<ol>
+  <li>applies theme (<code>applyTheme()</code>, reads <code>settings.theme</code> + system preference);</li>
+  <li><code>await initI18n(settings.lang)</code> and <code>await loadDB()</code> (fetch exercise + muscle JSON);</li>
+  <li>defines routes and starts the hash router;</li>
+  <li><code>initPWA()</code> registers the service worker and captures the install prompt.</li>
+</ol>
+
+<h2>Modules (js/)</h2>
+<table>
+<tr><th>File</th><th>Responsibility</th></tr>
+<tr><td><code>app.js</code></td><td>Bootstrap, theme, chrome (top bar + tabs), route table, <code>changeLanguage()</code>.</td></tr>
+<tr><td><code>store.js</code></td><td>State + <code>localStorage</code> persistence (key <code>kinetos.v1</code>), pub/sub, CRUD for plans/sessions/profile/settings/custom exercises, export/import, <code>resetAll()</code>, <code>migrate()</code>.</td></tr>
+<tr><td><code>i18n.js</code></td><td>Loads <code>locales/&lt;code&gt;.json</code>, <code>t(key, params)</code>, <code>pick(map)</code> for localized data fields, <code>applyDOM()</code> for <code>data-i18n</code> attributes, <code>SUPPORTED</code> list.</td></tr>
+<tr><td><code>router.js</code></td><td>Hash router. <code>defineRoutes(table,opts)</code>, patterns like <code>/plan/:id</code>, <code>navigate()</code>, <code>back()</code>.</td></tr>
+<tr><td><code>calc.js</code></td><td>Pure calculation functions (see <a href="extending.html">Extending</a>).</td></tr>
+<tr><td><code>workout.js</code></td><td>Session helpers: create empty/from-plan, active session, last-set lookup, week stats, duration.</td></tr>
+<tr><td><code>components.js</code></td><td>Reusable UI: bottom <code>sheet()</code>, <code>confirmDialog()</code>, <code>exercisePicker()</code>, <code>stepper()</code>.</td></tr>
+<tr><td><code>ui.js</code></td><td>DOM helpers: <code>h()</code> element factory, <code>esc()</code>, <code>toast()</code>, date/time/duration formatters, <code>uid()</code>.</td></tr>
+<tr><td><code>svg.js</code></td><td><code>injectSVG(el,path)</code> — fetch + inline an SVG so it inherits theme colors.</td></tr>
+<tr><td><code>pwa.js</code></td><td>Service-worker registration + install prompt handling.</td></tr>
+<tr><td><code>data/db.js</code></td><td>Loads exercise/muscle JSON, merges custom exercises, query helpers (<code>byGroup</code>, <code>getExercise</code>, <code>exName</code>, <code>svgPath</code>).</td></tr>
+<tr><td><code>views/*.js</code></td><td>One module per screen. Each exports a render function <code>(root, params, ctx)</code>.</td></tr>
+</table>
+
+<h2>Views &amp; routes</h2>
+<table>
+<tr><th>Route</th><th>View</th><th>Tab</th></tr>
+<tr><td><code>/</code></td><td>home.js</td><td>Home</td></tr>
+<tr><td><code>/exercises</code>, <code>/exercises/:id</code></td><td>exercises.js</td><td>Exercises</td></tr>
+<tr><td><code>/plan</code>, <code>/plan/new</code>, <code>/plan/:id</code></td><td>plan.js</td><td>Plan</td></tr>
+<tr><td><code>/session/:id</code></td><td>session.js</td><td>(from Home)</td></tr>
+<tr><td><code>/progress</code></td><td>progress.js</td><td>Progress</td></tr>
+<tr><td><code>/profile</code></td><td>profile.js</td><td>Profile</td></tr>
+</table>
+
+<h2>Rendering model</h2>
+<p>No virtual DOM. A route handler calls <code>show(renderFn, meta, params)</code> in <code>app.js</code>, which clears the <code>#view</code> element, sets the active tab / title / back button, then calls <code>renderFn(viewEl, params, ctx)</code>. Views build DOM with the <code>h()</code> helper and attach listeners directly. State mutations go through <code>store.js</code> and are persisted immediately; views re-render by re-running the current route (e.g. <code>ctx.navigate()</code>) or by rebuilding a sub-section in place.</p>
+<p><b>ctx</b> passed to views: <code>{ setTitle, setActions, navigate }</code>.</p>
+
+<h2>Responsive layout</h2>
+<p>Mobile-first. On phones the nav is a fixed bottom tab bar and content is a single centered column. At <code>min-width: 900px</code> the same <code>.tabbar</code> becomes a left sidebar rail (the <code>.tabbar__brand</code> element, hidden on mobile, shows here), content widens, and <code>.grid2</code> tile rows expand via <code>auto-fit</code>. The exercise detail becomes two columns (<code>.ex-detail</code>: sticky illustration + info). All purely CSS in <code>css/styles.css</code>; <code>show()</code> in <code>app.js</code> tags the view element with <code>view--&lt;tab&gt;</code> for per-screen styling. Hover affordances are gated behind <code>@media (hover:hover)</code>.</p>
+
+<h2>Illustrations</h2>
+<p>Exercise SVGs are fetched and injected inline (not <code>&lt;img&gt;</code>) so they use <code>currentColor</code> for the body and the <code>.muscle-fill</code> class (themed accent) for the targeted muscles. Fallback emoji shows if an SVG is missing (e.g. custom exercises).</p>
+
+<footer><a href="index.html">← Back to overview</a></footer>
+</main></body></html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Docs</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Kinetos — project context</h1>
+<p class="muted">Offline-first PWA to plan and track gym workouts. Vanilla JS (ES modules), no build step, no backend, data in <code>localStorage</code>. These docs are written to give a future session enough context to continue work quickly.</p>
+
+<nav>
+  <a href="architecture.html">Architecture</a>
+  <a href="data-model.html">Data model</a>
+  <a href="extending.html">Extending</a>
+  <a href="deploy.html">Run &amp; deploy</a>
+</nav>
+
+<h2>What it does</h2>
+<ul>
+  <li><b>Exercises</b> — ~38 built-in exercises grouped by muscle group, each with an inline SVG "muscle map" illustration and how-to cues. Users can add custom exercises.</li>
+  <li><b>Plan</b> — create planned sessions (name, date, exercises with target sets/reps/weight).</li>
+  <li><b>Session logging</b> — start a session (empty or from a plan), log sets with weight/reps/time/distance; each completed set records a timestamp for timing analysis; live elapsed timer.</li>
+  <li><b>Progress</b> — week stats, volume over time, sets by muscle group, estimated 1RM trend, recent sessions. Uses Chart.js if present, else a built-in fallback.</li>
+  <li><b>Profile</b> — name, photo, sex, birthdate, height, weight, resting HR, activity level; auto-calculated metrics: max HR + HR zones, BMI + body-fat, BMR + TDEE, 1RM. JSON export/import + reset.</li>
+  <li><b>Cross-cutting</b> — 5 languages (EN/DE/FR/ES/RU), light/dark themes, installable, fully offline via a service worker.</li>
+</ul>
+
+<h2>Key decisions</h2>
+<div class="card">
+<ul>
+  <li>No framework, no bundler — plain ES modules loaded by <code>index.html</code>. Easiest to reason about and to serve statically.</li>
+  <li>All paths are <b>relative</b> so the app runs unchanged at a domain root or under a GitHub Pages subpath (<code>/repo/</code>).</li>
+  <li>Single source of truth for exercises: <code>js/data/exercises.json</code> — the app and the SVG generator both read it.</li>
+  <li>Units are metric (kg/cm). Calculations are estimates only (see <a href="extending.html">Extending</a>).</li>
+</ul>
+</div>
+
+<h2>File map (top level)</h2>
+<p class="tree">index.html            app shell (top bar, view container, bottom tab bar)
+manifest.webmanifest  PWA manifest
+sw.js                 service worker (offline cache)
+css/styles.css        all styles (mobile-first, light/dark vars)
+js/                   application code (see Architecture)
+locales/              en, de, fr, es, ru JSON
+assets/exercises/     generated per-exercise SVGs (&lt;id&gt;.svg)
+assets/icons/         app icons (svg + png)
+vendor/               downloaded libs (Chart.js) — run tools/download-vendor.bat
+tools/                generate_svgs.py, download-vendor.bat, publish.bat
+run.bat               docker compose up + open browser
+docker-compose.yml    nginx static server
+docs/                 this documentation</p>
+
+<footer>Generated as project context. Update these docs when the architecture changes.</footer>
+</main></body></html>

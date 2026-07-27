@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Run &amp; deploy</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Run &amp; deploy</h1>
+<nav>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="data-model.html">Data model</a>
+  <a href="extending.html">Extending</a>
+</nav>
+
+<h2>Run locally</h2>
+<p><code>run.bat</code> (in the project root) runs <code>docker compose up -d</code> and opens <code>http://localhost:8080</code> in the default browser. It checks that Docker is installed and running first.</p>
+<p><code>docker-compose.yml</code> mounts the project into an <code>nginx:alpine</code> container read-only and applies <code>nginx.conf</code>, which:</p>
+<ul>
+  <li>serves <code>*.webmanifest</code> with the correct MIME type;</li>
+  <li>marks <code>sw.js</code> and <code>index.html</code> <code>no-cache</code> so updates roll out;</li>
+  <li>falls back to <code>index.html</code> for deep links.</li>
+</ul>
+<p>Stop it with <code>docker compose down</code>. No Docker? Any static server works, e.g. <code>python -m http.server 8080</code> from the project root.</p>
+
+<h2>Offline libraries</h2>
+<p><code>tools/download-vendor.bat</code> downloads Chart.js into <code>vendor/chart.umd.js</code> (via curl). The Progress screen loads it if present and otherwise uses a built-in fallback chart, so the app never hard-depends on it.</p>
+
+<h2>PWA / offline</h2>
+<ul>
+  <li><code>manifest.webmanifest</code> — installable metadata; icons in <code>assets/icons/</code>; <code>start_url</code>/<code>scope</code> are relative.</li>
+  <li><code>sw.js</code> — precaches the app shell, all locales and every exercise SVG on install; runtime cache-first for everything else same-origin; navigations fall back to the cached shell. Bump <code>CACHE</code> when app files change.</li>
+  <li>Install prompt is captured in <code>pwa.js</code>; the Profile screen shows an "Install app" button when available.</li>
+</ul>
+
+<h2>Publish to GitHub Pages</h2>
+<ol>
+  <li>Create an empty GitHub repo.</li>
+  <li>Edit <code>tools/publish.bat</code> → set <code>REPO_URL</code> (and <code>BRANCH</code>, default <code>gh-pages</code>).</li>
+  <li>Run <code>tools/publish.bat</code>. It initialises git if needed, copies the site into a temporary <code>gh-pages</code> worktree (excluding <code>.git</code>, <code>node_modules</code>, <code>*.bat</code>), adds <code>.nojekyll</code>, and force-pushes to the branch.</li>
+  <li>In the repo: Settings → Pages → source = <code>gh-pages</code> branch, folder <code>/ (root)</code>.</li>
+</ol>
+<p>Because all paths are relative, the app works at <code>https://USER.github.io/REPO/</code> without changes. Commit the <code>vendor/</code> file too if you want charts to work offline on the hosted version.</p>
+
+<footer><a href="index.html">← Back to overview</a></footer>
+</main></body></html>

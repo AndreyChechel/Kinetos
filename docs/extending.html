@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — Extending</title><link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<h1>Extending</h1>
+<nav>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="data-model.html">Data model</a>
+  <a href="deploy.html">Run &amp; deploy</a>
+</nav>
+
+<h2>Add an exercise</h2>
+<ol>
+  <li>Add an object to <code>js/data/exercises.json</code> (see the <a href="data-model.html">schema</a>). Pick an existing <code>group</code> and valid <code>primary</code>/<code>secondary</code> muscle keys from <code>js/data/muscles.json</code>.</li>
+  <li>Generate its illustration: run <code>python tools/generate_svgs.py</code>. It writes <code>assets/exercises/&lt;id&gt;.svg</code> for every exercise from the JSON.</li>
+  <li>Add the new SVG path to the <code>CORE</code>/precache logic only if needed — <code>sw.js</code> already precaches every id listed in <code>exercises.json</code> automatically, and bump <code>CACHE</code> in <code>sw.js</code> so clients refresh.</li>
+</ol>
+<p>Users can also add ad-hoc exercises at runtime (Exercises → + button); those are stored in <code>customExercises</code> and use the emoji fallback (no SVG file).</p>
+
+<h2>Add a language</h2>
+<ol>
+  <li>Copy <code>locales/en.json</code> to <code>locales/&lt;code&gt;.json</code> and translate the values.</li>
+  <li>Add <code>{ code, label }</code> to <code>SUPPORTED</code> in <code>js/i18n.js</code>.</li>
+  <li>Add the file to <code>CORE</code> in <code>sw.js</code> and bump <code>CACHE</code>.</li>
+  <li>Optionally add localized <code>names</code>/<code>cues</code> entries in <code>exercises.json</code>; missing languages fall back to English via <code>pick()</code>.</li>
+</ol>
+
+<h2>The SVG generator</h2>
+<p><code>tools/generate_svgs.py</code> (stdlib only) draws a solid body silhouette (front or back per the exercise's <code>view</code>) and overlays the targeted muscles. Body uses <code>currentColor</code>; targeted muscles get <code>class="muscle-fill"</code>. To change the art style, edit <code>front_overlays()</code>/<code>back_overlays()</code>, the <code>BODY</code> markup, or <code>equipment_badge()</code>, then re-run it.</p>
+
+<h2>Calculations (<code>js/calc.js</code>)</h2>
+<table>
+<tr><th>Function</th><th>Formula / basis</th></tr>
+<tr><td><code>maxHR(age)</code></td><td>Tanaka: 208 − 0.7·age</td></tr>
+<tr><td><code>hrZones(age, restingHR?)</code></td><td>5 zones; Karvonen (HR reserve) if resting HR given, else % of max HR</td></tr>
+<tr><td><code>oneRepMax(weight, reps)</code></td><td>Epley &amp; Brzycki, averaged</td></tr>
+<tr><td><code>weightForReps(1RM, reps)</code></td><td>Inverse Epley — suggested load for a rep target</td></tr>
+<tr><td><code>bmi(weightKg, heightCm)</code></td><td>kg / m²  (+ WHO category)</td></tr>
+<tr><td><code>bodyFat(w,h,age,sex)</code></td><td>Deurenberg estimate from BMI/age/sex</td></tr>
+<tr><td><code>bmr(w,h,age,sex)</code></td><td>Mifflin-St Jeor</td></tr>
+<tr><td><code>tdee(...activityLevel)</code></td><td>BMR × activity factor (1.2–1.9)</td></tr>
+</table>
+<p class="muted">All are estimates for planning, not medical advice. They are pure functions — easy to unit test or swap.</p>
+
+<h2>Add a screen</h2>
+<ol>
+  <li>Create <code>js/views/whatever.js</code> exporting a render function <code>(root, params, ctx)</code>.</li>
+  <li>Import it in <code>app.js</code> and add a route to the table in <code>routes()</code>.</li>
+  <li>Add a tab in <code>index.html</code> (<code>.tabbar</code>) with <code>data-tab</code>, or link to it from an existing view.</li>
+  <li>Add its file to <code>CORE</code> in <code>sw.js</code>; bump <code>CACHE</code>.</li>
+</ol>
+
+<footer><a href="index.html">← Back to overview</a></footer>
+</main></body></html>

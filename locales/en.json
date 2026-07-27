@@ -1,0 +1,97 @@
+{
+  "app": { "name": "Kinetos", "tagline": "Plan & track your training" },
+  "nav": { "home": "Home", "exercises": "Exercises", "plan": "Plan", "progress": "Progress", "profile": "Profile" },
+  "common": {
+    "save": "Save", "cancel": "Cancel", "delete": "Delete", "edit": "Edit", "add": "Add",
+    "close": "Close", "back": "Back", "done": "Done", "start": "Start", "finish": "Finish",
+    "today": "Today", "notes": "Notes", "name": "Name", "date": "Date", "confirm": "Confirm",
+    "search": "Search", "all": "All", "export": "Export", "import": "Import", "reset": "Reset",
+    "ok": "OK", "remove": "Remove", "optional": "optional", "of": "of", "seeAll": "See all",
+    "yes": "Yes", "no": "No", "set": "Set", "sets": "sets", "reps": "reps", "weight": "weight",
+    "min": "min", "sec": "sec"
+  },
+  "units": { "kg": "kg", "cm": "cm", "km": "km", "bpm": "bpm", "kcal": "kcal" },
+  "home": {
+    "greeting": "Hi, {name}", "welcome": "Welcome to Kinetos",
+    "todayPlan": "Today's plan", "noPlanToday": "Nothing planned for today",
+    "planSomething": "Plan a session", "quickStart": "Quick start",
+    "startEmpty": "Start empty session", "continueSession": "Continue session",
+    "activeSession": "Session in progress", "recent": "Recent workouts",
+    "thisWeek": "This week", "workouts": "Workouts", "volume": "Volume", "noRecent": "No workouts logged yet",
+    "startFromPlan": "Start"
+  },
+  "exercises": {
+    "title": "Exercises", "searchPlaceholder": "Search exercises…", "count": "{n} exercises",
+    "addCustom": "Add custom exercise", "targets": "Targets", "primary": "Primary", "secondary": "Secondary",
+    "equipment": "Equipment", "howto": "How to", "addToPlan": "Add to plan", "logNow": "Log now",
+    "customName": "Exercise name", "customGroup": "Muscle group", "customSaved": "Custom exercise added",
+    "none": "No exercises match your search"
+  },
+  "groups": {
+    "chest": "Chest", "back": "Back", "legs": "Legs", "shoulders": "Shoulders",
+    "biceps": "Biceps", "triceps": "Triceps", "core": "Core", "cardio": "Cardio", "_other": "Other"
+  },
+  "muscles": {
+    "chest": "Chest", "lats": "Lats", "traps": "Traps", "reardelt": "Rear delts", "delts": "Shoulders",
+    "biceps": "Biceps", "triceps": "Triceps", "forearms": "Forearms", "abs": "Abs", "obliques": "Obliques",
+    "quads": "Quads", "hamstrings": "Hamstrings", "glutes": "Glutes", "calves": "Calves", "lowerback": "Lower back"
+  },
+  "equipment": {
+    "barbell": "Barbell", "dumbbell": "Dumbbell", "cable": "Cable", "machine": "Machine",
+    "bodyweight": "Bodyweight", "cardio": "Cardio"
+  },
+  "plan": {
+    "title": "Plan", "new": "New session", "namePlaceholder": "e.g. Push day", "exercises": "Exercises",
+    "addExercise": "Add exercise", "targetSets": "Sets", "targetReps": "Reps", "targetWeight": "Weight",
+    "empty": "No planned sessions", "emptyHint": "Create a session to plan ahead.",
+    "startSession": "Start this session", "upcoming": "Upcoming", "past": "Past", "today": "Today",
+    "noExercises": "No exercises added yet", "saved": "Plan saved", "deleteConfirm": "Delete this plan?",
+    "duplicate": "Duplicate"
+  },
+  "session": {
+    "title": "Session", "active": "Active session", "start": "Start session", "finish": "Finish",
+    "finishConfirm": "Finish and save this session?", "addExercise": "Add exercise",
+    "set": "Set", "reps": "Reps", "weight": "Weight", "done": "Done", "elapsed": "Elapsed",
+    "addSet": "Add set", "empty": "No exercises in this session", "duration": "Duration",
+    "summary": "Summary", "volume": "Volume", "totalSets": "Total sets", "saved": "Session saved",
+    "discard": "Discard", "discardConfirm": "Discard this session? Nothing will be saved.",
+    "previous": "Last time", "time": "Time", "distance": "Distance", "sec": "s",
+    "quickAdd": "Quick add exercise", "removeExercise": "Remove exercise", "logging": "Logging"
+  },
+  "progress": {
+    "title": "Progress", "empty": "No data yet", "emptyHint": "Log a few sessions to see your trends.",
+    "thisWeek": "This week", "workouts": "Workouts", "totalVolume": "Total volume", "totalSets": "Total sets",
+    "avgDuration": "Avg duration", "volumeOverTime": "Volume over time", "byMuscle": "Sets by muscle group",
+    "frequency": "Sessions per week", "recentSessions": "Recent sessions", "est1rm": "Estimated 1RM",
+    "pickExercise": "Pick an exercise", "noData": "Not enough data", "last30": "Last 30 days",
+    "allTime": "All time"
+  },
+  "profile": {
+    "title": "Profile", "namePlaceholder": "Your name", "photo": "Photo", "changePhoto": "Change photo",
+    "removePhoto": "Remove photo", "sex": "Sex", "male": "Male", "female": "Female",
+    "birthdate": "Date of birth", "age": "Age", "height": "Height", "weight": "Weight",
+    "restingHR": "Resting heart rate", "restingHRHint": "Optional — improves zone accuracy",
+    "activity": "Activity level",
+    "activitySedentary": "Sedentary", "activityLight": "Light", "activityModerate": "Moderate",
+    "activityActive": "Active", "activityVery": "Very active",
+    "metrics": "Your metrics", "maxHR": "Max heart rate", "hrZones": "Heart-rate zones",
+    "bmi": "BMI", "bodyFat": "Body fat (est.)", "bmr": "BMR", "tdee": "Daily calories (TDEE)",
+    "fillProfile": "Add your age, height and weight to see personalized metrics.",
+    "zoneRecovery": "Recovery", "zoneFatburn": "Fat burn", "zoneAerobic": "Aerobic",
+    "zoneAnaerobic": "Anaerobic", "zoneMaximal": "Maximal",
+    "settings": "Settings", "language": "Language", "theme": "Theme",
+    "themeSystem": "System", "themeLight": "Light", "themeDark": "Dark", "units": "Units",
+    "data": "Your data", "exportData": "Export data (backup)", "importData": "Import data",
+    "importMerge": "Merge with current", "importReplace": "Replace everything", "importPrompt": "How should we import?",
+    "resetApp": "Erase all data", "resetConfirm": "Erase ALL data? This cannot be undone.",
+    "saved": "Profile saved", "install": "Install app", "about": "About",
+    "aboutText": "Kinetos is an offline-first workout planner. Your data stays on this device.",
+    "backupReminder": "Tip: export your data regularly so it is never lost."
+  },
+  "bmi": { "under": "Underweight", "normal": "Normal", "over": "Overweight", "obese": "Obese" },
+  "calc": { "disclaimer": "Estimates for planning only — not medical advice." },
+  "toast": {
+    "saved": "Saved", "deleted": "Deleted", "exported": "Data exported", "imported": "Data imported",
+    "added": "Added", "sessionSaved": "Session saved", "planSaved": "Plan saved", "photoTooBig": "Image too large"
+  }
+}

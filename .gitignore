@@ -1,0 +1,6 @@
+# Kinetos
+.gh-pages-tmp/
+node_modules/
+*.log
+.DS_Store
+Thumbs.db

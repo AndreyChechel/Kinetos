@@ -1,0 +1,40 @@
+<svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Close-Grip Bench Press">
+  <title>Close-Grip Bench Press</title>
+
+  <g fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-opacity="0.16">
+    <circle cx="100" cy="42" r="20"/>
+    <rect x="92" y="60" width="16" height="12" rx="4"/>
+    <path d="M66,76 Q64,72 74,72 L126,72 Q136,72 134,76 L128,120 Q124,150 120,152 L122,172 L78,172 L80,152 Q76,150 72,120 Z"/>
+  </g>
+  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M72,80 L54,120 L48,162"/>
+    <path d="M128,80 L146,120 L152,162"/>
+  </g>
+  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="21" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90,168 L88,228 L90,286"/>
+    <path d="M110,168 L112,228 L110,286"/>
+  </g>
+
+  <g>
+    <ellipse cx="72" cy="80" rx="12" ry="10" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="128" cy="80" rx="12" ry="10" fill="currentColor" fill-opacity="0.30"/>
+    <path d="M86,74 L114,74 L104,100 L96,100 Z" fill="currentColor" fill-opacity="0.30"/>
+    <path d="M82,96 L96,100 L98,142 L84,132 Z" fill="currentColor" fill-opacity="0.30"/>
+    <path d="M118,96 L104,100 L102,142 L116,132 Z" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="61" cy="99" rx="8" ry="15" transform="rotate(20 61 99)" class="muscle-fill"/>
+    <ellipse cx="139" cy="99" rx="8" ry="15" transform="rotate(-20 139 99)" class="muscle-fill"/>
+    <rect x="90" y="134" width="20" height="22" rx="5" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="91" cy="172" rx="12" ry="12" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="109" cy="172" rx="12" ry="12" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="89" cy="212" rx="11" ry="26" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="111" cy="212" rx="11" ry="26" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="89" cy="264" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
+    <ellipse cx="111" cy="264" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
+  </g>
+  <g transform="translate(150,8)">
+    <rect x="0" y="0" width="40" height="40" rx="11" fill="currentColor" fill-opacity="0.10"/>
+    <g transform="translate(0,0)" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" y1="20" x2="34" y2="20"/><rect x="4" y="13" width="6" height="14" rx="2"/><rect x="30" y="13" width="6" height="14" rx="2"/><rect x="10" y="16" width="4" height="8" rx="1"/><rect x="26" y="16" width="4" height="8" rx="1"/>
+    </g>
+  </g>
+</svg>

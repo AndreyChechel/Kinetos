@@ -1,0 +1,97 @@
+{
+  "app": { "name": "Kinetos", "tagline": "Planifiez et suivez vos entraînements" },
+  "nav": { "home": "Accueil", "exercises": "Exercices", "plan": "Plan", "progress": "Progrès", "profile": "Profil" },
+  "common": {
+    "save": "Enregistrer", "cancel": "Annuler", "delete": "Supprimer", "edit": "Modifier", "add": "Ajouter",
+    "close": "Fermer", "back": "Retour", "done": "Terminé", "start": "Démarrer", "finish": "Terminer",
+    "today": "Aujourd'hui", "notes": "Notes", "name": "Nom", "date": "Date", "confirm": "Confirmer",
+    "search": "Rechercher", "all": "Tous", "export": "Exporter", "import": "Importer", "reset": "Réinitialiser",
+    "ok": "OK", "remove": "Retirer", "optional": "facultatif", "of": "sur", "seeAll": "Tout voir",
+    "yes": "Oui", "no": "Non", "set": "Série", "sets": "séries", "reps": "réps", "weight": "poids",
+    "min": "min", "sec": "s"
+  },
+  "units": { "kg": "kg", "cm": "cm", "km": "km", "bpm": "bpm", "kcal": "kcal" },
+  "home": {
+    "greeting": "Salut, {name}", "welcome": "Bienvenue sur Kinetos",
+    "todayPlan": "Plan du jour", "noPlanToday": "Rien de prévu aujourd'hui",
+    "planSomething": "Planifier une séance", "quickStart": "Démarrage rapide",
+    "startEmpty": "Démarrer une séance vide", "continueSession": "Reprendre la séance",
+    "activeSession": "Séance en cours", "recent": "Séances récentes",
+    "thisWeek": "Cette semaine", "workouts": "Séances", "volume": "Volume", "noRecent": "Aucune séance enregistrée",
+    "startFromPlan": "Démarrer"
+  },
+  "exercises": {
+    "title": "Exercices", "searchPlaceholder": "Rechercher un exercice…", "count": "{n} exercices",
+    "addCustom": "Ajouter un exercice", "targets": "Muscles ciblés", "primary": "Principaux", "secondary": "Secondaires",
+    "equipment": "Matériel", "howto": "Comment faire", "addToPlan": "Ajouter au plan", "logNow": "Enregistrer",
+    "customName": "Nom de l'exercice", "customGroup": "Groupe musculaire", "customSaved": "Exercice ajouté",
+    "none": "Aucun exercice trouvé"
+  },
+  "groups": {
+    "chest": "Pectoraux", "back": "Dos", "legs": "Jambes", "shoulders": "Épaules",
+    "biceps": "Biceps", "triceps": "Triceps", "core": "Gainage", "cardio": "Cardio", "_other": "Autres"
+  },
+  "muscles": {
+    "chest": "Pectoraux", "lats": "Grand dorsal", "traps": "Trapèzes", "reardelt": "Deltoïdes post.", "delts": "Épaules",
+    "biceps": "Biceps", "triceps": "Triceps", "forearms": "Avant-bras", "abs": "Abdominaux", "obliques": "Obliques",
+    "quads": "Quadriceps", "hamstrings": "Ischio-jambiers", "glutes": "Fessiers", "calves": "Mollets", "lowerback": "Bas du dos"
+  },
+  "equipment": {
+    "barbell": "Barre", "dumbbell": "Haltères", "cable": "Poulie", "machine": "Machine",
+    "bodyweight": "Poids du corps", "cardio": "Cardio"
+  },
+  "plan": {
+    "title": "Plan", "new": "Nouvelle séance", "namePlaceholder": "ex. Jour Push", "exercises": "Exercices",
+    "addExercise": "Ajouter un exercice", "targetSets": "Séries", "targetReps": "Réps", "targetWeight": "Poids",
+    "empty": "Aucune séance planifiée", "emptyHint": "Créez une séance pour anticiper.",
+    "startSession": "Démarrer cette séance", "upcoming": "À venir", "past": "Passées", "today": "Aujourd'hui",
+    "noExercises": "Aucun exercice ajouté", "saved": "Plan enregistré", "deleteConfirm": "Supprimer ce plan ?",
+    "duplicate": "Dupliquer"
+  },
+  "session": {
+    "title": "Séance", "active": "Séance active", "start": "Démarrer la séance", "finish": "Terminer",
+    "finishConfirm": "Terminer et enregistrer cette séance ?", "addExercise": "Ajouter un exercice",
+    "set": "Série", "reps": "Réps", "weight": "Poids", "done": "Fait", "elapsed": "Écoulé",
+    "addSet": "Ajouter une série", "empty": "Aucun exercice dans cette séance", "duration": "Durée",
+    "summary": "Résumé", "volume": "Volume", "totalSets": "Total séries", "saved": "Séance enregistrée",
+    "discard": "Abandonner", "discardConfirm": "Abandonner cette séance ? Rien ne sera enregistré.",
+    "previous": "Dernière fois", "time": "Temps", "distance": "Distance", "sec": "s",
+    "quickAdd": "Ajout rapide", "removeExercise": "Retirer l'exercice", "logging": "Enregistrement"
+  },
+  "progress": {
+    "title": "Progrès", "empty": "Pas encore de données", "emptyHint": "Enregistrez quelques séances pour voir vos tendances.",
+    "thisWeek": "Cette semaine", "workouts": "Séances", "totalVolume": "Volume total", "totalSets": "Total séries",
+    "avgDuration": "Durée moy.", "volumeOverTime": "Volume dans le temps", "byMuscle": "Séries par groupe",
+    "frequency": "Séances par semaine", "recentSessions": "Séances récentes", "est1rm": "1RM estimé",
+    "pickExercise": "Choisir un exercice", "noData": "Données insuffisantes", "last30": "30 derniers jours",
+    "allTime": "Total"
+  },
+  "profile": {
+    "title": "Profil", "namePlaceholder": "Votre nom", "photo": "Photo", "changePhoto": "Changer la photo",
+    "removePhoto": "Retirer la photo", "sex": "Sexe", "male": "Homme", "female": "Femme",
+    "birthdate": "Date de naissance", "age": "Âge", "height": "Taille", "weight": "Poids",
+    "restingHR": "FC au repos", "restingHRHint": "Facultatif — améliore la précision des zones",
+    "activity": "Niveau d'activité",
+    "activitySedentary": "Sédentaire", "activityLight": "Léger", "activityModerate": "Modéré",
+    "activityActive": "Actif", "activityVery": "Très actif",
+    "metrics": "Vos mesures", "maxHR": "FC maximale", "hrZones": "Zones de fréquence cardiaque",
+    "bmi": "IMC", "bodyFat": "Masse grasse (est.)", "bmr": "Métabolisme de base", "tdee": "Calories/jour (DEJ)",
+    "fillProfile": "Ajoutez âge, taille et poids pour des mesures personnalisées.",
+    "zoneRecovery": "Récupération", "zoneFatburn": "Combustion", "zoneAerobic": "Aérobie",
+    "zoneAnaerobic": "Anaérobie", "zoneMaximal": "Maximale",
+    "settings": "Paramètres", "language": "Langue", "theme": "Thème",
+    "themeSystem": "Système", "themeLight": "Clair", "themeDark": "Sombre", "units": "Unités",
+    "data": "Vos données", "exportData": "Exporter (sauvegarde)", "importData": "Importer des données",
+    "importMerge": "Fusionner", "importReplace": "Tout remplacer", "importPrompt": "Comment importer ?",
+    "resetApp": "Effacer toutes les données", "resetConfirm": "Effacer TOUTES les données ? Irréversible.",
+    "saved": "Profil enregistré", "install": "Installer l'app", "about": "À propos",
+    "aboutText": "Kinetos est un planificateur d'entraînement hors ligne. Vos données restent sur cet appareil.",
+    "backupReminder": "Astuce : exportez vos données régulièrement pour ne rien perdre."
+  },
+  "bmi": { "under": "Insuffisance", "normal": "Normal", "over": "Surpoids", "obese": "Obésité" },
+  "calc": { "disclaimer": "Estimations pour la planification — pas un avis médical." },
+  "toast": {
+    "saved": "Enregistré", "deleted": "Supprimé", "exported": "Données exportées", "imported": "Données importées",
+    "added": "Ajouté", "sessionSaved": "Séance enregistrée", "planSaved": "Plan enregistré", "photoTooBig": "Image trop grande"
+  }
+}
