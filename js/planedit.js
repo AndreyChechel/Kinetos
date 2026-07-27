@@ -37,6 +37,21 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
     // Long-press the reps field for the 6/8/10/12/15/custom chooser.
     if (ex.metric === 'reps') attachLongPress(reps.input, { onLongPress: () => repChooser(reps.input, reps.get(), (v) => reps.set(v)) });
 
+    let fields;
+    if (ex.metric === 'reps') {
+      const weightField = labeled(t('plan.targetWeight') + ' (' + t('units.kg') + ')' + (isPerDumbbell(ex) ? ' · 2×' : ''), weight.el);
+      weightField.classList.add('target-fields__wide');
+      fields = h('div', { class: 'target-fields' }, [
+        labeled(t('plan.targetSets'), sets.el),
+        labeled(t('plan.targetReps'), reps.el),
+        weightField
+      ]);
+    } else {
+      const setsField = labeled(t('plan.targetSets'), sets.el);
+      setsField.classList.add('target-fields__wide');
+      fields = h('div', { class: 'target-fields' }, [setsField]);
+    }
+
     const card = h('div', { class: 'card', dataset: { idx } }, [
       h('div', { class: 'row', style: 'margin-bottom:10px' }, [
         h('span', { class: 'drag-handle', 'aria-label': t('common.reorder'), title: t('common.reorder') }, [icon('grip', { size: 18 })]),
@@ -45,13 +60,7 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
         h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.remove'),
           onclick: () => { list.splice(idx, 1); onChange && onChange(); } }, [icon('trash', { size: 18 })])
       ]),
-      ex.metric === 'reps'
-        ? h('div', { class: 'row', style: 'gap:8px' }, [
-            labeled(t('plan.targetSets'), sets.el),
-            labeled(t('plan.targetReps'), reps.el),
-            labeled(t('plan.targetWeight') + ' (' + t('units.kg') + ')' + (isPerDumbbell(ex) ? ' · 2×' : ''), weight.el)
-          ])
-        : h('div', { class: 'row', style: 'gap:8px' }, [labeled(t('plan.targetSets'), sets.el)])
+      fields
     ]);
     wrap.appendChild(card);
   });

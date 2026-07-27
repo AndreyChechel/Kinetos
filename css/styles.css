@@ -152,6 +152,20 @@ p { line-height: 1.5; }
 }
 .stepper button:active { transform: scale(.95); }
 
+/* Plan/template target editor: sets/reps/weight steppers laid out so they fit
+   narrow phones — 2 columns with the weight field spanning full width; 3-up on
+   wider screens. Steppers here are compacted and their inputs may shrink. */
+.target-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.target-fields .field { margin-bottom: 0; }
+.target-fields__wide { grid-column: 1 / -1; }
+.target-fields .stepper { gap: 6px; }
+.target-fields .stepper button { width: 40px; height: 44px; font-size: 1.25rem; }
+.target-fields .stepper .input { min-width: 0; padding-left: 4px; padding-right: 4px; }
+@media (min-width: 560px) {
+  .target-fields { grid-template-columns: 1fr 1fr 1fr; }
+  .target-fields__wide { grid-column: auto; }
+}
+
 /* Chips / tags */
 .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; }
 .chip {

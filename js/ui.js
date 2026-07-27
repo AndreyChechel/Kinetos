@@ -44,21 +44,35 @@ export function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-/** Format a date for display using current locale. */
+/** Format a date for display as YYYY-MM-DD (ISO 8601), independent of locale.
+ *  - A `weekday` option prefixes the localized weekday name, e.g.
+ *    "Tuesday, 2026-07-28" (used for day headers).
+ *  - A month/year request without a day (`{month, year}`, no `day`) is a
+ *    month bucket, formatted as YYYY-MM (used by the progress chart). */
 export function fmtDate(iso, lang, opts) {
   try {
-    return new Intl.DateTimeFormat(lang, opts || { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(iso));
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    if (opts && opts.month && !opts.day) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    }
+    const base = localISO(d);
+    if (opts && opts.weekday) {
+      const wd = new Intl.DateTimeFormat(lang, { weekday: opts.weekday }).format(d);
+      return `${wd}, ${base}`;
+    }
+    return base;
   } catch { return iso; }
 }
 export function fmtTime(iso, lang) {
   try {
-    return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+    return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(iso));
   } catch { return iso; }
 }
-/** Time including seconds, e.g. 14:03:27. */
+/** Time including seconds, e.g. 14:03:27 (24-hour). */
 export function fmtTimeSec(iso, lang) {
   try {
-    return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(iso));
+    return new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(iso));
   } catch { return iso; }
 }
 /** mm:ss from milliseconds. */
