@@ -1,8 +1,9 @@
-// Reusable UI pieces: bottom sheet, confirm dialog, exercise picker, stepper.
+// Reusable UI pieces: bottom sheet, confirm dialog, exercise picker, stepper,
+// long-press, popover menus, rep chooser, swipe-to-delete.
 import { h, qs } from './ui.js';
 import { t } from './i18n.js';
-import { byGroup, groups, exName, svgPath } from './data/db.js';
-import { injectSVG } from './svg.js';
+import { byGroup, groups, exName } from './data/db.js';
+import { injectExerciseSVG } from './svg.js';
 
 /** Bottom sheet overlay. Returns { close }. */
 export function sheet(titleText, contentNode, { onClose } = {}) {
@@ -43,10 +44,13 @@ export function confirmDialog(message, { danger = false, okText, cancelText } = 
   });
 }
 
-/** Promise-based text/password prompt. Resolves to the string or null. */
-export function promptDialog(message, { password = false, placeholder = '', okText, cancelText } = {}) {
+/** Promise-based text/password prompt. Resolves to the string or null.
+ *  Pass multiline:true for a textarea (used by notes). value pre-fills it. */
+export function promptDialog(message, { password = false, placeholder = '', value = '', okText, cancelText, multiline = false } = {}) {
   return new Promise((resolve) => {
-    const input = h('input', { class: 'input', type: password ? 'password' : 'text', placeholder, style: 'margin-bottom:16px' });
+    const input = multiline
+      ? h('textarea', { class: 'textarea', placeholder, style: 'margin-bottom:16px' }, [value])
+      : h('input', { class: 'input', type: password ? 'password' : 'text', placeholder, value, style: 'margin-bottom:16px' });
     const panel = h('div', { class: 'dialog__panel' }, [
       h('p', { class: 'dialog__msg', text: message }),
       input,
@@ -57,7 +61,7 @@ export function promptDialog(message, { password = false, placeholder = '', okTe
     ]);
     const overlay = h('div', { class: 'dialog' }, [panel]);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) done(null); });
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') done(input.value); });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !multiline) done(input.value); });
     document.body.appendChild(overlay);
     requestAnimationFrame(() => overlay.classList.add('is-open'));
     setTimeout(() => input.focus(), 60);
@@ -98,7 +102,7 @@ export function exercisePicker(onPick) {
       const ul = h('ul', { class: 'list card card--pad-0' });
       list.forEach((ex) => {
         const thumb = h('div', { class: 'list__thumb' });
-        injectSVG(thumb, svgPath(ex));
+        injectExerciseSVG(thumb, ex);
         ul.appendChild(h('li', {
           class: 'list__item',
           onclick: () => { onPick(ex); close(); }
@@ -131,4 +135,106 @@ export function stepper(value, { min = 0, max = 999, step = 1, decimals = 0 } = 
   function get() { const n = parseFloat(input.value); return isNaN(n) ? 0 : n; }
   function set(v) { v = Math.max(min, Math.min(max, Math.round(v / step) * step)); input.value = fmt(v); input.dispatchEvent(new Event('change', { bubbles: true })); }
   return { el, get, set, input };
+}
+
+/** Distinguish a quick tap from a long-press on one element (touch + mouse).
+ *  Movement beyond a small threshold cancels (so scrolling never triggers). */
+export function attachLongPress(el, { onTap, onLongPress, ms = 450 } = {}) {
+  let timer = null, longFired = false, sx = 0, sy = 0, moved = false;
+  el.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return;
+    longFired = false; moved = false; sx = e.clientX; sy = e.clientY;
+    timer = setTimeout(() => {
+      longFired = true;
+      if (navigator.vibrate) { try { navigator.vibrate(15); } catch (_) { /* ignore */ } }
+      onLongPress && onLongPress(e);
+    }, ms);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp, { once: true });
+    window.addEventListener('pointercancel', cancel, { once: true });
+  });
+  function onMove(e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) { moved = true; clearTimeout(timer); } }
+  function onUp() { window.removeEventListener('pointermove', onMove); clearTimeout(timer); if (!longFired && !moved) onTap && onTap(); }
+  function cancel() { window.removeEventListener('pointermove', onMove); clearTimeout(timer); }
+}
+
+/** Small floating menu anchored near an element. items: [{label,color,active,onClick}].
+ *  opts.grid lays items out as wrapping pills (used by the rep chooser). */
+export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) {
+  const menu = h('div', { class: 'popover' + (grid ? ' popover--grid' : '') },
+    (title ? [h('div', { class: 'popover__title', text: title })] : []).concat(
+      items.map((it) => h('button', {
+        class: 'popover__item' + (it.active ? ' is-active' : ''),
+        style: it.color ? `--swatch:${it.color}` : null,
+        onclick: () => { close(); it.onClick && it.onClick(); }
+      }, [it.color ? h('span', { class: 'popover__dot' }) : null, it.label]))
+    ));
+  const overlay = h('div', { class: 'popover-overlay' }, [menu]);
+  overlay.addEventListener('pointerdown', (e) => { if (e.target === overlay) close(); });
+  document.body.appendChild(overlay);
+  // Position: prefer above the anchor; flip below if not enough room. Clamp to viewport.
+  const r = anchorEl.getBoundingClientRect();
+  const mr = menu.getBoundingClientRect();
+  let top = r.top - mr.height - 8;
+  if (top < 8) top = Math.min(window.innerHeight - mr.height - 8, r.bottom + 8);
+  let left = r.left + r.width / 2 - mr.width / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - mr.width - 8));
+  menu.style.top = Math.max(8, top) + 'px';
+  menu.style.left = left + 'px';
+  requestAnimationFrame(() => overlay.classList.add('is-open'));
+  function close() { overlay.classList.remove('is-open'); setTimeout(() => overlay.remove(), 150); }
+  return { close };
+}
+
+/** Rep-count chooser popover: 6 / 8 / 10 / 12 / 15 / custom. */
+export function repChooser(anchorEl, current, onPick) {
+  const items = [6, 8, 10, 12, 15].map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
+  items.push({
+    label: t('session.customReps'),
+    onClick: async () => {
+      const s = await promptDialog(t('session.customReps'), { value: current != null ? String(current) : '', placeholder: t('common.reps') });
+      const n = parseInt(s, 10);
+      if (!isNaN(n) && n >= 0) onPick(n);
+    }
+  });
+  popoverMenu(anchorEl, items, { title: t('common.reps'), grid: true });
+}
+
+/** Swipe a row to the right past a threshold to delete it. Ignores gestures that
+ *  begin on interactive controls and vertical scrolls. isEnabled() gates it. */
+export function attachSwipeToDelete(rowEl, { onDelete, isEnabled } = {}) {
+  let startX = 0, startY = 0, dragging = false, decided = false, horiz = false, w = 0;
+  rowEl.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return;
+    if (isEnabled && !isEnabled()) return;
+    if (e.target.closest('input,textarea,select,button,a')) return;
+    startX = e.clientX; startY = e.clientY; w = rowEl.offsetWidth || 300;
+    dragging = true; decided = false; horiz = false;
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp, { once: true });
+    window.addEventListener('pointercancel', onUp, { once: true });
+  });
+  function onMove(e) {
+    if (!dragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    if (!decided) { if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; decided = true; horiz = Math.abs(dx) > Math.abs(dy); }
+    if (!horiz || dx < 0) return;
+    rowEl.style.transition = 'none';
+    rowEl.style.transform = `translateX(${dx}px)`;
+    rowEl.style.opacity = String(Math.max(0.25, 1 - dx / w));
+    rowEl.classList.add('is-swiping');
+  }
+  function onUp(e) {
+    window.removeEventListener('pointermove', onMove);
+    if (!dragging) return; dragging = false;
+    const dx = (e.clientX || startX) - startX;
+    rowEl.style.transition = '';
+    rowEl.classList.remove('is-swiping');
+    if (horiz && dx > w * 0.45) {
+      rowEl.style.transform = `translateX(${w}px)`; rowEl.style.opacity = '0';
+      setTimeout(() => onDelete && onDelete(), 160);
+    } else {
+      rowEl.style.transform = ''; rowEl.style.opacity = '';
+    }
+  }
 }

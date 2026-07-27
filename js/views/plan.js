@@ -1,121 +1,180 @@
-// Plan list + plan editor (plan sessions in advance).
-import { h, uid, fmtDate, toast } from '../ui.js';
+// Calendar (the "Plan" tab): a month grid marking planned sessions and
+// completed workouts, a selected-day panel, and a Templates shelf on top.
+// Also hosts the scheduled-session editor (a dated instance, optionally from a
+// template) via renderPlanEditor.
+import { h, uid, fmtDate, toast, todayISO, localISO } from '../ui.js';
 import { t, getLang } from '../i18n.js';
-import { getPlans, getPlan, savePlan, deletePlan } from '../store.js';
-import { getExercise, exName, svgPath } from '../data/db.js';
-import { injectSVG } from '../svg.js';
-import { exercisePicker, stepper, confirmDialog } from '../components.js';
-import { createSessionFromPlan, activeSession } from '../workout.js';
+import { getPlans, getPlan, savePlan, deletePlan, getTemplates, saveTemplate } from '../store.js';
+import { completedSessions, createSessionFromPlan, planFromTemplate, activeSession } from '../workout.js';
+import { exercisePicker, confirmDialog, sheet } from '../components.js';
+import { renderExerciseTargets, newTarget, labeled } from '../planedit.js';
 
-export function renderPlanList(root, params, ctx) {
-  const lang = getLang();
-  const today = new Date().toISOString().slice(0, 10);
-  const plans = [...getPlans()].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-  const upcoming = plans.filter((p) => (p.date || '') >= today);
-  const past = plans.filter((p) => (p.date || '') < today).reverse();
+// Persist which month + day the user is looking at across visits.
+const now = new Date();
+let calState = { y: now.getFullYear(), m: now.getMonth(), sel: todayISO() };
 
-  const wrap = h('div', {});
-  if (!plans.length) {
-    wrap.appendChild(h('div', { class: 'empty' }, [
-      h('div', { class: 'empty__icon', text: '🗓️' }),
-      h('p', { text: t('plan.empty') }),
-      h('p', { class: 'small', text: t('plan.emptyHint') })
-    ]));
-  } else {
-    if (upcoming.length) section(wrap, t('plan.upcoming'), upcoming, ctx, lang, today);
-    if (past.length) section(wrap, t('plan.past'), past, ctx, lang, today);
-  }
-  root.appendChild(wrap);
-  root.appendChild(h('button', { class: 'fab', 'aria-label': t('plan.new'), onclick: () => ctx.navigate('/plan/new') }, ['＋']));
+const iso = (d) => localISO(d);
+function monthDays(y, m) {
+  const first = new Date(y, m, 1);
+  const start = new Date(first);
+  start.setDate(1 - ((first.getDay() + 6) % 7)); // back up to Monday
+  return Array.from({ length: 42 }, (_, i) => { const d = new Date(start); d.setDate(start.getDate() + i); return d; });
 }
 
-function section(wrap, title, list, ctx, lang, today) {
-  wrap.appendChild(h('div', { class: 'section-title', text: title }));
-  const ul = h('ul', { class: 'list card card--pad-0' });
-  list.forEach((p) => {
-    const isToday = (p.date || '').slice(0, 10) === today;
-    ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/plan/' + p.id) }, [
-      h('div', { class: 'list__thumb', text: '🗓️', style: 'font-size:1.3rem' }),
-      h('div', { class: 'list__body' }, [
-        h('div', { class: 'list__title', text: p.name || t('plan.new') }),
-        h('div', { class: 'list__sub', text: `${isToday ? t('plan.today') : fmtDate(p.date, lang)} · ${t('exercises.count', { n: (p.exercises || []).length })}` })
-      ]),
-      h('span', { class: 'list__chev', text: '›' })
+export function renderCalendar(root, params, ctx) {
+  const lang = getLang();
+  const wrap = h('div', {});
+
+  // ---- Templates shelf ----
+  const templates = getTemplates();
+  const shelf = h('div', { class: 'tpl-shelf' });
+  templates.forEach((tpl) => shelf.appendChild(h('button', { class: 'tpl-chip', onclick: () => ctx.navigate('/templates/' + tpl.id) }, [
+    h('span', { class: 'tpl-chip__name', text: tpl.name || t('templates.untitled') }),
+    h('span', { class: 'tpl-chip__sub', text: t('exercises.count', { n: (tpl.exercises || []).length }) })
+  ])));
+  shelf.appendChild(h('button', { class: 'tpl-chip tpl-chip--new', onclick: () => ctx.navigate('/templates/new') }, ['＋ ' + t('templates.new')]));
+  wrap.appendChild(h('div', { class: 'row row--between', style: 'margin:2px' }, [
+    h('div', { class: 'section-title', style: 'margin:0', text: t('templates.title') }),
+    templates.length ? h('a', { class: 'small', href: 'templates', 'data-route': '/templates', text: t('common.seeAll') }) : null
+  ]));
+  wrap.appendChild(shelf);
+
+  // ---- Calendar ----
+  const cal = h('div', { class: 'card cal' });
+  wrap.appendChild(cal);
+  const dayPanel = h('div', {});
+  wrap.appendChild(dayPanel);
+  root.appendChild(wrap);
+
+  function renderCal() {
+    cal.innerHTML = '';
+    const plans = getPlans();
+    const done = completedSessions();
+    const planByDay = {}, doneByDay = {};
+    plans.forEach((p) => { const k = (p.date || '').slice(0, 10); if (k) (planByDay[k] = planByDay[k] || []).push(p); });
+    done.forEach((s) => { const k = s.startedAt ? localISO(new Date(s.startedAt)) : ''; if (k) (doneByDay[k] = doneByDay[k] || []).push(s); });
+
+    const monthLabel = new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric' }).format(new Date(calState.y, calState.m, 1));
+    cal.appendChild(h('div', { class: 'cal__head' }, [
+      h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.back'), onclick: () => { shiftMonth(-1); } }, ['‹']),
+      h('div', { class: 'cal__title', text: monthLabel }),
+      h('button', { class: 'btn btn--sm btn--ghost', onclick: () => { const d = new Date(); calState = { y: d.getFullYear(), m: d.getMonth(), sel: todayISO() }; renderCal(); renderDay(); } }, [t('plan.today')]),
+      h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.next') || 'Next', onclick: () => { shiftMonth(1); } }, ['›'])
     ]));
-  });
-  wrap.appendChild(ul);
+
+    const dow = h('div', { class: 'cal__dow' });
+    const wd = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    wd.forEach((k) => dow.appendChild(h('span', { text: t('weekday.' + k) })));
+    cal.appendChild(dow);
+
+    const grid = h('div', { class: 'cal__grid' });
+    const today = todayISO();
+    monthDays(calState.y, calState.m).forEach((d) => {
+      const k = iso(d);
+      const other = d.getMonth() !== calState.m;
+      const nPlan = (planByDay[k] || []).length;
+      const nDone = (doneByDay[k] || []).length;
+      grid.appendChild(h('button', {
+        class: 'cal__day' + (other ? ' cal__day--other' : '') + (k === today ? ' cal__day--today' : '') + (k === calState.sel ? ' cal__day--sel' : ''),
+        onclick: () => { calState.sel = k; renderCal(); renderDay(); }
+      }, [
+        h('span', { class: 'cal__day-num', text: String(d.getDate()) }),
+        h('span', { class: 'cal__dots' }, [
+          nPlan ? h('span', { class: 'cal__dot cal__dot--plan' }) : null,
+          nDone ? h('span', { class: 'cal__dot cal__dot--done' }) : null
+        ])
+      ]));
+    });
+    cal.appendChild(grid);
+  }
+
+  function shiftMonth(dir) {
+    const d = new Date(calState.y, calState.m + dir, 1);
+    calState.y = d.getFullYear(); calState.m = d.getMonth();
+    renderCal();
+  }
+
+  function renderDay() {
+    dayPanel.innerHTML = '';
+    const k = calState.sel;
+    const plans = getPlans().filter((p) => (p.date || '').slice(0, 10) === k);
+    const done = completedSessions().filter((s) => s.startedAt && localISO(new Date(s.startedAt)) === k);
+    dayPanel.appendChild(h('div', { class: 'section-title', text: k === todayISO() ? t('plan.today') : fmtDate(k, lang, { weekday: 'long', day: 'numeric', month: 'long' }) }));
+
+    if (!plans.length && !done.length) {
+      dayPanel.appendChild(h('div', { class: 'card center muted', text: t('plan.nothingDay') }));
+    } else {
+      const ul = h('ul', { class: 'list card card--pad-0' });
+      plans.forEach((p) => {
+        ul.appendChild(h('li', { class: 'list__item' }, [
+          h('div', { class: 'list__thumb', text: '🗓️', style: 'font-size:1.2rem', onclick: () => ctx.navigate('/plan/' + p.id) }),
+          h('div', { class: 'list__body', onclick: () => ctx.navigate('/plan/' + p.id) }, [
+            h('div', { class: 'list__title', text: p.name || t('plan.new') }),
+            h('div', { class: 'list__sub', text: t('plan.planned') + ' · ' + t('exercises.count', { n: (p.exercises || []).length }) })
+          ]),
+          h('button', { class: 'btn btn--sm btn--primary', disabled: activeSession() ? true : null,
+            onclick: () => { const id = createSessionFromPlan(p.id); ctx.navigate('/session/' + id); } }, [t('common.start')])
+        ]));
+      });
+      done.forEach((s) => {
+        ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
+          h('div', { class: 'list__thumb', text: '✓', style: 'font-size:1.2rem;color:var(--success)' }),
+          h('div', { class: 'list__body' }, [
+            h('div', { class: 'list__title', text: s.name || t('session.summary') }),
+            h('div', { class: 'list__sub', text: t('plan.completed') + ' · ' + (s.entries || []).length + ' ' + t('nav.exercises').toLowerCase() })
+          ]),
+          h('span', { class: 'list__chev', text: '›' })
+        ]));
+      });
+      dayPanel.appendChild(ul);
+    }
+    dayPanel.appendChild(h('button', { class: 'btn btn--block', onclick: () => scheduleSheet(k, ctx) }, ['＋ ' + t('plan.schedule')]));
+  }
+
+  renderCal();
+  renderDay();
+}
+
+function scheduleSheet(dateISO, ctx) {
+  const templates = getTemplates();
+  const items = [
+    h('button', { class: 'btn btn--block', onclick: () => {
+      const plan = { id: uid('plan'), templateId: null, name: '', date: dateISO, notes: '', exercises: [] };
+      savePlan(plan); close(); ctx.navigate('/plan/' + plan.id);
+    } }, ['＋ ' + t('plan.emptySession')])
+  ];
+  if (templates.length) {
+    items.push(h('div', { class: 'section-title', text: t('templates.fromTemplate') }));
+    templates.forEach((tpl) => items.push(h('button', { class: 'btn btn--block', style: 'justify-content:space-between', onclick: () => {
+      const plan = planFromTemplate(tpl.id, dateISO); savePlan(plan); close(); toast(t('templates.scheduled')); ctx.navigate('/plan/' + plan.id);
+    } }, [tpl.name || t('templates.untitled'), h('span', { class: 'muted small', text: t('exercises.count', { n: (tpl.exercises || []).length }) })])));
+  }
+  const ctl = sheet(t('plan.schedule'), h('div', { class: 'stack' }, items));
+  function close() { ctl.close(); }
 }
 
 export function renderPlanEditor(root, params, ctx) {
   const existing = params.id ? getPlan(params.id) : null;
+  const dateParam = new URLSearchParams(location.search).get('date');
   const plan = existing
     ? JSON.parse(JSON.stringify(existing))
-    : { id: uid('plan'), name: '', date: new Date().toISOString().slice(0, 10), notes: '', exercises: [] };
-  ctx.setTitle(existing ? (plan.name || t('plan.title')) : t('plan.new'));
+    : { id: uid('plan'), templateId: null, name: '', date: dateParam || todayISO(), notes: '', exercises: [] };
+  ctx.setTitle(existing ? (plan.name || t('plan.scheduled')) : t('plan.schedule'));
 
   const nameInput = h('input', { class: 'input', value: plan.name, placeholder: t('plan.namePlaceholder') });
   const dateInput = h('input', { class: 'input', type: 'date', value: (plan.date || '').slice(0, 10) });
   const notesInput = h('textarea', { class: 'textarea', placeholder: t('common.notes') }, [plan.notes || '']);
   const exWrap = h('div', {});
-
-  function renderExercises() {
-    exWrap.innerHTML = '';
-    if (!plan.exercises.length) {
-      exWrap.appendChild(h('div', { class: 'card center muted', text: t('plan.noExercises') }));
-      return;
-    }
-    plan.exercises.forEach((pe, idx) => {
-      const ex = getExercise(pe.exerciseId);
-      if (!ex) return;
-      const thumb = h('div', { class: 'list__thumb' }); thumb.textContent = '🏋️';
-      injectSVG(thumb, svgPath(ex));
-      const sets = stepper(pe.targetSets ?? 3, { min: 1, max: 20 });
-      const reps = stepper(pe.targetReps ?? 10, { min: 0, max: 100 });
-      const weight = stepper(pe.targetWeightKg ?? 0, { min: 0, max: 500, step: 2.5, decimals: 1 });
-      sets.input.addEventListener('change', () => { pe.targetSets = sets.get(); });
-      reps.input.addEventListener('change', () => { pe.targetReps = reps.get(); });
-      weight.input.addEventListener('change', () => { pe.targetWeightKg = weight.get(); });
-      exWrap.appendChild(h('div', { class: 'card' }, [
-        h('div', { class: 'row', style: 'margin-bottom:10px' }, [
-          thumb,
-          h('div', { class: 'list__body' }, [h('div', { class: 'list__title', text: exName(ex) })]),
-          h('div', { class: 'row', style: 'gap:2px' }, [
-            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveUp'), disabled: idx === 0 ? true : null,
-              onclick: () => moveExercise(idx, -1) }, ['↑']),
-            h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.moveDown'), disabled: idx === plan.exercises.length - 1 ? true : null,
-              onclick: () => moveExercise(idx, 1) }, ['↓']),
-            h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.remove'),
-              onclick: () => { plan.exercises.splice(idx, 1); renderExercises(); } }, ['🗑'])
-          ])
-        ]),
-        h('div', { class: 'row', style: 'gap:8px' }, [
-          labeled(t('plan.targetSets'), sets.el),
-          labeled(t('plan.targetReps'), reps.el),
-          labeled(t('plan.targetWeight') + ' (' + t('units.kg') + ')', weight.el)
-        ])
-      ]));
-    });
-  }
-
-  function moveExercise(idx, dir) {
-    const j = idx + dir;
-    if (j < 0 || j >= plan.exercises.length) return;
-    const [it] = plan.exercises.splice(idx, 1);
-    plan.exercises.splice(j, 0, it);
-    renderExercises();
-  }
+  const rerender = () => renderExerciseTargets(exWrap, plan.exercises, { onChange: rerender });
 
   const actions = h('div', { class: 'stack', style: 'margin-top:8px' }, [
-    h('button', { class: 'btn btn--block', onclick: () => exercisePicker((ex) => {
-      plan.exercises.push({ exerciseId: ex.id, targetSets: 3, targetReps: ex.metric === 'reps' ? 10 : null, targetWeightKg: null });
-      renderExercises();
-    }) }, ['＋ ' + t('plan.addExercise')]),
+    h('button', { class: 'btn btn--block', onclick: () => exercisePicker((ex) => { plan.exercises.push(newTarget(ex)); rerender(); }) }, ['＋ ' + t('plan.addExercise')]),
     h('button', { class: 'btn btn--primary btn--block', onclick: save }, [t('common.save')]),
     h('button', { class: 'btn btn--block', disabled: activeSession() ? true : null, onclick: startSession }, [t('plan.startSession')]),
-    existing ? h('div', { class: 'grid2' }, [
-      h('button', { class: 'btn btn--block', onclick: duplicate }, [t('plan.duplicate')]),
-      h('button', { class: 'btn btn--danger btn--block', onclick: remove }, [t('common.delete')])
-    ]) : null
+    h('div', { class: 'grid2' }, [
+      h('button', { class: 'btn btn--block', onclick: saveAsTemplate }, [t('plan.saveAsTemplate')]),
+      existing ? h('button', { class: 'btn btn--danger btn--block', onclick: remove }, [t('common.delete')]) : null
+    ])
   ]);
 
   root.appendChild(h('div', { class: 'stack' }, [
@@ -126,22 +185,19 @@ export function renderPlanEditor(root, params, ctx) {
     labeled(t('common.notes'), notesInput),
     actions
   ]));
-  renderExercises();
+  rerender();
 
   function sync() { plan.name = nameInput.value.trim(); plan.date = dateInput.value; plan.notes = notesInput.value.trim(); }
   function save() { sync(); savePlan(plan); toast(t('toast.planSaved')); ctx.navigate('/plan'); }
   function startSession() { sync(); savePlan(plan); const id = createSessionFromPlan(plan.id); ctx.navigate('/session/' + id); }
-  function duplicate() { sync(); const copy = JSON.parse(JSON.stringify(plan)); copy.id = uid('plan'); copy.name = (copy.name || '') + ' ✧'; savePlan(copy); toast(t('toast.saved')); ctx.navigate('/plan/' + copy.id); }
+  function saveAsTemplate() {
+    sync();
+    const tpl = { id: uid('tpl'), name: plan.name || t('templates.untitled'), notes: plan.notes || '', exercises: JSON.parse(JSON.stringify(plan.exercises || [])) };
+    saveTemplate(tpl); toast(t('templates.saved')); ctx.navigate('/templates/' + tpl.id);
+  }
   async function remove() {
     if (await confirmDialog(t('plan.deleteConfirm'), { danger: true, okText: t('common.delete') })) {
       deletePlan(plan.id); toast(t('toast.deleted')); ctx.navigate('/plan');
     }
   }
-}
-
-function labeled(label, node) {
-  return h('label', { class: 'field', style: 'flex:1' }, [
-    h('span', { text: label, style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:5px' }),
-    node
-  ]);
 }

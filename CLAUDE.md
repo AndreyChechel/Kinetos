@@ -9,9 +9,11 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
 - Units are metric. Calcs in `js/calc.js` are estimates only.
 
 ## Features already built
-- **Exercises**: 42 built-in across groups `warmup, chest, back, legs, shoulders, biceps, triceps, core, cardio`; each has a muscle-map SVG + how-to cues, all names/cues in 5 languages. Users can add custom ones. Equipment: `barbell,dumbbell,cable,machine,bodyweight,cardio,band`.
-- **Plan**: create planned sessions (name/date/exercises with target sets/reps/weight); reorder exercises.
-- **Session logging**: sets with weight/reps or time or distance; per-set **effort** (1/2/3), completion **timestamp** (seconds), add/remove sets, **collapse** & **reorder** exercises, live timer, target shown as faint `/8` on the row.
+- **Exercises**: 42 built-in across groups `warmup, chest, back, legs, shoulders, biceps, triceps, core, cardio`; each has a muscle-map SVG + how-to cues, all names/cues in 5 languages. Users can add custom ones (custom exercises get a **runtime-generated** SVG from their group via `exsvg.js` — no file). Equipment: `barbell,dumbbell,cable,machine,bodyweight,cardio,band`. Exercises can be **hidden** (filter to show) and carry **notes** (CRUD); custom ones can be deleted (soft-delete if used in history). Hidden/notes live in `store.exerciseMeta[id]` (works for built-in + custom ids); soft-delete flags `customExercise.deleted`.
+- **Templates**: reusable, dateless workout blueprints (`store.templates`), edited in `views/templates.js`. Start now, or schedule onto a date (creates a plan).
+- **Calendar** (the Plan tab, `views/plan.js`): month grid marking planned sessions (`store.plans`, now dated instances) + completed workouts; day panel to start/edit; Templates shelf on top. A plan can be saved back as a template.
+- **Session logging**: sets with weight/reps or time or distance; **combined effort+done** control (tap = done/medium, long-press = easy/medium/hard color menu); default **12 reps** (long-press reps field for 6/8/10/12/15/custom); delete a set by **swiping right** or long-pressing its number; **drag-reorder** exercises; per-entry notes; tap an exercise thumb to open its detail; add/collapse; live timer.
+- **Finished sessions** are **read-only** (explicit Edit mode to correct; notes stay editable); extended stats with charts (volume by exercise, sets by muscle doughnut, effort breakdown, best sets / est-1RM).
 - **Suggestions** (`suggest.js`): next-set target from last session, modulated by effort AND whether target reps were hit (miss → back off; beat → push). Surfaced as a chip (Use) + prefill; also on exercise detail.
 - **Progress**: Day/Week/Month/Year selector scoping tiles + volume chart; sets by muscle group; est-1RM trend; avg effort. Chart.js if vendored, else built-in fallback.
 - **Profile**: body params + auto metrics (max HR + zones, 1RM, BMI/body-fat, BMR/TDEE); JSON export/import; theme; language.
@@ -23,10 +25,14 @@ index.html  404.html  sw.js  manifest.webmanifest  docker-compose.yml  nginx.con
 css/styles.css                 all styles (mobile-first; desktop @media >=900px = sidebar)
 js/app.js                      bootstrap: theme, i18n, routes, chrome, sync.init()
 js/{store,i18n,router,calc,workout,components,ui,svg,pwa,suggest,version}.js   version.js = APP_VERSION (shown in Profile→About)
+js/exsvg.js                    runtime muscle-map SVG builder (JS port of tools/generate_svgs.py) — used for CUSTOM exercises
+js/sortable.js                 pointer drag-to-reorder helper (used by session + plan/template editors)
+js/charts.js                   shared Chart.js loader + fallback (used by progress + finished-session stats)
+js/planedit.js                 shared exercise-targets editor (steppers, rep chooser, drag) for templates & plans
 js/config.js                   sync config (Client IDs/secret); sync OFF until clientId set
 js/sync/{manager,providers,secret}.js   optional cloud sync (Google Drive; OneDrive/Yandex disabled)
 js/data/{db.js, exercises.json, muscles.json}   exercises.json = single source of truth
-js/views/{home,exercises,plan,session,progress,profile}.js
+js/views/{home,exercises,plan,templates,session,progress,profile}.js   plan.js = Calendar + scheduled-session editor
 locales/{en,de,fr,es,ru}.json  en.json is the key reference; keep all 5 in sync (276 keys)
 assets/exercises/<id>.svg      generated muscle-map illustrations
 tools/{generate_svgs.py, download-vendor.bat, publish.bat, encrypt-secret.html}
@@ -53,7 +59,7 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 - New exercise → add to `exercises.json`, then `python tools/generate_svgs.py`. (SW auto-precaches every id.)
 - New locale key → add to **all** `locales/*.json` (parity is verified; en is the reference).
 - New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** or clients won't update.
-- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.2.0`). The version shows in Profile → About so you can confirm the loaded build.
+- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.3.0`). The version shows in Profile → About so you can confirm the loaded build.
 
 ## Verify (no browser here; do this)
 ```

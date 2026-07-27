@@ -6,23 +6,9 @@ import { t, getLang } from '../i18n.js';
 import { getExercise, exName } from '../data/db.js';
 import { completedSessions, sessionDurationMs, startOfWeek } from '../workout.js';
 import { sessionVolume, oneRepMax } from '../calc.js';
+import { ensureChart, chartOrFallback } from '../charts.js';
 
 let period = 'week';           // day | week | month | year — persists across visits
-let chartPromise = null;
-
-function ensureChart() {
-  if (window.Chart) return Promise.resolve(true);
-  if (chartPromise) return chartPromise;
-  chartPromise = new Promise((resolve) => {
-    const sc = document.createElement('script');
-    sc.src = 'vendor/chart.umd.js';
-    sc.onload = () => resolve(!!window.Chart);
-    sc.onerror = () => resolve(false);
-    document.head.appendChild(sc);
-  });
-  return chartPromise;
-}
-function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 
 // ---- date helpers ----
 function windowFor(p) {
@@ -179,36 +165,6 @@ export default function renderProgress(root, params, ctx) {
   render();
 }
 
-function chartOrFallback(hasChart, type, labels, data) {
-  if (hasChart) {
-    const canvas = h('canvas', { height: 200 });
-    setTimeout(() => {
-      const primary = cssVar('--primary') || '#2f6df6';
-      const grid = cssVar('--border') || '#ddd';
-      const text = cssVar('--text-muted') || '#888';
-      // eslint-disable-next-line no-undef
-      new Chart(canvas.getContext('2d'), {
-        type,
-        data: { labels, datasets: [{ data, label: '', borderColor: primary, backgroundColor: type === 'line' ? 'transparent' : primary, fill: false, tension: 0.3, borderRadius: 6, pointRadius: 2 }] },
-        options: { responsive: true, plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: { color: text, maxRotation: 0, autoSkip: true } },
-            y: { grid: { color: grid }, ticks: { color: text }, beginAtZero: true } } }
-      });
-    }, 0);
-    return canvas;
-  }
-  return fallbackBars(labels, data);
-}
-function fallbackBars(labels, data) {
-  const max = Math.max(1, ...data);
-  return h('div', { class: 'stack', style: 'gap:6px' }, labels.map((lab, i) => h('div', { class: 'zone' }, [
-    h('span', { style: 'width:64px;flex:none;font-size:.75rem', class: 'muted', text: lab }),
-    h('div', { class: 'zone__bar', style: 'background:var(--surface-2);position:relative' }, [
-      h('div', { style: `position:absolute;inset:0;width:${Math.round(data[i] / max * 100)}%;background:var(--primary);border-radius:6px` })
-    ]),
-    h('span', { style: 'width:52px;flex:none;text-align:right;font-size:.75rem', text: String(Math.round(data[i])) })
-  ])));
-}
 function card(title, node) { return h('div', { class: 'card' }, [h('div', { class: 'card__title', text: title }), node]); }
 function tile(value, label) { return h('div', { class: 'stat' }, [h('div', { class: 'stat__value', text: String(value) }), h('div', { class: 'stat__label', text: label })]); }
 function muted(txt) { return h('p', { class: 'muted small center', text: txt }); }

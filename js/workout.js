@@ -1,8 +1,32 @@
 // Higher-level workout helpers shared by views.
-import { getSessions, saveSession, getPlan, getState } from './store.js';
+import { getSessions, saveSession, getPlan, getTemplate, getState } from './store.js';
 import { uid } from './ui.js';
 import { getExercise } from './data/db.js';
 import { sessionVolume } from './calc.js';
+
+const DEFAULT_REPS = 12; // app-wide default target reps (feature: default to 12)
+
+/** Turn a planned/template exercise list into fresh session entries. */
+export function entriesFromExerciseList(list) {
+  return (list || []).map((pe) => ({
+    id: uid('en'),
+    exerciseId: pe.exerciseId,
+    note: '',
+    sets: Array.from({ length: pe.targetSets || 3 }, (_, i) => ({
+      n: i + 1,
+      reps: pe.targetReps ?? null,
+      weightKg: pe.targetWeightKg || null,
+      seconds: null,
+      distanceKm: null,
+      minutes: null,
+      effort: null,
+      targetReps: pe.targetReps ?? null,
+      targetWeightKg: pe.targetWeightKg || null,
+      done: false,
+      timestamp: null
+    }))
+  }));
+}
 
 export function activeSession() {
   return getSessions().find((s) => !s.endedAt);
@@ -27,30 +51,44 @@ export function createSessionFromPlan(planId) {
   const s = {
     id: uid('sess'),
     planId,
+    templateId: plan ? (plan.templateId || null) : null,
     name: plan ? plan.name : '',
     startedAt: new Date().toISOString(),
     endedAt: null,
     notes: plan ? (plan.notes || '') : '',
-    entries: (plan ? plan.exercises : []).map((pe) => ({
-      id: uid('en'),
-      exerciseId: pe.exerciseId,
-      sets: Array.from({ length: pe.targetSets || 3 }, (_, i) => ({
-        n: i + 1,
-        reps: pe.targetReps || null,
-        weightKg: pe.targetWeightKg || null,
-        seconds: null,
-        distanceKm: null,
-        minutes: null,
-        effort: null,
-        targetReps: pe.targetReps || null,        // planned target, for hit/miss autoregulation
-        targetWeightKg: pe.targetWeightKg || null,
-        done: false,
-        timestamp: null
-      }))
-    }))
+    entries: entriesFromExerciseList(plan ? plan.exercises : [])
   };
   saveSession(s);
   return s.id;
+}
+
+export function createSessionFromTemplate(templateId) {
+  const tpl = getTemplate(templateId);
+  const s = {
+    id: uid('sess'),
+    planId: null,
+    templateId: templateId || null,
+    name: tpl ? tpl.name : '',
+    startedAt: new Date().toISOString(),
+    endedAt: null,
+    notes: tpl ? (tpl.notes || '') : '',
+    entries: entriesFromExerciseList(tpl ? tpl.exercises : [])
+  };
+  saveSession(s);
+  return s.id;
+}
+
+/** Build (but do not save) a scheduled plan seeded from a template. */
+export function planFromTemplate(templateId, dateISO) {
+  const tpl = getTemplate(templateId);
+  return {
+    id: uid('plan'),
+    templateId: templateId || null,
+    name: tpl ? tpl.name : '',
+    date: dateISO,
+    notes: tpl ? (tpl.notes || '') : '',
+    exercises: tpl ? JSON.parse(JSON.stringify(tpl.exercises || [])) : []
+  };
 }
 
 /** Most recent completed set data for an exercise (for "last time" prefill). */
@@ -69,6 +107,45 @@ export function historyFor(exerciseId, excludeSessionId) {
       return sets.length ? { session: s, sets } : null;
     })
     .filter(Boolean);
+}
+
+/** ISO start date of the most recent completed session that trained an exercise. */
+export function lastPerformedISO(exerciseId) {
+  const h = historyFor(exerciseId)[0];
+  return h ? h.session.startedAt : null;
+}
+
+/** { exerciseId: lastPerformedISO } across all completed sessions. */
+export function lastPerformedMap() {
+  const map = {};
+  completedSessions().forEach((s) => {
+    (s.entries || []).forEach((e) => {
+      if (!e || !e.exerciseId || map[e.exerciseId]) return;
+      const did = (e.sets || []).some((st) => st.reps || st.seconds || st.distanceKm);
+      if (did) map[e.exerciseId] = s.startedAt;
+    });
+  });
+  return map;
+}
+
+/** True if any session (logged or active) references this exercise — governs
+ *  whether deleting a custom exercise must be a soft delete to preserve history. */
+export function exerciseUsedInHistory(exerciseId) {
+  return getSessions().some((s) => (s.entries || []).some((e) => e.exerciseId === exerciseId));
+}
+
+/** Exercises trained most recently, newest first: [{ exerciseId, lastISO }]. */
+export function recentExercises(limit = 8) {
+  const seen = new Map();
+  completedSessions().forEach((s) => {
+    (s.entries || []).forEach((e) => {
+      if (!e || !e.exerciseId || seen.has(e.exerciseId)) return;
+      const did = (e.sets || []).some((st) => st.reps || st.seconds || st.distanceKm);
+      if (did) seen.set(e.exerciseId, s.startedAt);
+    });
+  });
+  return [...seen.entries()].map(([exerciseId, lastISO]) => ({ exerciseId, lastISO }))
+    .sort((a, b) => new Date(b.lastISO) - new Date(a.lastISO)).slice(0, limit);
 }
 
 export function startOfWeek(d = new Date()) {

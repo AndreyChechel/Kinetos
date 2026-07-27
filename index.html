@@ -13,7 +13,7 @@
     // before it is the base. No hardcoded sub-path depth, so root and subpath
     // deploys both work. (Keep TOP_ROUTES in sync with 404.html; and don't name
     // the repo after a route.)
-    var TOP_ROUTES = ['exercises', 'plan', 'progress', 'profile', 'session'];
+    var TOP_ROUTES = ['exercises', 'plan', 'templates', 'progress', 'profile', 'session'];
     (function () {
       var segs = location.pathname.split('/');
       var idx = segs.length;
@@ -68,8 +68,8 @@
         <span class="tabbar__label" data-i18n="nav.exercises">Exercises</span>
       </a>
       <a class="tabbar__item" href="plan" data-route="/plan" data-tab="plan">
-        <span class="tabbar__icon" aria-hidden="true">🗓️</span>
-        <span class="tabbar__label" data-i18n="nav.plan">Plan</span>
+        <span class="tabbar__icon" aria-hidden="true">📅</span>
+        <span class="tabbar__label" data-i18n="nav.calendar">Calendar</span>
       </a>
       <a class="tabbar__item" href="progress" data-route="/progress" data-tab="progress">
         <span class="tabbar__icon" aria-hidden="true">📈</span>

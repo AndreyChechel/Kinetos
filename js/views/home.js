@@ -1,5 +1,5 @@
 // Dashboard: greeting, active/today session, week stats, recent workouts, quick start.
-import { h, fmtDate, fmtDuration } from '../ui.js';
+import { h, fmtDate, fmtDuration, todayISO } from '../ui.js';
 import { t } from '../i18n.js';
 import { getProfile, getPlans } from '../store.js';
 import { activeSession, createEmptySession, createSessionFromPlan, completedSessions, weekStats, sessionDurationMs } from '../workout.js';
@@ -11,10 +11,14 @@ export default function renderHome(root, params, ctx) {
   const lang = getLang();
   const wrap = h('div', {});
 
-  // Greeting
+  // Greeting — personal and time-of-day aware
+  const hour = new Date().getHours();
+  const part = hour < 5 ? 'night' : hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : hour < 22 ? 'evening' : 'night';
+  const salutation = t('home.' + part);
+  const greeting = profile.name ? `${salutation}, ${profile.name}` : salutation;
   wrap.appendChild(h('div', { class: 'row row--between', style: 'margin:2px 2px 12px' }, [
     h('div', {}, [
-      h('h2', { style: 'margin:0', text: profile.name ? t('home.greeting', { name: profile.name }) : t('home.welcome') }),
+      h('h2', { style: 'margin:0', text: greeting }),
       h('div', { class: 'muted small', text: t('app.tagline') })
     ])
   ]));
@@ -34,7 +38,7 @@ export default function renderHome(root, params, ctx) {
   }
 
   // Today's plan
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayISO();
   const todays = getPlans().filter((p) => (p.date || '').slice(0, 10) === today);
   wrap.appendChild(h('div', { class: 'section-title', text: t('home.todayPlan') }));
   if (todays.length) {

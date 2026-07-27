@@ -24,9 +24,11 @@ function defaultState() {
       units: 'metric',
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
-    plans: [],              // planned sessions (templates/scheduled)
+    templates: [],          // reusable, dateless workout blueprints
+    plans: [],              // scheduled sessions on the calendar (a date + exercises)
     sessions: [],           // logged workouts
-    customExercises: []     // user-added exercises (merged with built-in)
+    customExercises: [],    // user-added exercises (merged with built-in)
+    exerciseMeta: {}        // per-exercise UI state keyed by id: { hidden, notes:[{id,text,ts}] }
   };
 }
 
@@ -51,9 +53,11 @@ function migrate(s) {
   const merged = { ...base, ...s, version: VERSION };
   merged.profile = { ...base.profile, ...(s.profile || {}) };
   merged.settings = { ...base.settings, ...(s.settings || {}) };
+  merged.templates = Array.isArray(s.templates) ? s.templates : [];
   merged.plans = Array.isArray(s.plans) ? s.plans : [];
   merged.sessions = Array.isArray(s.sessions) ? s.sessions : [];
   merged.customExercises = Array.isArray(s.customExercises) ? s.customExercises : [];
+  merged.exerciseMeta = (s.exerciseMeta && typeof s.exerciseMeta === 'object') ? s.exerciseMeta : {};
   return merged;
 }
 
@@ -101,9 +105,13 @@ export function mergeRemote(remote) {
       second.forEach((x) => x && x.id && map.set(x.id, x)); // newer side overrides on conflict
       return [...map.values()];
     };
+    s.templates = mergeArr(s.templates, remote.templates);
     s.plans = mergeArr(s.plans, remote.plans);
     s.sessions = mergeArr(s.sessions, remote.sessions);
     s.customExercises = mergeArr(s.customExercises, remote.customExercises);
+    // exerciseMeta is an object keyed by exercise id — union keys, newer side wins on conflict.
+    const localMeta = s.exerciseMeta || {}, remoteMeta = remote.exerciseMeta || {};
+    s.exerciseMeta = remoteNewer ? { ...localMeta, ...remoteMeta } : { ...remoteMeta, ...localMeta };
     if (remoteNewer) {
       s.profile = { ...s.profile, ...(remote.profile || {}) };
       s.settings = { ...s.settings, ...(remote.settings || {}) };
@@ -141,9 +149,48 @@ export function saveSession(sess) {
 }
 export function deleteSession(id) { update((s) => { s.sessions = s.sessions.filter((x) => x.id !== id); }); }
 
+// --- Templates (reusable, dateless workout blueprints) ---
+export function getTemplates() { return state.templates; }
+export function getTemplate(id) { return state.templates.find((tpl) => tpl.id === id); }
+export function saveTemplate(tpl) {
+  update((s) => {
+    tpl.updatedAt = new Date().toISOString();
+    const i = s.templates.findIndex((x) => x.id === tpl.id);
+    if (i >= 0) s.templates[i] = tpl; else s.templates.push(tpl);
+  });
+}
+export function deleteTemplate(id) { update((s) => { s.templates = s.templates.filter((x) => x.id !== id); }); }
+
 // --- Custom exercises ---
 export function getCustomExercises() { return state.customExercises; }
 export function addCustomExercise(ex) { update((s) => { s.customExercises.push(ex); }); }
+export function updateCustomExercise(ex) {
+  update((s) => { const i = s.customExercises.findIndex((x) => x.id === ex.id); if (i >= 0) s.customExercises[i] = ex; });
+}
+/** Hard-remove a custom exercise (only safe when it has no logged history). */
+export function removeCustomExercise(id) { update((s) => { s.customExercises = s.customExercises.filter((x) => x.id !== id); }); }
+/** Soft-delete: keep the row (so history still resolves its name) but flag as deleted. */
+export function softDeleteCustomExercise(id) {
+  update((s) => { const ex = s.customExercises.find((x) => x.id === id); if (ex) ex.deleted = true; });
+}
+
+// --- Per-exercise UI meta (hide + notes), works for built-in and custom ids ---
+export function getExerciseMeta(id) { return state.exerciseMeta[id] || {}; }
+function ensureMeta(s, id) { return (s.exerciseMeta[id] = s.exerciseMeta[id] || {}); }
+export function isExerciseHidden(id) { return !!(state.exerciseMeta[id] && state.exerciseMeta[id].hidden); }
+export function setExerciseHidden(id, hidden) { update((s) => { ensureMeta(s, id).hidden = !!hidden; }); }
+export function getExerciseNotes(id) { return (state.exerciseMeta[id] && state.exerciseMeta[id].notes) || []; }
+export function addExerciseNote(id, text) {
+  const noteId = 'note_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  update((s) => { const m = ensureMeta(s, id); m.notes = m.notes || []; m.notes.push({ id: noteId, text, ts: new Date().toISOString() }); });
+  return noteId;
+}
+export function updateExerciseNote(id, noteId, text) {
+  update((s) => { const n = ((s.exerciseMeta[id] || {}).notes || []).find((x) => x.id === noteId); if (n) { n.text = text; n.ts = new Date().toISOString(); } });
+}
+export function deleteExerciseNote(id, noteId) {
+  update((s) => { const m = s.exerciseMeta[id]; if (m && m.notes) m.notes = m.notes.filter((x) => x.id !== noteId); });
+}
 
 // --- Export / Import ---
 export function exportJSON() {
@@ -159,9 +206,11 @@ export function importJSON(text, { merge = false } = {}) {
         const ids = new Set(arr.map((x) => x.id));
         add.forEach((x) => { if (!ids.has(x.id)) arr.push(x); });
       };
+      byId(s.templates, incoming.templates);
       byId(s.plans, incoming.plans);
       byId(s.sessions, incoming.sessions);
       byId(s.customExercises, incoming.customExercises);
+      s.exerciseMeta = { ...incoming.exerciseMeta, ...s.exerciseMeta };
       s.profile = { ...s.profile, ...incoming.profile };
     } else {
       Object.assign(s, incoming);

@@ -9,7 +9,8 @@ import { qs, qsa } from './ui.js';
 
 import renderHome from './views/home.js';
 import { renderExerciseList, renderExerciseDetail } from './views/exercises.js';
-import { renderPlanList, renderPlanEditor } from './views/plan.js';
+import { renderCalendar, renderPlanEditor } from './views/plan.js';
+import { renderTemplateList, renderTemplateEditor } from './views/templates.js';
 import renderSession from './views/session.js';
 import renderProgress from './views/progress.js';
 import renderProfile from './views/profile.js';
@@ -63,9 +64,12 @@ function routes() {
     '/': (p) => show(renderHome, { tab: 'home', title: 'app.name' }, p),
     '/exercises': (p) => show(renderExerciseList, { tab: 'exercises', title: 'exercises.title' }, p),
     '/exercises/:id': (p) => show(renderExerciseDetail, { tab: 'exercises', back: true }, p),
-    '/plan': (p) => show(renderPlanList, { tab: 'plan', title: 'plan.title' }, p),
-    '/plan/new': (p) => show(renderPlanEditor, { tab: 'plan', back: true, title: 'plan.new' }, { id: null }),
+    '/plan': (p) => show(renderCalendar, { tab: 'plan', title: 'plan.title' }, p),
+    '/plan/new': (p) => show(renderPlanEditor, { tab: 'plan', back: true, title: 'plan.schedule' }, { id: null }),
     '/plan/:id': (p) => show(renderPlanEditor, { tab: 'plan', back: true }, p),
+    '/templates': (p) => show(renderTemplateList, { tab: 'plan', back: true, title: 'templates.title' }, p),
+    '/templates/new': (p) => show(renderTemplateEditor, { tab: 'plan', back: true, title: 'templates.new' }, { id: null }),
+    '/templates/:id': (p) => show(renderTemplateEditor, { tab: 'plan', back: true }, p),
     '/session/:id': (p) => show(renderSession, { tab: 'home', back: true, title: 'session.title' }, p),
     '/progress': (p) => show(renderProgress, { tab: 'progress', title: 'progress.title' }, p),
     '/profile': (p) => show(renderProfile, { tab: 'profile', title: 'profile.title' }, p)

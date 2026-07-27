@@ -1,7 +1,7 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates.
    Keep the version in sync with js/version.js (APP_VERSION). */
-const CACHE = 'kinetos-1.2.1';
+const CACHE = 'kinetos-1.3.0';
 
 const CORE = [
   './',
@@ -10,10 +10,11 @@ const CORE = [
   'manifest.webmanifest',
   'css/styles.css',
   'js/app.js', 'js/version.js', 'js/ui.js', 'js/store.js', 'js/i18n.js', 'js/calc.js', 'js/router.js',
-  'js/svg.js', 'js/components.js', 'js/pwa.js', 'js/workout.js', 'js/suggest.js', 'js/config.js',
+  'js/svg.js', 'js/exsvg.js', 'js/sortable.js', 'js/charts.js', 'js/planedit.js',
+  'js/components.js', 'js/pwa.js', 'js/workout.js', 'js/suggest.js', 'js/config.js',
   'js/sync/manager.js', 'js/sync/providers.js', 'js/sync/secret.js',
   'js/data/db.js', 'js/data/exercises.json', 'js/data/muscles.json',
-  'js/views/home.js', 'js/views/exercises.js', 'js/views/plan.js',
+  'js/views/home.js', 'js/views/exercises.js', 'js/views/plan.js', 'js/views/templates.js',
   'js/views/session.js', 'js/views/progress.js', 'js/views/profile.js',
   'locales/en.json', 'locales/de.json', 'locales/fr.json', 'locales/es.json', 'locales/ru.json',
   'assets/icons/icon.svg', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable.png'

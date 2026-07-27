@@ -72,11 +72,12 @@ export function fmtDuration(ms) {
   }
   return `${m}:${String(r).padStart(2, '0')}`;
 }
-export function todayISO() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString().slice(0, 10);
+/** Local calendar date as YYYY-MM-DD (avoids UTC off-by-one from toISOString). */
+export function localISO(d = new Date()) {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`;
 }
+export function todayISO() { return localISO(new Date()); }
 export function isSameDay(iso, dayISO) {
   return (iso || '').slice(0, 10) === dayISO;
 }
