@@ -1,12 +1,12 @@
 // Progress / analytics with a Day / Week / Month / Year period selector.
 // Uses Chart.js from /vendor when available, else a built-in fallback so the
 // page works fully offline.
-import { h, fmtDate, fmtDuration } from '../ui.js';
+import { h, fmtDate, fmtDuration, localISO, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getExercise, exName, effectiveWeight, volumeWeightOf } from '../data/db.js';
 import { completedSessions, sessionDurationMs, startOfWeek } from '../workout.js';
 import { sessionVolume, oneRepMax } from '../calc.js';
-import { ensureChart, chartOrFallback } from '../charts.js';
+import { ensureChart, chartOrFallback, reapCharts } from '../charts.js';
 import { icon } from '../icons.js';
 
 let period = 'week';           // day | week | month | year — persists across visits
@@ -80,9 +80,12 @@ export default function renderProgress(root, params, ctx) {
     ));
   }
 
+  let generation = 0; // two rapid chip taps must not both append after their await
   async function render() {
+    const gen = ++generation;
     renderChips();
     content.innerHTML = '';
+    reapCharts(); // destroy Chart.js instances whose canvases we just detached
     const { start, end } = windowFor(period);
     const inWin = all.filter((s) => { const d = new Date(s.startedAt); return d >= start && d < end; });
 
@@ -102,6 +105,7 @@ export default function renderProgress(root, params, ctx) {
     content.appendChild(h('div', { class: 'grid2', style: 'margin-bottom:12px' }, tiles));
 
     const hasChart = await ensureChart();
+    if (gen !== generation) return; // a newer render started while we awaited
 
     // Volume over time (bucketed to the period granularity)
     const bk = bucketsFor(period, lang);
@@ -138,7 +142,7 @@ export default function renderProgress(root, params, ctx) {
           if (!e) return null;
           let best = 0;
           (e.sets || []).forEach((x) => { if (x.weightKg && x.reps) { const o = oneRepMax(effectiveWeight(id, x.weightKg, x), x.reps); if (o && o.avg > best) best = o.avg; } });
-          return best ? { day: s.startedAt.slice(0, 10), val: Math.round(best) } : null;
+          return best ? { day: localISO(new Date(s.startedAt)), val: Math.round(best) } : null; // LOCAL day, not UTC slice
         }).filter(Boolean);
         if (!pts.length) { chartHost.appendChild(muted(t('progress.noData'))); return; }
         chartHost.appendChild(chartOrFallback(hasChart, 'line', pts.map((p) => fmtDate(p.day, lang, { month: 'short', day: 'numeric' })), pts.map((p) => p.val)));
@@ -151,14 +155,14 @@ export default function renderProgress(root, params, ctx) {
     const ul = h('ul', { class: 'list card card--pad-0' });
     all.slice(0, 8).forEach((s) => {
       const v = sessionVolume(s, volumeWeightOf);
-      ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
+      ul.appendChild(clickable(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
         h('div', { class: 'list__thumb' }, [icon('dumbbell', { size: 26 })]),
         h('div', { class: 'list__body' }, [
           h('div', { class: 'list__title', text: s.name || fmtDate(s.startedAt, lang) }),
           h('div', { class: 'list__sub', text: `${fmtDate(s.startedAt, lang)} · ${v.sets} ${t('common.sets')} · ${v.volume} ${t('units.kg')}` })
         ]),
         h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
-      ]));
+      ])));
     });
     content.appendChild(ul);
   }

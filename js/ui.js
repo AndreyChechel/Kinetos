@@ -35,13 +35,37 @@ export function uid(prefix = 'id') {
 }
 
 let toastTimer;
-export function toast(msg) {
+/** Show a toast. opts.action + opts.onAction add a tappable action (e.g. Undo). */
+export function toast(msg, opts = {}) {
   const el = document.getElementById('toast');
   if (!el) return;
-  el.textContent = msg;
+  el.textContent = '';
+  el.appendChild(document.createTextNode(msg));
+  if (opts.action && typeof opts.onAction === 'function') {
+    const btn = document.createElement('button');
+    btn.className = 'toast__action';
+    btn.type = 'button';
+    btn.textContent = opts.action;
+    btn.addEventListener('click', () => {
+      clearTimeout(toastTimer);
+      el.classList.remove('show');
+      opts.onAction();
+    });
+    el.appendChild(btn);
+  }
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => el.classList.remove('show'), opts.duration || 2200);
+}
+
+/** Make a non-button element keyboard-operable (Enter/Space fire click). */
+export function clickable(el, role = 'button') {
+  el.setAttribute('role', role);
+  el.tabIndex = 0;
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+  });
+  return el;
 }
 
 /** Format a date for display as YYYY-MM-DD (ISO 8601), independent of locale.
@@ -49,9 +73,20 @@ export function toast(msg) {
  *    "Tuesday, 2026-07-28" (used for day headers).
  *  - A month/year request without a day (`{month, year}`, no `day`) is a
  *    month bucket, formatted as YYYY-MM (used by the progress chart). */
+/** Parse an ISO string; date-only values ('yyyy-mm-dd') are treated as LOCAL
+ *  midnight. (new Date('yyyy-mm-dd') is UTC midnight, which renders as the
+ *  previous day in negative-offset timezones.) */
+export function parseISO(iso) {
+  if (typeof iso === 'string') {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  }
+  return new Date(iso);
+}
+
 export function fmtDate(iso, lang, opts) {
   try {
-    const d = new Date(iso);
+    const d = parseISO(iso);
     if (isNaN(d)) return iso;
     if (opts && opts.month && !opts.day) {
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -93,5 +128,7 @@ export function localISO(d = new Date()) {
 }
 export function todayISO() { return localISO(new Date()); }
 export function isSameDay(iso, dayISO) {
-  return (iso || '').slice(0, 10) === dayISO;
+  const s = String(iso || '');
+  // Timestamps compare by LOCAL calendar day; date-only strings compare as-is.
+  return (s.includes('T') ? localISO(new Date(s)) : s.slice(0, 10)) === dayISO;
 }

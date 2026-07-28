@@ -85,7 +85,7 @@
 <p><code>js/data/muscles.json</code> lists valid <code>groups</code> and <code>muscles</code> keys. Their display names live in each <code>locales/*.json</code> under <code>groups.*</code> and <code>muscles.*</code>.</p>
 
 <h2>Export / import</h2>
-<p>Profile → "Export data" downloads the whole state as <code>kinetos-backup-YYYY-MM-DD.json</code>. Import offers <b>merge</b> (adds plans/sessions/custom exercises by id, keeps profile-ish) or <b>replace</b> (overwrites everything). Encourage regular exports — data is device-local only.</p>
+<p>Profile → "Export data" downloads the whole state as <code>kinetos-backup-YYYY-MM-DD.json</code>. Import validates that the file is a Kinetos backup, then offers <b>merge</b> (adds templates/plans/sessions/custom exercises by id; local profile/settings win, the import only fills gaps) or <b>replace</b> (overwrites everything). The device-local sync provider choice is never taken from an imported file. Encourage regular exports — data is device-local only.</p>
 
 <footer><a href="index.html">← Back to overview</a></footer>
 </main></body></html>

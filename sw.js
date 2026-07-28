@@ -1,7 +1,7 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates.
    Keep the version in sync with js/version.js (APP_VERSION). */
-const CACHE = 'kinetos-1.6.3';
+const CACHE = 'kinetos-1.7.0';
 
 const CORE = [
   './',
@@ -17,22 +17,31 @@ const CORE = [
   'js/views/home.js', 'js/views/exercises.js', 'js/views/plan.js', 'js/views/templates.js',
   'js/views/session.js', 'js/views/progress.js', 'js/views/profile.js',
   'locales/en.json', 'locales/de.json', 'locales/fr.json', 'locales/es.json', 'locales/ru.json',
+  'vendor/chart.umd.js',
   'assets/icons/icon.svg', 'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/icon-maskable.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
+    // cache:'reload' bypasses the HTTP cache — plain cache.add() could precache
+    // stale copies the browser still holds (GH Pages serves 10-min caching).
     // Core files must all cache; tolerate individual failures for robustness.
-    await Promise.allSettled(CORE.map((u) => cache.add(u)));
+    await Promise.allSettled(CORE.map((u) => cache.add(new Request(u, { cache: 'reload' }))));
     // Precache every exercise illustration listed in the data file.
     try {
       const res = await fetch('js/data/exercises.json', { cache: 'no-cache' });
       const list = await res.json();
       await Promise.allSettled(list.map((ex) => cache.add('assets/exercises/' + ex.id + '.svg')));
     } catch (e) { /* offline first install still works with core */ }
-    self.skipWaiting();
+    // NOTE: no skipWaiting() here — an updated SW must not hijack a running
+    // session. The page shows an "update available" toast; accepting it posts
+    // SKIP_WAITING below, then reloads on controllerchange (see js/pwa.js).
   })());
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

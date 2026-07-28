@@ -24,8 +24,10 @@ export const SYNC = {
   autoEveryMinutes: 10,
 
   // Where the provider sends you back after login. Must be registered verbatim
-  // with the provider. Defaults to this app's own URL (no query/hash).
-  redirectUri: (typeof location !== 'undefined') ? (location.origin + location.pathname) : '',
+  // with the provider. Derived from <base href>, so it is always the app BASE
+  // (e.g. https://host/ or https://host/Kinetos/) — stable no matter which
+  // in-app route the user starts the login from (location.pathname is not).
+  redirectUri: (typeof document !== 'undefined') ? new URL('.', document.baseURI).href : '',
 
   providers: {
     google: {

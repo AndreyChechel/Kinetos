@@ -61,7 +61,7 @@
 <p>Mobile-first. On phones the nav is a fixed bottom tab bar and content is a single centered column. At <code>min-width: 900px</code> the same <code>.tabbar</code> becomes a left sidebar rail (the <code>.tabbar__brand</code> element, hidden on mobile, shows here), content widens, and <code>.grid2</code> tile rows expand via <code>auto-fit</code>. The exercise detail becomes two columns (<code>.ex-detail</code>: sticky illustration + info). All purely CSS in <code>css/styles.css</code>; <code>show()</code> in <code>app.js</code> tags the view element with <code>view--&lt;tab&gt;</code> for per-screen styling. Hover affordances are gated behind <code>@media (hover:hover)</code>.</p>
 
 <h2>Illustrations</h2>
-<p>Exercise SVGs are fetched and injected inline (not <code>&lt;img&gt;</code>) so they use <code>currentColor</code> for the body and the <code>.muscle-fill</code> class (themed accent) for the targeted muscles. Fallback emoji shows if an SVG is missing (e.g. custom exercises).</p>
+<p>Exercise SVGs are fetched and injected inline (not <code>&lt;img&gt;</code>) so they use <code>currentColor</code> for the body and the <code>.muscle-fill</code> class (themed accent) for the targeted muscles. Custom exercises get a runtime-generated SVG from their muscle group via <code>js/exsvg.js</code>; UI glyphs come from <code>js/icons.js</code> (inline SVG line icons).</p>
 
 <footer><a href="index.html">← Back to overview</a></footer>
 </main></body></html>

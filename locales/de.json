@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Kinetos",
-    "tagline": "Training planen & verfolgen"
+    "tagline": "Training planen & verfolgen",
+    "error": "Etwas ist schiefgelaufen."
   },
   "nav": {
     "home": "Start",
@@ -47,7 +48,9 @@
     "sec": "Sek",
     "reorder": "Neu ordnen",
     "next": "Weiter",
-    "open": "Öffnen"
+    "open": "Öffnen",
+    "undo": "Rückgängig",
+    "unsavedConfirm": "Ungespeicherte Änderungen verwerfen?"
   },
   "units": {
     "kg": "kg",
@@ -75,7 +78,10 @@
     "morning": "Guten Morgen",
     "afternoon": "Guten Tag",
     "evening": "Guten Abend",
-    "night": "Hallo"
+    "night": "Hallo",
+    "sets": "Sätze",
+    "streak": "Wochen-Serie",
+    "staleSession": "Läuft seit {date} — beende oder verwirf sie, um ein neues Training zu starten."
   },
   "exercises": {
     "title": "Übungen",
@@ -109,7 +115,9 @@
     "deleteNote": "Diese Notiz löschen?",
     "deleteCustom": "Übung löschen",
     "softDeleteConfirm": "Diese Übung wird in deinem Verlauf verwendet. Sie wird aus der Liste entfernt, bleibt aber für vergangene Trainings erhalten. Löschen?",
-    "hardDeleteConfirm": "Diese eigene Übung löschen?"
+    "hardDeleteConfirm": "Diese eigene Übung löschen?",
+    "weightStep": "Gewichtsschritt",
+    "weightStepHint": "Wird von Vorschlägen beim Steigern der Last verwendet. Leer lassen für den Gerätestandard."
   },
   "groups": {
     "chest": "Brust",
@@ -174,7 +182,8 @@
     "completed": "Abgeschlossen",
     "nothingDay": "Nichts an diesem Tag",
     "emptySession": "Leere Einheit",
-    "saveAsTemplate": "Als Vorlage speichern"
+    "saveAsTemplate": "Als Vorlage speichern",
+    "started": "Gestartet"
   },
   "session": {
     "title": "Einheit",
@@ -231,7 +240,13 @@
     "bestSets": "Beste Sätze",
     "dumbbellX2Hint": "Gewicht pro Hantel – in Summen ×2 gezählt",
     "editTime": "Zeit bearbeiten",
-    "barWeight": "Stangengewicht"
+    "barWeight": "Stangengewicht",
+    "deleteConfirm": "Dieses Training aus dem Verlauf löschen?",
+    "rest": "Pause",
+    "restDone": "Pause vorbei — nächster Satz!",
+    "perSide": "Pro Seite",
+    "pr": "PR",
+    "newPR": "Neuer persönlicher Rekord: {names}!"
   },
   "progress": {
     "title": "Fortschritt",
@@ -323,7 +338,12 @@
     "barbellHint": "Ob das eingegebene Gewicht die Stange bereits enthält. „Stangengewicht addieren“ erfasst nur die Scheiben und addiert die pro Satz gewählte Stange zu Volumen und 1RM.",
     "barbellWeights": "Stangengewichte (kg)",
     "barbellWeightsHint": "Diese Optionen kannst du pro Satz wählen; das erste ist die Vorgabe. Entferne nicht benötigte oder füge eigene hinzu.",
-    "barbellAddWeight": "z. B. 15"
+    "barbellAddWeight": "z. B. 15",
+    "restTimer": "Pausen-Timer (Sek.)",
+    "restTimerHint": "Countdown, nachdem ein Satz als erledigt markiert wurde. 0 schaltet ihn aus.",
+    "plates": "Hantelscheiben (kg)",
+    "platesHint": "Verfügbare Scheibengrößen für den Scheibenrechner — im Training das Gewichtsfeld einer Langhantel lange drücken.",
+    "exportCSV": "CSV exportieren (Sätze)"
   },
   "sync": {
     "title": "Cloud-Sync",
@@ -364,7 +384,11 @@
     "sessionSaved": "Einheit gespeichert",
     "planSaved": "Plan gespeichert",
     "photoTooBig": "Bild zu groß",
-    "importError": "Import fehlgeschlagen"
+    "importError": "Import fehlgeschlagen",
+    "saveFailed": "Speichern fehlgeschlagen — der Speicher ist evtl. voll. Exportiere jetzt deine Daten!",
+    "updateAvailable": "Update verfügbar",
+    "reload": "Neu laden",
+    "setDeleted": "Satz gelöscht"
   },
   "weekday": {
     "mon": "Mo",

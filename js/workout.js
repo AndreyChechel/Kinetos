@@ -1,8 +1,15 @@
 // Higher-level workout helpers shared by views.
-import { getSessions, saveSession, getPlan, getTemplate, getState } from './store.js';
+import { getSessions, saveSession, getPlan, getTemplate } from './store.js';
 import { uid } from './ui.js';
-import { getExercise, volumeWeightOf } from './data/db.js';
-import { sessionVolume } from './calc.js';
+import { getExercise, volumeWeightOf, effectiveWeight } from './data/db.js';
+import { sessionVolume, oneRepMax } from './calc.js';
+
+/** A set counts as performed only if it has data AND wasn't left/marked not-done.
+ *  (Plan-prefilled sets carry reps but done:false until the user taps them —
+ *  without this check they'd poison history, suggestions and "Previous" hints.) */
+function performed(st) {
+  return !!(st && st.done !== false && (st.reps || st.seconds || st.distanceKm));
+}
 
 const DEFAULT_REPS = 12; // app-wide default target reps (feature: default to 12)
 
@@ -49,6 +56,60 @@ export function targetsFromSession(session) {
 
 export function activeSession() {
   return getSessions().find((s) => !s.endedAt);
+}
+
+// A session left running this long is almost certainly forgotten, not active.
+const STALE_SESSION_MS = 12 * 60 * 60 * 1000;
+
+/** True for an unfinished session that has been open suspiciously long. */
+export function isStaleSession(s) {
+  return !!(s && !s.endedAt && (Date.now() - new Date(s.startedAt).getTime()) > STALE_SESSION_MS);
+}
+
+/** Finish a (stale) session in place: end it at the last logged set's time,
+ *  or an hour after start if nothing was ever logged. */
+export function autoFinishSession(s) {
+  let last = null;
+  (s.entries || []).forEach((e) => (e.sets || []).forEach((st) => {
+    if (st.timestamp && (!last || st.timestamp > last)) last = st.timestamp;
+  }));
+  s.endedAt = last || new Date(new Date(s.startedAt).getTime() + 3600000).toISOString();
+  saveSession(s);
+}
+
+/** True if any session (active or completed) was started from this plan —
+ *  a started plan shouldn't be offered as "planned" again. */
+export function planStarted(planId) {
+  return !!planId && getSessions().some((s) => s.planId === planId);
+}
+
+/** Best estimated 1RM ever logged for an exercise before/outside one session. */
+export function bestE1RMBefore(exerciseId, excludeSessionId) {
+  let best = 0;
+  completedSessions().forEach((s) => {
+    if (s.id === excludeSessionId) return;
+    (s.entries || []).forEach((e) => {
+      if (e.exerciseId !== exerciseId) return;
+      (e.sets || []).forEach((st) => {
+        if (!performed(st) || !st.weightKg || !st.reps) return;
+        const o = oneRepMax(effectiveWeight(exerciseId, st.weightKg, st), st.reps);
+        if (o && o.avg > best) best = o.avg;
+      });
+    });
+  });
+  return best;
+}
+
+/** Consecutive training weeks (Mon-based), counting back from this week.
+ *  An empty current week doesn't break the streak — it just isn't counted yet. */
+export function weekStreak() {
+  const weeks = new Set(completedSessions().map((s) => startOfWeek(new Date(s.startedAt)).getTime()));
+  if (!weeks.size) return 0;
+  let cur = startOfWeek(new Date());
+  if (!weeks.has(cur.getTime())) { cur.setDate(cur.getDate() - 7); cur = startOfWeek(cur); }
+  let streak = 0;
+  while (weeks.has(cur.getTime())) { streak++; cur.setDate(cur.getDate() - 7); cur = startOfWeek(cur); }
+  return streak;
 }
 
 export function createEmptySession(name) {
@@ -122,7 +183,7 @@ export function historyFor(exerciseId, excludeSessionId) {
     .map((s) => {
       const e = (s.entries || []).find((x) => x.exerciseId === exerciseId);
       if (!e) return null;
-      const sets = (e.sets || []).filter((st) => st.reps || st.seconds || st.distanceKm);
+      const sets = (e.sets || []).filter(performed);
       return sets.length ? { session: s, sets } : null;
     })
     .filter(Boolean);
@@ -140,7 +201,7 @@ export function lastPerformedMap() {
   completedSessions().forEach((s) => {
     (s.entries || []).forEach((e) => {
       if (!e || !e.exerciseId || map[e.exerciseId]) return;
-      const did = (e.sets || []).some((st) => st.reps || st.seconds || st.distanceKm);
+      const did = (e.sets || []).some(performed);
       if (did) map[e.exerciseId] = s.startedAt;
     });
   });
@@ -159,7 +220,7 @@ export function recentExercises(limit = 8) {
   completedSessions().forEach((s) => {
     (s.entries || []).forEach((e) => {
       if (!e || !e.exerciseId || seen.has(e.exerciseId)) return;
-      const did = (e.sets || []).some((st) => st.reps || st.seconds || st.distanceKm);
+      const did = (e.sets || []).some(performed);
       if (did) seen.set(e.exerciseId, s.startedAt);
     });
   });

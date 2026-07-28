@@ -1,8 +1,13 @@
 // Dashboard: greeting, active/today session, week stats, recent workouts, quick start.
-import { h, fmtDate, fmtDuration, todayISO } from '../ui.js';
+import { h, fmtDate, fmtDuration, todayISO, toast, clickable } from '../ui.js';
 import { t } from '../i18n.js';
 import { getProfile, getPlans } from '../store.js';
-import { activeSession, createEmptySession, createSessionFromPlan, completedSessions, weekStats, sessionDurationMs } from '../workout.js';
+import {
+  activeSession, createEmptySession, createSessionFromPlan, completedSessions,
+  weekStats, sessionDurationMs, isStaleSession, autoFinishSession, weekStreak, planStarted
+} from '../workout.js';
+import { deleteSession } from '../store.js';
+import { confirmDialog } from '../components.js';
 import { sessionVolume } from '../calc.js';
 import { volumeWeightOf } from '../data/db.js';
 import { getLang } from '../i18n.js';
@@ -25,23 +30,34 @@ export default function renderHome(root, params, ctx) {
     ])
   ]));
 
-  // Active session banner
+  // Active session banner. A stale one (left running >12 h) blocks every Start
+  // button — explain why and offer to finish or discard it right here.
   const active = activeSession();
   if (active) {
-    wrap.appendChild(h('div', { class: 'card', style: 'border-color:var(--success)' }, [
+    const stale = isStaleSession(active);
+    wrap.appendChild(h('div', { class: 'card', style: 'border-color:' + (stale ? 'var(--danger)' : 'var(--success)') }, [
       h('div', { class: 'row row--between' }, [
         h('div', {}, [
           h('span', { class: 'badge badge--live' }, [icon('dot', { size: 12 }), ' ' + t('home.activeSession')]),
           h('div', { class: 'small muted', style: 'margin-top:6px', text: active.name || fmtDate(active.startedAt, lang) })
         ]),
         h('button', { class: 'btn btn--primary', onclick: () => ctx.navigate('/session/' + active.id) }, [t('home.continueSession')])
-      ])
+      ]),
+      stale ? h('div', { style: 'margin-top:10px' }, [
+        h('p', { class: 'small muted', style: 'margin:0 0 8px', text: t('home.staleSession', { date: fmtDate(active.startedAt, lang) }) }),
+        h('div', { class: 'grid2' }, [
+          h('button', { class: 'btn btn--sm', onclick: () => { autoFinishSession(active); toast(t('toast.sessionSaved')); ctx.navigate('/'); } }, [t('common.finish')]),
+          h('button', { class: 'btn btn--sm btn--ghost', style: 'color:var(--danger)', onclick: async () => {
+            if (await confirmDialog(t('session.discardConfirm'), { danger: true, okText: t('session.discard') })) { deleteSession(active.id); ctx.navigate('/'); }
+          } }, [t('session.discard')])
+        ])
+      ]) : null
     ]));
   }
 
-  // Today's plan
+  // Today's plan — skip plans already started (their session exists now)
   const today = todayISO();
-  const todays = getPlans().filter((p) => (p.date || '').slice(0, 10) === today);
+  const todays = getPlans().filter((p) => (p.date || '').slice(0, 10) === today && !planStarted(p.id));
   wrap.appendChild(h('div', { class: 'section-title', text: t('home.todayPlan') }));
   if (todays.length) {
     todays.forEach((p) => {
@@ -68,10 +84,13 @@ export default function renderHome(root, params, ctx) {
 
   // This week stats
   const ws = weekStats();
+  const streak = weekStreak();
   wrap.appendChild(h('div', { class: 'section-title', text: t('home.thisWeek') }));
   wrap.appendChild(h('div', { class: 'grid2' }, [
     stat(ws.workouts, t('home.workouts')),
-    stat(ws.volume.toLocaleString(lang) + ' ' + t('units.kg'), t('home.volume'))
+    stat(ws.volume.toLocaleString(lang) + ' ' + t('units.kg'), t('home.volume')),
+    stat(ws.sets, t('home.sets')),
+    stat(streak, t('home.streak'))
   ]));
 
   // Recent workouts
@@ -81,14 +100,14 @@ export default function renderHome(root, params, ctx) {
     const ul = h('ul', { class: 'list card card--pad-0' });
     recent.forEach((s) => {
       const v = sessionVolume(s, volumeWeightOf);
-      ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
+      ul.appendChild(clickable(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
         h('div', { class: 'list__thumb' }, [icon('dumbbell', { size: 26 })]),
         h('div', { class: 'list__body' }, [
           h('div', { class: 'list__title', text: s.name || fmtDate(s.startedAt, lang) }),
           h('div', { class: 'list__sub', text: `${fmtDate(s.startedAt, lang)} · ${v.sets} ${t('common.sets')} · ${fmtDuration(sessionDurationMs(s))}` })
         ]),
         h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
-      ]));
+      ])));
     });
     wrap.appendChild(ul);
   } else {

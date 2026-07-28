@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Kinetos",
-    "tagline": "Plan & track your training"
+    "tagline": "Plan & track your training",
+    "error": "Something went wrong."
   },
   "nav": {
     "home": "Home",
@@ -47,7 +48,9 @@
     "sec": "sec",
     "reorder": "Reorder",
     "next": "Next",
-    "open": "Open"
+    "open": "Open",
+    "undo": "Undo",
+    "unsavedConfirm": "Discard unsaved changes?"
   },
   "units": {
     "kg": "kg",
@@ -75,7 +78,10 @@
     "morning": "Good morning",
     "afternoon": "Good afternoon",
     "evening": "Good evening",
-    "night": "Hello"
+    "night": "Hello",
+    "sets": "Sets",
+    "streak": "Week streak",
+    "staleSession": "Running since {date} — finish or discard it to start a new workout."
   },
   "exercises": {
     "title": "Exercises",
@@ -109,7 +115,9 @@
     "deleteNote": "Delete this note?",
     "deleteCustom": "Delete exercise",
     "softDeleteConfirm": "This exercise is used in your history. It will be removed from the list but kept for past workouts. Delete?",
-    "hardDeleteConfirm": "Delete this custom exercise?"
+    "hardDeleteConfirm": "Delete this custom exercise?",
+    "weightStep": "Weight increment",
+    "weightStepHint": "Used by suggestions when increasing the load. Leave empty for the equipment default."
   },
   "groups": {
     "chest": "Chest",
@@ -174,7 +182,8 @@
     "completed": "Completed",
     "nothingDay": "Nothing on this day",
     "emptySession": "Empty session",
-    "saveAsTemplate": "Save as template"
+    "saveAsTemplate": "Save as template",
+    "started": "Started"
   },
   "session": {
     "title": "Session",
@@ -231,7 +240,13 @@
     "bestSets": "Best sets",
     "dumbbellX2Hint": "Per-dumbbell weight — counted ×2 in totals",
     "editTime": "Edit time",
-    "barWeight": "Bar weight"
+    "barWeight": "Bar weight",
+    "deleteConfirm": "Delete this workout from your history?",
+    "rest": "Rest",
+    "restDone": "Rest over — next set!",
+    "perSide": "Per side",
+    "pr": "PR",
+    "newPR": "New personal record: {names}!"
   },
   "progress": {
     "title": "Progress",
@@ -323,7 +338,12 @@
     "barbellHint": "Whether the weight you log already includes the bar. “Add bar weight” logs plates only and adds the bar you pick per set in volume and 1RM.",
     "barbellWeights": "Bar weights (kg)",
     "barbellWeightsHint": "These are the options you can pick per set; the first is the default. Remove any you don't need, or add your own.",
-    "barbellAddWeight": "e.g. 15"
+    "barbellAddWeight": "e.g. 15",
+    "restTimer": "Rest timer (sec)",
+    "restTimerHint": "Countdown after you mark a set done. 0 turns it off.",
+    "plates": "Plates (kg)",
+    "platesHint": "Available plate sizes for the plate calculator — long-press a barbell weight field during a session.",
+    "exportCSV": "Export CSV (sets)"
   },
   "sync": {
     "title": "Cloud sync",
@@ -364,7 +384,11 @@
     "sessionSaved": "Session saved",
     "planSaved": "Plan saved",
     "photoTooBig": "Image too large",
-    "importError": "Import failed"
+    "importError": "Import failed",
+    "saveFailed": "Saving failed — storage may be full. Export your data now!",
+    "updateAvailable": "Update available",
+    "reload": "Reload",
+    "setDeleted": "Set deleted"
   },
   "weekday": {
     "mon": "Mon",

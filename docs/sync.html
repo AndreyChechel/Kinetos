@@ -21,7 +21,7 @@
 <ul>
   <li>State carries an <code>updatedAt</code> timestamp. Sync <b>pulls</b> the remote file, merges it (union of plans/sessions/exercises by id; last-write-wins on profile/settings), then <b>pushes</b> the result to <code>kinetos.json</code>.</li>
   <li><b>Deletions</b> are tracked as <code>tombstones</code> (id + deletion time). The merge unions tombstones and removes any re-appearing id, so deleting a session/template/plan on one device sticks instead of being re-added from another device's copy. An edit newer than the deletion still wins (resurrects). Tombstones self-prune after ~6 months.</li>
-  <li>Triggers: on app open, when you tap <b>Sync now</b>, and automatically every <code>autoEveryMinutes</code> (default 10) if something changed. It also pushes when the tab is hidden and when the network comes back.</li>
+  <li>Triggers: on app open, when you tap <b>Sync now</b>, and automatically every <code>autoEveryMinutes</code> (default 10) if something changed. It also runs a full sync (pull + merge + push — never a blind overwrite) when the tab is hidden and when the network comes back; concurrent triggers coalesce into a single run.</li>
   <li>Everything still works fully offline; sync simply resumes when you're back online and connected.</li>
 </ul>
 

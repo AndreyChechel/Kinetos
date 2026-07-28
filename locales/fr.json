@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Kinetos",
-    "tagline": "Planifiez et suivez vos entraînements"
+    "tagline": "Planifiez et suivez vos entraînements",
+    "error": "Une erreur est survenue."
   },
   "nav": {
     "home": "Accueil",
@@ -47,7 +48,9 @@
     "sec": "s",
     "reorder": "Réorganiser",
     "next": "Suivant",
-    "open": "Ouvrir"
+    "open": "Ouvrir",
+    "undo": "Annuler",
+    "unsavedConfirm": "Abandonner les modifications non enregistrées ?"
   },
   "units": {
     "kg": "kg",
@@ -75,7 +78,10 @@
     "morning": "Bonjour",
     "afternoon": "Bon après-midi",
     "evening": "Bonsoir",
-    "night": "Bonsoir"
+    "night": "Bonsoir",
+    "sets": "Séries",
+    "streak": "Semaines d'affilée",
+    "staleSession": "En cours depuis le {date} — terminez-la ou abandonnez-la pour démarrer une nouvelle séance."
   },
   "exercises": {
     "title": "Exercices",
@@ -109,7 +115,9 @@
     "deleteNote": "Supprimer cette note ?",
     "deleteCustom": "Supprimer l’exercice",
     "softDeleteConfirm": "Cet exercice figure dans votre historique. Il sera retiré de la liste mais conservé pour les séances passées. Supprimer ?",
-    "hardDeleteConfirm": "Supprimer cet exercice personnalisé ?"
+    "hardDeleteConfirm": "Supprimer cet exercice personnalisé ?",
+    "weightStep": "Incrément de poids",
+    "weightStepHint": "Utilisé par les suggestions pour augmenter la charge. Laissez vide pour la valeur par défaut de l'équipement."
   },
   "groups": {
     "chest": "Pectoraux",
@@ -174,7 +182,8 @@
     "completed": "Terminé",
     "nothingDay": "Rien ce jour-là",
     "emptySession": "Séance vide",
-    "saveAsTemplate": "Enregistrer comme modèle"
+    "saveAsTemplate": "Enregistrer comme modèle",
+    "started": "Commencée"
   },
   "session": {
     "title": "Séance",
@@ -231,7 +240,13 @@
     "bestSets": "Meilleures séries",
     "dumbbellX2Hint": "Poids par haltère — compté ×2 dans les totaux",
     "editTime": "Modifier l'heure",
-    "barWeight": "Poids de la barre"
+    "barWeight": "Poids de la barre",
+    "deleteConfirm": "Supprimer cette séance de votre historique ?",
+    "rest": "Repos",
+    "restDone": "Repos terminé — série suivante !",
+    "perSide": "Par côté",
+    "pr": "PR",
+    "newPR": "Nouveau record personnel : {names} !"
   },
   "progress": {
     "title": "Progrès",
@@ -323,7 +338,12 @@
     "barbellHint": "Indique si le poids saisi inclut déjà la barre. « Ajouter le poids de la barre » enregistre seulement les disques et ajoute la barre choisie par série au volume et au 1RM.",
     "barbellWeights": "Poids de barre (kg)",
     "barbellWeightsHint": "Ce sont les options disponibles par série ; la première est la valeur par défaut. Supprimez celles dont vous n’avez pas besoin ou ajoutez les vôtres.",
-    "barbellAddWeight": "ex. 15"
+    "barbellAddWeight": "ex. 15",
+    "restTimer": "Minuteur de repos (s)",
+    "restTimerHint": "Compte à rebours après avoir validé une série. 0 pour désactiver.",
+    "plates": "Disques (kg)",
+    "platesHint": "Tailles de disques disponibles pour le calculateur — appui long sur le champ de poids d'une barre pendant une séance.",
+    "exportCSV": "Exporter en CSV (séries)"
   },
   "sync": {
     "title": "Sync cloud",
@@ -364,7 +384,11 @@
     "sessionSaved": "Séance enregistrée",
     "planSaved": "Plan enregistré",
     "photoTooBig": "Image trop grande",
-    "importError": "Échec de l’importation"
+    "importError": "Échec de l’importation",
+    "saveFailed": "Échec de l'enregistrement — le stockage est peut-être plein. Exportez vos données !",
+    "updateAvailable": "Mise à jour disponible",
+    "reload": "Recharger",
+    "setDeleted": "Série supprimée"
   },
   "weekday": {
     "mon": "Lun",

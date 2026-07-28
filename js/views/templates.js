@@ -7,6 +7,8 @@ import { getTemplates, getTemplate, saveTemplate, deleteTemplate, savePlan } fro
 import { exercisePicker, confirmDialog, sheet } from '../components.js';
 import { createSessionFromTemplate, planFromTemplate, activeSession } from '../workout.js';
 import { renderExerciseTargets, newTarget, labeled } from '../planedit.js';
+import { setNavGuard, clearNavGuard } from '../router.js';
+import { clickable } from '../ui.js';
 import { icon } from '../icons.js';
 
 export function renderTemplateList(root, params, ctx) {
@@ -21,14 +23,14 @@ export function renderTemplateList(root, params, ctx) {
   } else {
     const ul = h('ul', { class: 'list card card--pad-0' });
     templates.forEach((tpl) => {
-      ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/templates/' + tpl.id) }, [
+      ul.appendChild(clickable(h('li', { class: 'list__item', onclick: () => ctx.navigate('/templates/' + tpl.id) }, [
         h('div', { class: 'list__thumb' }, [icon('clipboard', { size: 26 })]),
         h('div', { class: 'list__body' }, [
           h('div', { class: 'list__title', text: tpl.name || t('templates.untitled') }),
           h('div', { class: 'list__sub', text: t('exercises.count', { n: (tpl.exercises || []).length }) })
         ]),
         h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
-      ]));
+      ])));
     });
     wrap.appendChild(ul);
   }
@@ -71,17 +73,25 @@ export function renderTemplateEditor(root, params, ctx) {
   ]));
   rerender();
 
+  // Warn before leaving with unsaved edits (the editor works on a deep copy).
+  const initialSnapshot = JSON.stringify(tpl);
+  const guard = () => {
+    sync();
+    return JSON.stringify(tpl) === initialSnapshot || window.confirm(t('common.unsavedConfirm'));
+  };
+  setNavGuard(guard);
+
   function sync() { tpl.name = nameInput.value.trim(); tpl.notes = notesInput.value.trim(); }
-  function save() { sync(); saveTemplate(tpl); toast(t('templates.saved')); ctx.navigate('/plan'); }
-  function startNow() { sync(); saveTemplate(tpl); const id = createSessionFromTemplate(tpl.id); ctx.navigate('/session/' + id); }
-  function duplicate() { sync(); const copy = JSON.parse(JSON.stringify(tpl)); copy.id = uid('tpl'); copy.name = (copy.name || t('templates.untitled')) + ' (' + t('templates.copySuffix') + ')'; saveTemplate(copy); toast(t('toast.saved')); ctx.navigate('/templates/' + copy.id); }
+  function save() { sync(); clearNavGuard(guard); saveTemplate(tpl); toast(t('templates.saved')); ctx.navigate('/plan'); }
+  function startNow() { sync(); clearNavGuard(guard); saveTemplate(tpl); const id = createSessionFromTemplate(tpl.id); ctx.navigate('/session/' + id); }
+  function duplicate() { sync(); clearNavGuard(guard); const copy = JSON.parse(JSON.stringify(tpl)); copy.id = uid('tpl'); copy.name = (copy.name || t('templates.untitled')) + ' (' + t('templates.copySuffix') + ')'; saveTemplate(copy); toast(t('toast.saved')); ctx.navigate('/templates/' + copy.id); }
   async function remove() {
     if (await confirmDialog(t('templates.deleteConfirm'), { danger: true, okText: t('common.delete') })) {
-      deleteTemplate(tpl.id); toast(t('toast.deleted')); ctx.navigate('/plan');
+      clearNavGuard(guard); deleteTemplate(tpl.id); toast(t('toast.deleted')); ctx.navigate('/plan');
     }
   }
   function schedule() {
-    sync(); saveTemplate(tpl);
+    sync(); clearNavGuard(guard); saveTemplate(tpl);
     const dateInput = h('input', { class: 'input', type: 'date', value: todayISO() });
     const { close } = sheet(t('templates.scheduleOn'), h('div', { class: 'stack' }, [
       labeled(t('common.date'), dateInput),

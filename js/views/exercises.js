@@ -9,10 +9,11 @@ import { sheet, confirmDialog, promptDialog, popoverMenu, attachLongPress } from
 import {
   addCustomExercise, updateCustomExercise, removeCustomExercise, softDeleteCustomExercise,
   getPlans, savePlan, saveSession, getSession,
-  isExerciseHidden, setExerciseHidden, getExerciseNotes, addExerciseNote, updateExerciseNote, deleteExerciseNote
+  isExerciseHidden, setExerciseHidden, getExerciseNotes, addExerciseNote, updateExerciseNote, deleteExerciseNote,
+  getExerciseMeta, setExerciseWeightStep
 } from '../store.js';
 import { activeSession, createEmptySession, recentExercises, lastPerformedMap, exerciseUsedInHistory } from '../workout.js';
-import { suggestNext, formatSuggestion, suggestionReason } from '../suggest.js';
+import { suggestNext, formatSuggestion, suggestionReason, weightStepFor } from '../suggest.js';
 import { icon } from '../icons.js';
 
 let filter = 'all';
@@ -107,7 +108,7 @@ export function exerciseRow(ex, { onOpen, onLongPress, lastISO } = {}) {
     exName(ex),
     hidden ? h('span', { class: 'tag', style: 'margin-left:6px', text: t('exercises.hiddenTag') }) : null
   ]);
-  const row = h('li', { class: 'list__item' + (hidden ? ' is-hidden-ex' : '') }, [
+  const row = h('li', { class: 'list__item' + (hidden ? ' is-hidden-ex' : ''), role: 'button', tabindex: '0' }, [
     thumb,
     h('div', { class: 'list__body' }, [title, h('div', { class: 'list__sub', text: sub })]),
     h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
@@ -154,6 +155,7 @@ export function renderExerciseDetail(root, params, ctx) {
         h('ol', { style: 'margin:0; padding-left:18px; line-height:1.6' }, cues.map((c) => h('li', { text: c })))
       ]) : null,
       notesHost,
+      ex.metric === 'reps' && ex.equipment !== 'bodyweight' ? weightStepCard(ex) : null,
       suggestionCard(ex),
       h('div', { class: 'grid2' }, [
         h('button', { class: 'btn', onclick: () => addToPlan(ex, ctx) }, [t('exercises.addToPlan')]),
@@ -227,7 +229,8 @@ function logNow(ex, ctx) {
   if (!s) { const id = createEmptySession(); s = getSession(id); }
   s.entries = s.entries || [];
   if (!s.entries.some((e) => e.exerciseId === ex.id)) {
-    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: null, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, done: false, timestamp: null }] });
+    // Same shape/defaults as every other set-creation path (12-rep prefill, no implicit target).
+    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, targetReps: null, barKg: null, done: false, timestamp: null }] });
   }
   saveSession(s);
   ctx.navigate('/session/' + s.id);
@@ -274,6 +277,23 @@ function openCustomSheet(onDone) {
     close();
     onDone && onDone();
   }
+}
+
+/** Per-exercise weight increment used by the suggestion engine. */
+function weightStepCard(ex) {
+  const meta = getExerciseMeta(ex.id);
+  const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step: '0.25', min: '0',
+    value: meta.weightStep || '', placeholder: String(weightStepFor(ex)) });
+  inp.addEventListener('change', () => {
+    const n = parseFloat(inp.value);
+    setExerciseWeightStep(ex.id, isNaN(n) ? 0 : n);
+    toast(t('toast.saved'));
+  });
+  return h('div', { class: 'card' }, [
+    h('div', { class: 'card__title', text: t('exercises.weightStep') + ' (' + t('units.kg') + ')' }),
+    inp,
+    h('div', { class: 'small muted', style: 'margin-top:6px', text: t('exercises.weightStepHint') })
+  ]);
 }
 
 function suggestionCard(ex) {

@@ -3,9 +3,9 @@ import { getSettings, subscribe } from './store.js';
 import { initI18n, setLang, applyDOM, t } from './i18n.js';
 import { loadDB } from './data/db.js';
 import { defineRoutes, startRouter, back, navigate, refresh } from './router.js';
-import { initPWA } from './pwa.js';
+import { initPWA, onUpdateAvailable } from './pwa.js';
 import * as sync from './sync/manager.js';
-import { qs, qsa } from './ui.js';
+import { qs, qsa, toast } from './ui.js';
 
 import renderHome from './views/home.js';
 import { renderExerciseList, renderExerciseDetail } from './views/exercises.js';
@@ -34,7 +34,10 @@ darkMedia.addEventListener('change', applyTheme);
 // ---- Chrome / view mounting ----
 function makeCtx() {
   return {
-    setTitle: (txt) => { titleEl.textContent = txt; },
+    setTitle: (txt) => {
+      titleEl.textContent = txt;
+      document.title = txt && txt !== t('app.name') ? txt + ' — ' + t('app.name') : t('app.name');
+    },
     setActions: (nodes) => {
       actionsEl.innerHTML = '';
       [].concat(nodes || []).forEach((n) => n && actionsEl.appendChild(n));
@@ -48,14 +51,22 @@ function show(renderFn, meta, params) {
   viewEl.className = 'view view--' + (meta.tab || 'home');
   actionsEl.innerHTML = '';
   backBtn.hidden = !meta.back;
-  qsa('.tabbar__item').forEach((a) => a.classList.toggle('is-active', a.dataset.tab === meta.tab));
+  qsa('.tabbar__item').forEach((a) => {
+    const active = a.dataset.tab === meta.tab;
+    a.classList.toggle('is-active', active);
+    if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
   const ctx = makeCtx();
   ctx.setTitle(meta.title ? t(meta.title) : t('app.name'));
   window.scrollTo(0, 0);
   viewEl.scrollTop = 0;
   Promise.resolve(renderFn(viewEl, params || {}, ctx)).catch((e) => {
     console.error('view error', e);
-    viewEl.innerHTML = '<p class="empty">Something went wrong.</p>';
+    viewEl.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = t('app.error');
+    viewEl.appendChild(p);
   });
 }
 
@@ -98,6 +109,13 @@ async function boot() {
   initPWA();
   await Promise.all([initI18n(getSettings().lang), loadDB()]);
   applyDOM();
+  // A new build is installed and waiting — let the user apply it when ready
+  // instead of yanking the running page over to new assets mid-session.
+  onUpdateAvailable((apply) => toast(t('toast.updateAvailable'), { action: t('toast.reload'), duration: 10000, onAction: apply }));
+  // localStorage write failed (quota?) — tell the user before they lose data.
+  window.addEventListener('store:persist-error', () => toast(t('toast.saveFailed'), { duration: 6000 }));
+  // Ask the browser not to evict our storage under pressure.
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
   try { await sync.init(); } catch (e) { console.warn('sync init failed', e); }
   routes();
   startRouter();

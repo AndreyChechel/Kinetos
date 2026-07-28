@@ -20,6 +20,20 @@ export function ensureChart() {
 
 export function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 
+// Chart.js instances are registered globally (with resize observers) and leak
+// if their canvas is detached without destroy(). Track every instance we
+// create and reap the orphans on re-render / navigation.
+const liveCharts = new Set();
+export function reapCharts() {
+  liveCharts.forEach((c) => {
+    if (!c.canvas || !c.canvas.isConnected) {
+      try { c.destroy(); } catch (_) { /* already gone */ }
+      liveCharts.delete(c);
+    }
+  });
+}
+if (typeof window !== 'undefined') window.addEventListener('route:change', reapCharts);
+
 const PALETTE = ['--primary', '--accent', '--success', '--danger', '#f0b429', '#8b5cf6', '#14b8a6', '#ec4899'];
 function palette(i) { const p = PALETTE[i % PALETTE.length]; return p.startsWith('--') ? (cssVar(p) || '#2f6df6') : p; }
 
@@ -28,13 +42,14 @@ export function chartOrFallback(hasChart, type, labels, data, { colors, height =
   if (hasChart) {
     const canvas = h('canvas', { height });
     setTimeout(() => {
+      if (!canvas.isConnected) return; // view re-rendered before we got here
       const primary = cssVar('--primary') || '#2f6df6';
       const grid = cssVar('--border') || '#ddd';
       const text = cssVar('--text-muted') || '#888';
       const multi = colors || (type !== 'line' ? labels.map((_, i) => palette(i)) : primary);
       const isPie = type === 'doughnut' || type === 'pie';
       // eslint-disable-next-line no-undef
-      new Chart(canvas.getContext('2d'), {
+      liveCharts.add(new Chart(canvas.getContext('2d'), {
         type,
         data: {
           labels,
@@ -54,7 +69,7 @@ export function chartOrFallback(hasChart, type, labels, data, { colors, height =
             y: { grid: { color: grid }, ticks: { color: text }, beginAtZero: true }
           }
         }
-      });
+      }));
     }, 0);
     return canvas;
   }

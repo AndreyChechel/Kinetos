@@ -1,26 +1,45 @@
 // Reusable UI pieces: bottom sheet, confirm dialog, exercise picker, stepper,
 // long-press, popover menus, rep chooser, swipe-to-delete.
-import { h, qs } from './ui.js';
+import { h, clickable } from './ui.js';
 import { t } from './i18n.js';
 import { byGroup, groups, exName } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
 import { icon } from './icons.js';
 
+/** Shared a11y wiring for modal overlays: Escape closes, focus moves in and is
+ *  restored on close. Returns a teardown fn (call it from close()). */
+function modalize(overlay, panel, close, focusEl) {
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-modal', 'true');
+  const prevFocus = document.activeElement;
+  const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+  document.addEventListener('keydown', onKey);
+  if (!focusEl) { panel.tabIndex = -1; focusEl = panel; }
+  setTimeout(() => { try { focusEl.focus(); } catch (_) { /* ignore */ } }, 60);
+  return () => {
+    document.removeEventListener('keydown', onKey);
+    if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus(); } catch (_) { /* ignore */ } }
+  };
+}
+
 /** Bottom sheet overlay. Returns { close }. */
 export function sheet(titleText, contentNode, { onClose } = {}) {
-  const panel = h('div', { class: 'sheet__panel' }, [
+  const closeBtn = h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.close'), onclick: () => close() }, [icon('x', { size: 18 })]);
+  const panel = h('div', { class: 'sheet__panel', 'aria-label': titleText }, [
     h('div', { class: 'sheet__grab' }),
     h('div', { class: 'sheet__head' }, [
       h('h3', { class: 'sheet__title', text: titleText }),
-      h('button', { class: 'btn btn--icon btn--ghost', 'aria-label': t('common.close'), onclick: () => close() }, [icon('x', { size: 18 })])
+      closeBtn
     ]),
     h('div', { class: 'sheet__body' }, [contentNode])
   ]);
   const overlay = h('div', { class: 'sheet' }, [panel]);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
   document.body.appendChild(overlay);
+  const unmodal = modalize(overlay, panel, () => close());
   requestAnimationFrame(() => overlay.classList.add('is-open'));
   function close() {
+    unmodal();
     overlay.classList.remove('is-open');
     setTimeout(() => { overlay.remove(); onClose && onClose(); }, 220);
   }
@@ -30,18 +49,27 @@ export function sheet(titleText, contentNode, { onClose } = {}) {
 /** Promise-based confirm dialog. */
 export function confirmDialog(message, { danger = false, okText, cancelText } = {}) {
   return new Promise((resolve) => {
+    const okBtn = h('button', { class: 'btn ' + (danger ? 'btn--danger' : 'btn--primary'), onclick: () => done(true) }, [okText || t('common.confirm')]);
     const panel = h('div', { class: 'dialog__panel' }, [
       h('p', { class: 'dialog__msg', text: message }),
       h('div', { class: 'dialog__actions' }, [
         h('button', { class: 'btn btn--ghost', onclick: () => done(false) }, [cancelText || t('common.cancel')]),
-        h('button', { class: 'btn ' + (danger ? 'btn--danger' : 'btn--primary'), onclick: () => done(true) }, [okText || t('common.confirm')])
+        okBtn
       ])
     ]);
     const overlay = h('div', { class: 'dialog' }, [panel]);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) done(false); });
     document.body.appendChild(overlay);
+    const unmodal = modalize(overlay, panel, () => done(false), okBtn);
     requestAnimationFrame(() => overlay.classList.add('is-open'));
-    function done(v) { overlay.classList.remove('is-open'); setTimeout(() => overlay.remove(), 180); resolve(v); }
+    let settled = false;
+    function done(v) {
+      if (settled) return; settled = true;
+      unmodal();
+      overlay.classList.remove('is-open');
+      setTimeout(() => overlay.remove(), 180);
+      resolve(v);
+    }
   });
 }
 
@@ -66,9 +94,16 @@ export function promptDialog(message, { password = false, placeholder = '', valu
     overlay.addEventListener('click', (e) => { if (e.target === overlay) done(null); });
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !multiline) done(input.value); });
     document.body.appendChild(overlay);
+    const unmodal = modalize(overlay, panel, () => done(null), input);
     requestAnimationFrame(() => overlay.classList.add('is-open'));
-    setTimeout(() => input.focus(), 60);
-    function done(v) { overlay.classList.remove('is-open'); setTimeout(() => overlay.remove(), 180); resolve(v == null ? null : v); }
+    let settled = false;
+    function done(v) {
+      if (settled) return; settled = true;
+      unmodal();
+      overlay.classList.remove('is-open');
+      setTimeout(() => overlay.remove(), 180);
+      resolve(v == null ? null : v);
+    }
   });
 }
 
@@ -106,7 +141,7 @@ export function exercisePicker(onPick) {
       list.forEach((ex) => {
         const thumb = h('div', { class: 'list__thumb' });
         injectExerciseSVG(thumb, ex);
-        ul.appendChild(h('li', {
+        ul.appendChild(clickable(h('li', {
           class: 'list__item',
           onclick: () => { onPick(ex); close(); }
         }, [
@@ -116,7 +151,7 @@ export function exercisePicker(onPick) {
             h('div', { class: 'list__sub', text: (ex.primary || []).map((mk) => t('muscles.' + mk)).join(', ') })
           ]),
           h('span', { class: 'list__chev' }, [icon('plus', { size: 18 })])
-        ]));
+        ])));
       });
       listWrap.appendChild(ul);
     }
@@ -144,6 +179,18 @@ export function stepper(value, { min = 0, max = 999, step = 1, decimals = 0 } = 
  *  Movement beyond a small threshold cancels (so scrolling never triggers). */
 export function attachLongPress(el, { onTap, onLongPress, ms = 450 } = {}) {
   let timer = null, longFired = false, sx = 0, sy = 0, moved = false;
+  const isFormField = /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+  // Keyboard access: Enter/Space = tap; the context-menu key (and right-click
+  // on non-fields) opens the long-press menu. Form fields keep their native
+  // Enter/context-menu behavior — only the pointer long-press applies there.
+  if (!isFormField) {
+    el.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onTap) { e.preventDefault(); onTap(); }
+      else if (e.key === 'ContextMenu' && onLongPress) { e.preventDefault(); onLongPress(e); }
+    });
+    if (onLongPress) el.addEventListener('contextmenu', (e) => { e.preventDefault(); onLongPress(e); });
+  }
+  if (onLongPress) el.setAttribute('aria-haspopup', 'true');
   el.addEventListener('pointerdown', (e) => {
     if (e.button > 0) return;
     longFired = false; moved = false; sx = e.clientX; sy = e.clientY;
@@ -164,17 +211,23 @@ export function attachLongPress(el, { onTap, onLongPress, ms = 450 } = {}) {
 /** Small floating menu anchored near an element. items: [{label,color,active,onClick}].
  *  opts.grid lays items out as wrapping pills (used by the rep chooser). */
 export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) {
-  const menu = h('div', { class: 'popover' + (grid ? ' popover--grid' : '') },
+  const menu = h('div', { class: 'popover' + (grid ? ' popover--grid' : ''), role: 'menu', 'aria-label': title || undefined },
     (title ? [h('div', { class: 'popover__title', text: title })] : []).concat(
       items.map((it) => h('button', {
         class: 'popover__item' + (it.active ? ' is-active' : ''),
+        role: 'menuitem',
         style: it.color ? `--swatch:${it.color}` : null,
         onclick: () => { close(); it.onClick && it.onClick(); }
       }, [it.color ? h('span', { class: 'popover__dot' }) : null, it.label]))
     ));
   const overlay = h('div', { class: 'popover-overlay' }, [menu]);
   overlay.addEventListener('pointerdown', (e) => { if (e.target === overlay) close(); });
+  const prevFocus = document.activeElement;
+  const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+  document.addEventListener('keydown', onKey);
   document.body.appendChild(overlay);
+  const firstItem = menu.querySelector('.popover__item');
+  if (firstItem) setTimeout(() => { try { firstItem.focus(); } catch (_) { /* ignore */ } }, 30);
   // Position: prefer above the anchor; flip below if not enough room. Clamp to viewport.
   const r = anchorEl.getBoundingClientRect();
   const mr = menu.getBoundingClientRect();
@@ -185,7 +238,12 @@ export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) 
   menu.style.top = Math.max(8, top) + 'px';
   menu.style.left = left + 'px';
   requestAnimationFrame(() => overlay.classList.add('is-open'));
-  function close() { overlay.classList.remove('is-open'); setTimeout(() => overlay.remove(), 150); }
+  function close() {
+    document.removeEventListener('keydown', onKey);
+    overlay.classList.remove('is-open');
+    setTimeout(() => overlay.remove(), 150);
+    if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus(); } catch (_) { /* ignore */ } }
+  }
   return { close };
 }
 

@@ -6,12 +6,26 @@
 // Priority: a missed target backs you off even if effort wasn't marked; beating
 // the target pushes you up. No signals at all => steady progression.
 import { getExercise } from './data/db.js';
+import { getExerciseMeta } from './store.js';
 import { historyFor } from './workout.js';
 import { t } from './i18n.js';
 
-const WEIGHT_STEP = 2.5; // kg increment
+// Weight increment by equipment. Barbells load in 1.25 kg plates per side;
+// dumbbell racks usually step by 2 kg; machines/cables by their stack.
+// A per-exercise override can be stored in exerciseMeta[id].weightStep.
+const STEP_BY_EQUIPMENT = { barbell: 2.5, dumbbell: 2, machine: 2.5, cable: 2.5, band: 0, bodyweight: 0 };
+const DEFAULT_STEP = 2.5;
 
-function round(n) { return Math.round(n / WEIGHT_STEP) * WEIGHT_STEP; }
+/** The kg increment to use when progressing this exercise. */
+export function weightStepFor(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  const meta = ex ? getExerciseMeta(ex.id) : null;
+  if (meta && meta.weightStep > 0) return meta.weightStep;
+  const s = ex ? STEP_BY_EQUIPMENT[ex.equipment] : undefined;
+  return (s === undefined || s === 0) ? DEFAULT_STEP : s;
+}
+
+function round(n, step) { return Math.round(n / step) * step; }
 function round1(n) { return Math.round(n * 10) / 10; }
 function heaviest(sets) { return [...sets].sort((a, b) => (b.weightKg || 0) - (a.weightKg || 0) || (b.reps || 0) - (a.reps || 0))[0] || {}; }
 
@@ -68,7 +82,8 @@ export function suggestNext(exerciseId, excludeSessionId) {
   const [trend, reason] = pickTrend(effortTrend, missed, beat);
 
   if (w > 0) {
-    if (trend === 'up') return { ...base, trend, reason, values: { weightKg: round(w + WEIGHT_STEP), reps: r } };
+    const step = weightStepFor(ex);
+    if (trend === 'up') return { ...base, trend, reason, values: { weightKg: round(w + step, step), reps: r } };
     if (trend === 'down') return { ...base, trend, reason, values: { weightKg: w, reps: missed ? retryReps : r } };
     return { ...base, trend, reason, values: { weightKg: w, reps: r + 1 } };
   }

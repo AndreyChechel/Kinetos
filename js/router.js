@@ -7,6 +7,8 @@
 let routes = [];
 let notFound = null;
 let onNavigate = null;
+let navGuard = null;   // editor views set this to intercept leaving with unsaved changes
+let lastPath = null;   // last successfully rendered in-app path
 
 // App base path with a trailing slash, e.g. '/' or '/Kinetos/'.
 // document.baseURI comes from the <base href> set in index.html.
@@ -53,10 +55,24 @@ export function back() {
 // Re-run the current route (used after a language switch re-renders the view).
 export function refresh() { handle(); }
 
+/** Register a guard called before leaving the current route. Return false to
+ *  stay (the URL is restored). Cleared automatically once a navigation passes. */
+export function setNavGuard(fn) { navGuard = fn; }
+export function clearNavGuard(fn) { if (!fn || navGuard === fn) navGuard = null; }
+
 function handle() {
+  const path = currentPath() || '/';
+  if (navGuard && lastPath && path.split('?')[0] !== lastPath.split('?')[0]) {
+    if (!navGuard()) {
+      // Rejected: restore the previous URL (covers both pushState and popstate).
+      history.replaceState({}, '', href(lastPath));
+      return;
+    }
+    navGuard = null;
+  }
   // Let views react to navigation (e.g. stop the session timer) before re-render.
   window.dispatchEvent(new Event('route:change'));
-  const path = currentPath() || '/';
+  lastPath = path;
   const clean = path.split('?')[0];
   for (const r of routes) {
     const m = clean.match(r.rx);

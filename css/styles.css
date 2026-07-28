@@ -492,3 +492,51 @@ canvas { max-width: 100%; }
 .stepper button { display: grid; place-items: center; }
 /* Suggestion (💡) leading icon: keep the bulb aligned with the text */
 .suggest__ico { display: inline-flex; align-items: center; color: var(--primary); flex: none; }
+
+/* ============ Accessibility ============ */
+/* Visible keyboard focus for interactive elements (inputs already have one). */
+.btn:focus-visible, .chip:focus-visible, .cal__day:focus-visible, .tabbar__item:focus-visible,
+.donebtn:focus-visible, .fab:focus-visible, .list__item:focus-visible, .tpl-chip:focus-visible,
+.barbtn:focus-visible, .ex-shelf__item:focus-visible, .popover__item:focus-visible,
+.topbar__back:focus-visible, .toast__action:focus-visible, .restbar__skip:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============ Toast action (e.g. Undo / Reload) ============ */
+.toast.show { pointer-events: auto; }
+.toast__action {
+  margin-left: 12px; padding: 4px 10px; border: none; border-radius: 999px;
+  background: var(--primary); color: var(--primary-contrast);
+  font-weight: 700; font-size: .85rem; cursor: pointer;
+}
+
+/* ============ Rest timer bar (active session) ============ */
+.restbar {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 74px);
+  display: flex; align-items: center; gap: 10px;
+  background: var(--primary); color: var(--primary-contrast);
+  padding: 10px 16px; border-radius: 999px; font-weight: 700; font-size: .95rem;
+  box-shadow: 0 6px 18px rgba(47,109,246,.45); z-index: 30;
+  font-variant-numeric: tabular-nums;
+}
+.restbar[hidden] { display: none; }
+.restbar__skip {
+  display: grid; place-items: center; width: 24px; height: 24px;
+  border: none; border-radius: 50%; background: rgba(255,255,255,.25);
+  color: inherit; cursor: pointer; padding: 0;
+}
+
+/* ============ PR badge (finished-session best sets) ============ */
+.tag--pr {
+  background: color-mix(in srgb, var(--success) 22%, transparent);
+  color: var(--success); margin-left: 6px;
+}

@@ -19,7 +19,7 @@
   <li>Generate its illustration: run <code>python tools/generate_svgs.py</code>. It writes <code>assets/exercises/&lt;id&gt;.svg</code> for every exercise from the JSON.</li>
   <li>Add the new SVG path to the <code>CORE</code>/precache logic only if needed — <code>sw.js</code> already precaches every id listed in <code>exercises.json</code> automatically, and bump <code>CACHE</code> in <code>sw.js</code> so clients refresh.</li>
 </ol>
-<p>Users can also add ad-hoc exercises at runtime (Exercises → + button); those are stored in <code>customExercises</code> and use the emoji fallback (no SVG file).</p>
+<p>Users can also add ad-hoc exercises at runtime (Exercises → + button); those are stored in <code>customExercises</code> and get a <b>runtime-generated</b> muscle-map SVG from their group via <code>js/exsvg.js</code> (no SVG file needed).</p>
 
 <h2>Add a language</h2>
 <ol>
@@ -47,7 +47,7 @@
 <p class="muted">All are estimates for planning, not medical advice. They are pure functions — easy to unit test or swap.</p>
 
 <h2>Target suggestions (<code>js/suggest.js</code>)</h2>
-<p>Lightweight autoregulation. <code>suggestNext(exerciseId, excludeSessionId)</code> finds the last session that trained the exercise (via <code>lastSetFor</code>), takes the reference set (heaviest, then most reps) and the average <em>effort</em> rating of those sets, then nudges the target: effort &lt; 1.7 → progress (weighted: +2.5&nbsp;kg; bodyweight: +2 reps; time: +15&nbsp;s), 1.7–2.3 → steady (+1 rep), &gt; 2.3 → back off (hold weight, −1 rep). With no effort logged it defaults to steady. Surfaced as a chip in the active session (with a <b>Use</b> button and auto-prefill of new sets) and as a "Suggested next" card on the exercise detail. Tune the thresholds/increments at the top of <code>suggest.js</code>.</p>
+<p>Lightweight autoregulation. <code>suggestNext(exerciseId, excludeSessionId)</code> finds the last session that trained the exercise (via <code>historyFor</code>, which only counts <em>performed</em> sets — <code>done !== false</code>), takes the reference set (heaviest, then most reps), and combines the average <em>effort</em> rating with whether the target reps were hit: a missed target backs off (hold weight, retry the target reps); beating it pushes up. Otherwise: effort &lt; 1.7 → progress (weighted: +1 step; bodyweight: +2 reps; time: +15&nbsp;s), 1.7–2.3 → steady (+1 rep), &gt; 2.3 → back off. The weight step is per-equipment (barbell/machine/cable 2.5&nbsp;kg, dumbbell 2&nbsp;kg) and can be overridden per exercise on its detail screen (stored in <code>exerciseMeta[id].weightStep</code>). With no signals it defaults to steady. Surfaced as a chip in the active session (with a <b>Use</b> button and auto-prefill of new sets) and as a "Suggested next" card on the exercise detail. Tune the thresholds/increments at the top of <code>suggest.js</code>.</p>
 
 <h2>Add a screen</h2>
 <ol>

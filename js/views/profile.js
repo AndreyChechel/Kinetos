@@ -2,6 +2,8 @@
 import { h, toast } from '../ui.js';
 import { t, getLang, SUPPORTED } from '../i18n.js';
 import { getProfile, setProfile, getSettings, setSettings, exportJSON, importJSON, resetAll } from '../store.js';
+import { completedSessions } from '../workout.js';
+import { getExercise, exName } from '../data/db.js';
 import { age, maxHR, hrZones, bmi, bodyFat, bmr, tdee } from '../calc.js';
 import { sheet, confirmDialog } from '../components.js';
 import { applyTheme, changeLanguage } from '../app.js';
@@ -129,7 +131,14 @@ export default function renderProfile(root, params, ctx) {
     ['included', t('profile.barbellIncluded')],
     ['added', t('profile.barbellAdded')]
   ], st.barbellInput || 'included', (v) => { setSettings({ barbellInput: v }); drawBarWeights(); });
+  const restInput = h('input', { class: 'input', type: 'number', inputmode: 'numeric', min: '0', step: '5', value: st.restSeconds ?? 90 });
+  restInput.addEventListener('change', () => {
+    const n = parseInt(restInput.value, 10);
+    setSettings({ restSeconds: isNaN(n) || n < 0 ? 0 : n });
+    toast(t('toast.saved'));
+  });
   const barWeightsHost = h('div', { style: 'margin-top:10px' });
+  const platesHost = h('div', { style: 'margin-top:10px' });
   root.appendChild(h('div', { class: 'card' }, [
     h('div', { class: 'card__title', text: t('profile.settings') }),
     h('div', { class: 'grid2' }, [
@@ -137,11 +146,14 @@ export default function renderProfile(root, params, ctx) {
       field(t('profile.theme'), themeSel),
       field(t('profile.units'), unitSel),
       field(t('profile.dumbbellInput'), dumbbellSel),
-      field(t('profile.barbellInput'), barbellSel)
+      field(t('profile.barbellInput'), barbellSel),
+      field(t('profile.restTimer'), restInput)
     ]),
     h('div', { class: 'small muted', text: t('profile.dumbbellHint') }),
     h('div', { class: 'small muted', style: 'margin-top:4px', text: t('profile.barbellHint') }),
-    barWeightsHost
+    h('div', { class: 'small muted', style: 'margin-top:4px', text: t('profile.restTimerHint') }),
+    barWeightsHost,
+    platesHost
   ]));
 
   // Editable list of bar weights — only relevant in "add bar weight" mode.
@@ -175,10 +187,47 @@ export default function renderProfile(root, params, ctx) {
   }
   drawBarWeights();
 
+  // Available plate sizes (kg) — feeds the per-side plate calculator in the
+  // session view (long-press a barbell weight field).
+  function drawPlates() {
+    platesHost.innerHTML = '';
+    const plates = (getSettings().plates || []).slice().sort((a, b) => b - a);
+    platesHost.appendChild(h('div', { class: 'field__label', style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:6px', text: t('profile.plates') }));
+    const chips = h('div', { class: 'chips' });
+    plates.forEach((w, i) => {
+      chips.appendChild(h('span', { class: 'tag', style: 'display:inline-flex;align-items:center;gap:6px;padding-right:5px' }, [
+        w + ' ' + t('units.kg'),
+        h('button', { class: 'btn btn--icon btn--ghost btn--sm', style: 'width:20px;height:20px;min-height:0;padding:0', 'aria-label': t('common.remove'),
+          onclick: () => { const arr = plates.filter((_, j) => j !== i); setSettings({ plates: arr }); drawPlates(); } }, [icon('x', { size: 14 })])
+      ]));
+    });
+    platesHost.appendChild(chips);
+    const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step: '0.25', min: '0', placeholder: t('profile.barbellAddWeight'), style: 'flex:1' });
+    const add = () => {
+      const n = parseFloat(inp.value);
+      if (isNaN(n) || n <= 0) return;
+      const arr = plates.slice();
+      if (!arr.includes(n)) arr.push(n);
+      setSettings({ plates: arr }); inp.value = ''; drawPlates();
+    };
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+    platesHost.appendChild(h('div', { class: 'row', style: 'gap:8px;margin-top:8px' }, [
+      inp, h('button', { class: 'btn btn--sm', onclick: add }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
+    ]));
+    platesHost.appendChild(h('div', { class: 'small muted', style: 'margin-top:6px', text: t('profile.platesHint') }));
+  }
+  drawPlates();
+
   // ---------- Cloud sync ----------
   const syncCard = h('div', { class: 'card' });
   root.appendChild(syncCard);
-  const unsub = sync.onStatus(() => { if (document.body.contains(syncCard)) renderSync(); else unsub(); });
+  const unsub = sync.onStatus(() => { if (document.body.contains(syncCard)) renderSync(); });
+  // Unsubscribe deterministically when this view unmounts — waiting for a later
+  // status event to notice the card is gone leaked a callback per visit.
+  window.addEventListener('route:change', function off() {
+    unsub();
+    window.removeEventListener('route:change', off);
+  });
   renderSync();
   function renderSync() {
     const st = sync.getStatus();
@@ -228,6 +277,7 @@ export default function renderProfile(root, params, ctx) {
     h('p', { class: 'small muted', text: t('profile.backupReminder') }),
     h('div', { class: 'stack' }, [
       h('button', { class: 'btn btn--primary btn--block', onclick: doExport }, [icon('download', { size: 16 }), ' ' + t('profile.exportData')]),
+      h('button', { class: 'btn btn--block', onclick: doExportCSV }, [icon('download', { size: 16 }), ' ' + t('profile.exportCSV')]),
       h('button', { class: 'btn btn--block', onclick: doImport }, [icon('upload', { size: 16 }), ' ' + t('profile.importData')]),
       h('button', { class: 'btn btn--danger btn--block', onclick: doReset }, [t('profile.resetApp')])
     ])
@@ -238,7 +288,11 @@ export default function renderProfile(root, params, ctx) {
   const installBtn = h('button', { class: 'btn btn--block', onclick: async () => { await promptInstall(); } }, [icon('download', { size: 16 }), ' ' + t('profile.install')]);
   const installWrap = h('div', { class: 'card', style: canInstall() ? '' : 'display:none' }, [installBtn]);
   root.appendChild(installWrap);
-  onInstallAvailability((ok) => { installWrap.style.display = ok ? '' : 'none'; });
+  const offInstall = onInstallAvailability((ok) => { installWrap.style.display = ok ? '' : 'none'; });
+  window.addEventListener('route:change', function off() {
+    offInstall();
+    window.removeEventListener('route:change', off);
+  });
 
   // About
   root.appendChild(h('div', { class: 'card small muted' }, [
@@ -255,6 +309,30 @@ export default function renderProfile(root, params, ctx) {
     const blob = new Blob([exportJSON()], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = h('a', { href: url, download: `kinetos-backup-${new Date().toISOString().slice(0, 10)}.json` });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(t('toast.exported'));
+  }
+  // Flat one-row-per-set CSV — what people actually want for spreadsheets.
+  function doExportCSV() {
+    const q = (v) => { v = v == null ? '' : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    const rows = [['date', 'session', 'exercise', 'set', 'weightKg', 'barKg', 'reps', 'seconds', 'distanceKm', 'minutes', 'effort', 'done']];
+    completedSessions().slice().reverse().forEach((s) => {
+      (s.entries || []).forEach((e) => {
+        const ex = getExercise(e.exerciseId);
+        (e.sets || []).forEach((set) => {
+          rows.push([
+            (s.startedAt || '').slice(0, 10), s.name || '', ex ? exName(ex) : e.exerciseId, set.n,
+            set.weightKg ?? '', set.barKg ?? '', set.reps ?? '', set.seconds ?? '', set.distanceKm ?? '', set.minutes ?? '',
+            set.effort ?? '', set.done === false ? 0 : 1
+          ]);
+        });
+      });
+    });
+    const csv = rows.map((r) => r.map(q).join(',')).join('\r\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }); // BOM so Excel detects UTF-8
+    const url = URL.createObjectURL(blob);
+    const a = h('a', { href: url, download: `kinetos-sets-${new Date().toISOString().slice(0, 10)}.csv` });
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     toast(t('toast.exported'));

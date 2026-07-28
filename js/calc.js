@@ -4,7 +4,10 @@
 /** Age in years from ISO birthdate. */
 export function age(birthdateISO, ref = new Date()) {
   if (!birthdateISO) return null;
-  const b = new Date(birthdateISO);
+  // Parse date-only strings as LOCAL midnight — new Date('yyyy-mm-dd') is UTC
+  // midnight, which shifts the birthday a day early in negative-offset zones.
+  const dm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(birthdateISO).slice(0, 10));
+  const b = dm ? new Date(+dm[1], +dm[2] - 1, +dm[3]) : new Date(birthdateISO);
   if (isNaN(b)) return null;
   let a = ref.getFullYear() - b.getFullYear();
   const m = ref.getMonth() - b.getMonth();
@@ -33,7 +36,7 @@ export function hrZones(ageYears, restingHR) {
     { key: 'z4', name: 'anaerobic', lo: 0.80, hi: 0.90 },
     { key: 'z5', name: 'maximal', lo: 0.90, hi: 1.00 }
   ];
-  const useKarvonen = restingHR != null && restingHR > 0;
+  const useKarvonen = restingHR != null && restingHR > 0 && restingHR < hrMax; // a resting HR ≥ max would invert the zones
   const reserve = hrMax - (restingHR || 0);
   return {
     hrMax, method: useKarvonen ? 'karvonen' : 'percent',
@@ -50,7 +53,8 @@ export function oneRepMax(weight, reps) {
   if (!weight || !reps || reps < 1) return null;
   if (reps === 1) return { epley: weight, brzycki: weight, avg: weight };
   const epley = weight * (1 + reps / 30);
-  const brzycki = weight * (36 / (37 - reps));
+  // Brzycki blows up (Infinity/negative) at reps >= 37 — fall back to Epley there.
+  const brzycki = reps < 37 ? weight * (36 / (37 - reps)) : epley;
   const valid = reps < 37 ? [epley, brzycki] : [epley];
   const avg = valid.reduce((a, b) => a + b, 0) / valid.length;
   return { epley: round1(epley), brzycki: round1(brzycki), avg: round1(avg) };
@@ -110,12 +114,29 @@ export function sessionVolume(session, weightOf) {
   let vol = 0, sets = 0, reps = 0;
   (session.entries || []).forEach((e) => {
     (e.sets || []).forEach((s) => {
-      if (s.done !== false && s.reps) {
+      if (s.done === false) return;
+      if (s.reps) {
         vol += (wOf(s, e) || 0) * s.reps;
         reps += s.reps;
         sets += 1;
+      } else if (s.seconds || s.distanceKm) {
+        sets += 1; // time/distance work counts as a set even without reps
       }
     });
   });
   return { volume: Math.round(vol), sets, reps };
+}
+
+/** Plates needed per side to load `totalKg` on a `barKg` bar from available
+ *  `plates` sizes (greedy, largest first). Returns { plates:[], remainder } or
+ *  null when the target is below the bare bar. Pure — unit-testable. */
+export function platesPerSide(totalKg, barKg, plates) {
+  if (totalKg == null || barKg == null || totalKg < barKg) return null;
+  let per = (totalKg - barKg) / 2;
+  const out = [];
+  const sizes = [...(plates || [])].filter((p) => p > 0).sort((a, b) => b - a);
+  for (const p of sizes) {
+    while (per >= p - 1e-9) { out.push(p); per -= p; }
+  }
+  return { plates: out, remainder: Math.round(per * 100) / 100 };
 }

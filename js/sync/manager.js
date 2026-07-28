@@ -4,7 +4,7 @@
 import { SYNC } from '../config.js';
 import * as prov from './providers.js';
 import { forgetSecrets } from './secret.js';
-import { serialize, mergeRemote, subscribe, getSettings, setSettings } from '../store.js';
+import { serialize, mergeRemote, subscribe, getSettings, setSettings, flushPersist } from '../store.js';
 
 const META_KEY = 'kinetos.sync.meta';
 
@@ -57,29 +57,46 @@ async function pull() {
   return remote || { text: null };
 }
 async function push(remote) {
+  flushPersist(); // make sure any debounced write is on disk before we snapshot
   const text = serialize();
-  // Skip the write when the remote file already holds exactly what we'd upload.
-  // (remote is the result of the pull that just ran; absent on best-effort pushes.)
-  if (!(remote && remote.text === text)) {
-    await prov.upload(provider(), text, remote);
-  }
+  // Clear dirty at snapshot time: edits made while the upload is in flight land
+  // after serialize() and re-set dirty via subscribe(), so they aren't lost.
   dirty = false;
+  // Skip the write when the remote file already holds exactly what we'd upload.
+  // (remote is the result of the pull that just ran.)
+  if (!(remote && remote.text === text)) {
+    try { await prov.upload(provider(), text, remote); }
+    catch (e) { dirty = true; throw e; }
+  }
   setMeta({ lastSyncedAt: new Date().toISOString() });
 }
 
-/** Full sync: pull + merge, then push. */
-export async function syncNow() {
-  if (!isConnected()) { setStatus('needsAuth'); return; }
-  if (typeof navigator !== 'undefined' && navigator.onLine === false) { setStatus('offline'); return; }
+// Single-flight guard: manual button, the interval, the online handler and the
+// hidden-tab hook can all fire — only one sync runs at a time; overlapping
+// requests coalesce into one follow-up run.
+let inFlight = null;
+let runAgain = false;
+
+/** Full sync: pull + merge, then push. Never pushes without merging first. */
+export function syncNow() {
+  if (!isConnected()) { setStatus('needsAuth'); return Promise.resolve(); }
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) { setStatus('offline'); return Promise.resolve(); }
+  if (inFlight) { runAgain = true; return inFlight; }
   setStatus('syncing');
-  try {
-    const remote = await pull();
-    await push(remote);
-    setStatus('ok');
-  } catch (e) {
-    console.error('Kinetos sync error:', e);
-    setStatus(e && e.code === 'auth' ? 'needsAuth' : 'error', (e && e.message) || '');
-  }
+  inFlight = (async () => {
+    try {
+      const remote = await pull();
+      await push(remote);
+      setStatus('ok');
+    } catch (e) {
+      console.error('Kinetos sync error:', e);
+      setStatus(e && e.code === 'auth' ? 'needsAuth' : 'error', (e && e.message) || '');
+    } finally {
+      inFlight = null;
+      if (runAgain) { runAgain = false; if (dirty) syncNow(); }
+    }
+  })();
+  return inFlight;
 }
 
 /** Called once on boot. Handles OAuth redirect, wires triggers, kicks a sync. */
@@ -88,7 +105,12 @@ export async function init() {
   try {
     const p = await prov.handleRedirect();
     if (p) setSettings({ sync: { ...(getSettings().sync || {}), provider: p } });
-  } catch (e) { /* ignore */ }
+  } catch (e) {
+    // A failed token exchange used to be swallowed, leaving the user looking
+    // "connected" with no tokens. Surface it so Profile shows the error.
+    console.warn('sync: OAuth redirect failed', e);
+    setStatus('error', (e && e.message) || 'auth');
+  }
 
   // 2) mark data dirty on any user change (not while applying a remote snapshot)
   subscribe(() => { if (!applying) { dirty = true; emit(); } });
@@ -98,9 +120,12 @@ export async function init() {
   clearInterval(intervalId);
   intervalId = setInterval(() => { if (dirty && isConnected() && navigator.onLine !== false) syncNow(); }, everyMs);
 
-  // 4) best-effort push when the tab is hidden/closed
+  // 4) best-effort sync when the tab is hidden/closed. A full pull+merge+push —
+  //    a blind push here could overwrite what another device wrote in between.
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden' && dirty && isConnected()) { try { push(); } catch (e) {} }
+    if (document.visibilityState === 'hidden' && dirty && isConnected() && navigator.onLine !== false) {
+      syncNow().catch(() => { /* status already set inside syncNow */ });
+    }
   });
   window.addEventListener('online', () => { if (dirty && isConnected()) syncNow(); });
 

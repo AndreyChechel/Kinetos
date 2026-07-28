@@ -65,7 +65,12 @@ export async function handleRedirect() {
 
   // Implicit token flow (e.g. Yandex): token arrives in the hash fragment.
   if (hash.get('access_token')) {
-    const provider = (saved && saved.provider) || (hash.get('state') || '').split('.')[0];
+    // CSRF check: the state we generated in beginAuth must come back unchanged.
+    if (!saved || !saved.state || hash.get('state') !== saved.state) {
+      finishRedirect();
+      throw authError('state-mismatch');
+    }
+    const provider = saved.provider;
     if (provider) setTokens(provider, {
       access_token: hash.get('access_token'),
       expires_at: Date.now() + (parseInt(hash.get('expires_in') || '3600', 10) * 1000)
@@ -75,24 +80,36 @@ export async function handleRedirect() {
   }
   // Authorization-code + PKCE flow: exchange the code for tokens.
   if (query.get('code')) {
-    const provider = (saved && saved.provider) || (query.get('state') || '').split('.')[0];
+    // CSRF check: the state we generated in beginAuth must come back unchanged.
+    if (!saved || !saved.state || query.get('state') !== saved.state) {
+      finishRedirect();
+      throw authError('state-mismatch');
+    }
+    const provider = saved.provider;
     const cfg = SYNC.providers[provider];
     if (cfg) {
       const body = new URLSearchParams({
         grant_type: 'authorization_code', code: query.get('code'),
         redirect_uri: SYNC.redirectUri, client_id: cfg.clientId
       });
-      if (saved && saved.verifier) body.set('code_verifier', saved.verifier);
+      if (saved.verifier) body.set('code_verifier', saved.verifier);
       const secret = await getClientSecret(provider);
       if (secret) body.set('client_secret', secret);
       try {
         const res = await fetch(cfg.tokenUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
         const j = await res.json();
-        if (j.access_token) setTokens(provider, {
+        if (!j.access_token) {
+          // Don't leave the user looking half-connected with no explanation.
+          throw new Error(j.error_description || j.error || 'token-exchange-failed');
+        }
+        setTokens(provider, {
           access_token: j.access_token, refresh_token: j.refresh_token,
           expires_at: Date.now() + ((j.expires_in || 3600) * 1000)
         });
-      } catch (e) { /* leave unauthenticated */ }
+      } finally {
+        finishRedirect();
+      }
+      return provider || null;
     }
     finishRedirect();
     return provider || null;
@@ -102,11 +119,13 @@ export async function handleRedirect() {
 
 function finishRedirect() {
   sessionStorage.removeItem(OAUTH_KEY);
-  // Land back on a clean /profile URL. SYNC.redirectUri is the app base (ends
-  // with '/'); the router picks the route up when it starts during boot.
-  const base = /\/$/.test(SYNC.redirectUri || '') ? SYNC.redirectUri : (SYNC.redirectUri + '/');
-  try { history.replaceState({}, document.title, base + 'profile'); }
-  catch (e) { /* URL cleanup is best-effort */ }
+  // Land back on a clean /profile URL under the app base. Use <base href>
+  // (same source as the router) rather than SYNC.redirectUri so the target is
+  // right even if the registered redirect URI is customized.
+  try {
+    const base = new URL('.', document.baseURI).pathname;
+    history.replaceState({}, document.title, base + 'profile');
+  } catch (e) { /* URL cleanup is best-effort */ }
 }
 
 async function ensureToken(provider) {

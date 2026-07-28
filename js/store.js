@@ -30,6 +30,8 @@ function defaultState() {
       dumbbellInput: 'single', // 'single' => user logs ONE dumbbell (counted x2); 'pair' => logs both (total)
       barbellInput: 'included', // 'included' => logged weight already includes the bar; 'added' => log plates only, add the chosen bar
       barbellWeights: [20, 10, 5], // selectable bar weights (kg) when barbellInput==='added'; first is the default
+      plates: [25, 20, 15, 10, 5, 2.5, 1.25], // available plate sizes (kg) — drives the per-side plate calculator
+      restSeconds: 90,      // rest countdown after a set is marked done; 0 = off
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
     templates: [],          // reusable, dateless workout blueprints
@@ -107,12 +109,45 @@ function prunedTombstones(tombs) {
   return out;
 }
 
+const HAS_DOM = typeof window !== 'undefined' && typeof document !== 'undefined';
+
+// Writes are debounced: rapid edits during logging (every keystroke/tap) would
+// otherwise serialize the whole state each time. flushPersist() guarantees the
+// pending write lands (called on pagehide/visibilitychange and before sync).
+let persistTimer = null;
+let lastPersistErrorAt = 0;
 function persist() {
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(flushPersist, 250);
+}
+export function flushPersist() {
+  if (persistTimer) { clearTimeout(persistTimer); persistTimer = null; }
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
+    lastPersistErrorAt = 0;
   } catch (e) {
+    // Surface the failure — silently losing writes mid-workout is worse than a
+    // scary toast. app.js listens and tells the user to export.
     console.error('store: save failed (quota?)', e);
+    const now = Date.now();
+    if (HAS_DOM && now - lastPersistErrorAt > 60000) {
+      lastPersistErrorAt = now;
+      try { window.dispatchEvent(new CustomEvent('store:persist-error', { detail: e })); } catch (_) { /* ignore */ }
+    }
   }
+}
+if (HAS_DOM) {
+  window.addEventListener('pagehide', flushPersist);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushPersist(); });
+  // Cross-tab coordination: another tab (or PWA window) wrote the key — adopt
+  // its state if it's at least as new, instead of clobbering it on our next write.
+  window.addEventListener('storage', (e) => {
+    if (e.key !== KEY || e.newValue == null) return;
+    try {
+      const incoming = migrate(JSON.parse(e.newValue));
+      if ((incoming.updatedAt || '') >= (state.updatedAt || '')) { state = incoming; notify(); }
+    } catch (_) { /* ignore malformed writes */ }
+  });
 }
 
 function notify() { subs.forEach((fn) => fn(state)); }
@@ -199,6 +234,7 @@ export function getPlan(id) { return state.plans.find((p) => p.id === id); }
 export function savePlan(plan) {
   update((s) => {
     clearTombstone(s, 'plans', plan.id);
+    plan.updatedAt = new Date().toISOString(); // entity-level stamp — lets an edit beat a remote delete (lastModOf)
     const i = s.plans.findIndex((p) => p.id === plan.id);
     if (i >= 0) s.plans[i] = plan; else s.plans.push(plan);
   });
@@ -211,6 +247,7 @@ export function getSession(id) { return state.sessions.find((x) => x.id === id);
 export function saveSession(sess) {
   update((s) => {
     clearTombstone(s, 'sessions', sess.id);
+    sess.updatedAt = new Date().toISOString(); // entity-level stamp — lets an edit beat a remote delete (lastModOf)
     const i = s.sessions.findIndex((x) => x.id === sess.id);
     if (i >= 0) s.sessions[i] = sess; else s.sessions.push(sess);
   });
@@ -232,15 +269,15 @@ export function deleteTemplate(id) { update((s) => { s.templates = s.templates.f
 
 // --- Custom exercises ---
 export function getCustomExercises() { return state.customExercises; }
-export function addCustomExercise(ex) { update((s) => { clearTombstone(s, 'customExercises', ex.id); s.customExercises.push(ex); }); }
+export function addCustomExercise(ex) { update((s) => { clearTombstone(s, 'customExercises', ex.id); ex.updatedAt = new Date().toISOString(); s.customExercises.push(ex); }); }
 export function updateCustomExercise(ex) {
-  update((s) => { clearTombstone(s, 'customExercises', ex.id); const i = s.customExercises.findIndex((x) => x.id === ex.id); if (i >= 0) s.customExercises[i] = ex; });
+  update((s) => { clearTombstone(s, 'customExercises', ex.id); ex.updatedAt = new Date().toISOString(); const i = s.customExercises.findIndex((x) => x.id === ex.id); if (i >= 0) s.customExercises[i] = ex; });
 }
 /** Hard-remove a custom exercise (only safe when it has no logged history). */
 export function removeCustomExercise(id) { update((s) => { s.customExercises = s.customExercises.filter((x) => x.id !== id); recordTombstone(s, 'customExercises', id); }); }
 /** Soft-delete: keep the row (so history still resolves its name) but flag as deleted. */
 export function softDeleteCustomExercise(id) {
-  update((s) => { const ex = s.customExercises.find((x) => x.id === id); if (ex) ex.deleted = true; });
+  update((s) => { const ex = s.customExercises.find((x) => x.id === id); if (ex) { ex.deleted = true; ex.updatedAt = new Date().toISOString(); } });
 }
 
 // --- Per-exercise UI meta (hide + notes), works for built-in and custom ids ---
@@ -249,6 +286,10 @@ function ensureMeta(s, id) { return (s.exerciseMeta[id] = s.exerciseMeta[id] || 
 export function isExerciseHidden(id) { return !!(state.exerciseMeta[id] && state.exerciseMeta[id].hidden); }
 export function setExerciseHidden(id, hidden) { update((s) => { ensureMeta(s, id).hidden = !!hidden; }); }
 export function getExerciseNotes(id) { return (state.exerciseMeta[id] && state.exerciseMeta[id].notes) || []; }
+/** Per-exercise weight increment override (kg); null/0 clears it. */
+export function setExerciseWeightStep(id, step) {
+  update((s) => { const m = ensureMeta(s, id); if (step > 0) m.weightStep = step; else delete m.weightStep; });
+}
 export function addExerciseNote(id, text) {
   const noteId = 'note_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   update((s) => { const m = ensureMeta(s, id); m.notes = m.notes || []; m.notes.push({ id: noteId, text, ts: new Date().toISOString() }); });
@@ -267,13 +308,20 @@ export function exportJSON() {
 }
 export function importJSON(text, { merge = false } = {}) {
   const data = JSON.parse(text);
-  if (!data || typeof data !== 'object') throw new Error('invalid');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('invalid');
+  // Only accept files that plausibly are a Kinetos backup — an arbitrary JSON
+  // object would otherwise be "migrated" into a valid-looking empty state.
+  const looksLikeKinetos = data.app === 'kinetos' ||
+    ['sessions', 'plans', 'templates', 'customExercises', 'profile'].some((k) => Array.isArray(data[k]) || (data[k] && typeof data[k] === 'object'));
+  if (!looksLikeKinetos) throw new Error('invalid');
   update((s) => {
     const incoming = migrate(data);
+    // Sync wiring (provider choice) is device-local — never adopt it from a file.
+    const localSync = (s.settings || {}).sync || { provider: '' };
     if (merge) {
       const byId = (arr, add) => {
         const ids = new Set(arr.map((x) => x.id));
-        add.forEach((x) => { if (!ids.has(x.id)) arr.push(x); });
+        add.forEach((x) => { if (x && x.id && !ids.has(x.id)) arr.push(x); });
       };
       byId(s.templates, incoming.templates);
       byId(s.plans, incoming.plans);
@@ -281,16 +329,32 @@ export function importJSON(text, { merge = false } = {}) {
       byId(s.customExercises, incoming.customExercises);
       s.exerciseMeta = { ...incoming.exerciseMeta, ...s.exerciseMeta };
       s.tombstones = unionTombstones(s.tombstones, incoming.tombstones);
-      s.profile = { ...s.profile, ...incoming.profile };
+      // Merge keeps local profile/settings values; the import only fills gaps.
+      const fillEmpty = (loc, inc) => {
+        const out = { ...loc };
+        Object.entries(inc || {}).forEach(([k, v]) => { if (out[k] == null || out[k] === '') out[k] = v; });
+        return out;
+      };
+      s.profile = fillEmpty(s.profile, incoming.profile);
+      s.settings = fillEmpty(s.settings, incoming.settings);
     } else {
       Object.assign(s, incoming);
     }
+    s.settings = { ...s.settings, sync: localSync };
   });
 }
 
-/** Wipe everything (used by "reset" in profile). */
+/** Wipe everything (used by "reset" in profile). Also forgets the cloud-sync
+ *  identity (tokens, remote file id, sync meta) — otherwise the very next sync
+ *  would just merge all the "erased" data back in from the remote copy. */
 export function resetAll() {
   state = defaultState();
-  persist();
+  try {
+    ['kinetos.tokens', 'kinetos.gdrive.fileId', 'kinetos.sync.meta'].forEach((k) => localStorage.removeItem(k));
+    if (typeof sessionStorage !== 'undefined') {
+      Object.keys(sessionStorage).filter((k) => k.startsWith('kinetos.')).forEach((k) => sessionStorage.removeItem(k));
+    }
+  } catch (_) { /* best-effort */ }
+  flushPersist();
   notify();
 }

@@ -18,6 +18,10 @@ export function newTarget(ex) {
 /** Render editable exercise rows into `wrap`. onChange() is called after any edit
  *  that mutates `list` (reorder/remove) so the caller can re-render + persist. */
 export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) {
+  // Tear down the previous drag listener: `wrap` survives re-renders, and each
+  // stacked listener would fire its own onReorder for a single drag, splicing
+  // the list N times and silently scrambling the exercise order.
+  if (wrap._unsort) { wrap._unsort(); wrap._unsort = null; }
   wrap.innerHTML = '';
   if (!list.length) {
     wrap.appendChild(h('div', { class: 'card center muted', text: emptyText || t('plan.noExercises') }));
@@ -65,7 +69,7 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
     wrap.appendChild(card);
   });
 
-  makeSortable(wrap, {
+  wrap._unsort = makeSortable(wrap, {
     handle: '.drag-handle',
     onReorder: (from, to) => { const [it] = list.splice(from, 1); list.splice(to, 0, it); onChange && onChange(); }
   });

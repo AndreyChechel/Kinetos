@@ -2,17 +2,26 @@
 // completed workouts, a selected-day panel, and a Templates shelf on top.
 // Also hosts the scheduled-session editor (a dated instance, optionally from a
 // template) via renderPlanEditor.
-import { h, uid, fmtDate, toast, todayISO, localISO } from '../ui.js';
+import { h, uid, fmtDate, toast, todayISO, localISO, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getPlans, getPlan, savePlan, deletePlan, getTemplates, saveTemplate } from '../store.js';
-import { completedSessions, createSessionFromPlan, planFromTemplate, activeSession } from '../workout.js';
+import { completedSessions, createSessionFromPlan, planFromTemplate, activeSession, planStarted } from '../workout.js';
 import { exercisePicker, confirmDialog, sheet } from '../components.js';
 import { renderExerciseTargets, newTarget, labeled } from '../planedit.js';
+import { setNavGuard, clearNavGuard } from '../router.js';
 import { icon } from '../icons.js';
 
-// Persist which month + day the user is looking at across visits.
-const now = new Date();
-let calState = { y: now.getFullYear(), m: now.getMonth(), sel: todayISO() };
+// Persist which month + day the user is looking at across visits — but refresh
+// when the calendar day rolls over (a resumed PWA must not open on yesterday).
+let calState = null;
+function ensureCalState() {
+  const today = todayISO();
+  if (!calState || calState.today !== today) {
+    const d = new Date();
+    calState = { y: d.getFullYear(), m: d.getMonth(), sel: today, today };
+  }
+  return calState;
+}
 
 const iso = (d) => localISO(d);
 function monthDays(y, m) {
@@ -23,6 +32,7 @@ function monthDays(y, m) {
 }
 
 export function renderCalendar(root, params, ctx) {
+  ensureCalState();
   const lang = getLang();
   const wrap = h('div', {});
 
@@ -59,8 +69,8 @@ export function renderCalendar(root, params, ctx) {
     cal.appendChild(h('div', { class: 'cal__head' }, [
       h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.back'), onclick: () => { shiftMonth(-1); } }, [icon('chevronLeft', { size: 20 })]),
       h('div', { class: 'cal__title', text: monthLabel }),
-      h('button', { class: 'btn btn--sm btn--ghost', onclick: () => { const d = new Date(); calState = { y: d.getFullYear(), m: d.getMonth(), sel: todayISO() }; renderCal(); renderDay(); } }, [t('plan.today')]),
-      h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.next') || 'Next', onclick: () => { shiftMonth(1); } }, [icon('chevronRight', { size: 20 })])
+      h('button', { class: 'btn btn--sm btn--ghost', onclick: () => { const d = new Date(); calState = { y: d.getFullYear(), m: d.getMonth(), sel: todayISO(), today: todayISO() }; renderCal(); renderDay(); } }, [t('plan.today')]),
+      h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.next'), onclick: () => { shiftMonth(1); } }, [icon('chevronRight', { size: 20 })])
     ]));
 
     const dow = h('div', { class: 'cal__dow' });
@@ -107,25 +117,28 @@ export function renderCalendar(root, params, ctx) {
     } else {
       const ul = h('ul', { class: 'list card card--pad-0' });
       plans.forEach((p) => {
+        const started = planStarted(p.id); // a started plan isn't "planned" anymore
         ul.appendChild(h('li', { class: 'list__item' }, [
-          h('div', { class: 'list__thumb', onclick: () => ctx.navigate('/plan/' + p.id) }, [icon('calendar', { size: 24 })]),
+          clickable(h('div', { class: 'list__thumb', onclick: () => ctx.navigate('/plan/' + p.id) }, [icon('calendar', { size: 24 })])),
           h('div', { class: 'list__body', onclick: () => ctx.navigate('/plan/' + p.id) }, [
             h('div', { class: 'list__title', text: p.name || t('plan.new') }),
-            h('div', { class: 'list__sub', text: t('plan.planned') + ' · ' + t('exercises.count', { n: (p.exercises || []).length }) })
+            h('div', { class: 'list__sub', text: (started ? t('plan.started') : t('plan.planned')) + ' · ' + t('exercises.count', { n: (p.exercises || []).length }) })
           ]),
-          h('button', { class: 'btn btn--sm btn--primary', disabled: activeSession() ? true : null,
-            onclick: () => { const id = createSessionFromPlan(p.id); ctx.navigate('/session/' + id); } }, [t('common.start')])
+          started
+            ? h('span', { class: 'tag', text: t('plan.started') })
+            : h('button', { class: 'btn btn--sm btn--primary', disabled: activeSession() ? true : null,
+                onclick: () => { const id = createSessionFromPlan(p.id); ctx.navigate('/session/' + id); } }, [t('common.start')])
         ]));
       });
       done.forEach((s) => {
-        ul.appendChild(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
+        ul.appendChild(clickable(h('li', { class: 'list__item', onclick: () => ctx.navigate('/session/' + s.id) }, [
           h('div', { class: 'list__thumb' }, [icon('check', { size: 24, cls: 'thumb-done' })]),
           h('div', { class: 'list__body' }, [
             h('div', { class: 'list__title', text: s.name || t('session.summary') }),
             h('div', { class: 'list__sub', text: t('plan.completed') + ' · ' + (s.entries || []).length + ' ' + t('nav.exercises').toLowerCase() })
           ]),
           h('span', { class: 'list__chev' }, [icon('chevronRight', { size: 18 })])
-        ]));
+        ])));
       });
       dayPanel.appendChild(ul);
     }
@@ -188,17 +201,31 @@ export function renderPlanEditor(root, params, ctx) {
   ]));
   rerender();
 
-  function sync() { plan.name = nameInput.value.trim(); plan.date = dateInput.value; plan.notes = notesInput.value.trim(); }
-  function save() { sync(); savePlan(plan); toast(t('toast.planSaved')); ctx.navigate('/plan'); }
-  function startSession() { sync(); savePlan(plan); const id = createSessionFromPlan(plan.id); ctx.navigate('/session/' + id); }
-  function saveAsTemplate() {
+  // The editor works on a deep copy that only persists on Save/Start — warn
+  // before navigating away with unsaved edits instead of discarding silently.
+  const initialSnapshot = JSON.stringify(plan);
+  const guard = () => {
     sync();
+    return JSON.stringify(plan) === initialSnapshot || window.confirm(t('common.unsavedConfirm'));
+  };
+  setNavGuard(guard);
+
+  function sync() {
+    plan.name = nameInput.value.trim();
+    // A cleared date field must not orphan the plan off every calendar day.
+    plan.date = dateInput.value || plan.date || todayISO();
+    plan.notes = notesInput.value.trim();
+  }
+  function save() { sync(); clearNavGuard(guard); savePlan(plan); toast(t('toast.planSaved')); ctx.navigate('/plan'); }
+  function startSession() { sync(); clearNavGuard(guard); savePlan(plan); const id = createSessionFromPlan(plan.id); ctx.navigate('/session/' + id); }
+  function saveAsTemplate() {
+    sync(); clearNavGuard(guard);
     const tpl = { id: uid('tpl'), name: plan.name || t('templates.untitled'), notes: plan.notes || '', exercises: JSON.parse(JSON.stringify(plan.exercises || [])) };
     saveTemplate(tpl); toast(t('templates.saved')); ctx.navigate('/templates/' + tpl.id);
   }
   async function remove() {
     if (await confirmDialog(t('plan.deleteConfirm'), { danger: true, okText: t('common.delete') })) {
-      deletePlan(plan.id); toast(t('toast.deleted')); ctx.navigate('/plan');
+      clearNavGuard(guard); deletePlan(plan.id); toast(t('toast.deleted')); ctx.navigate('/plan');
     }
   }
 }
