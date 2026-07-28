@@ -12,12 +12,13 @@
 //                        JS can read it. Only OK if your deployment is private.
 //   * clientSecretEnc  — the secret encrypted with a passphrase (AES-256-GCM).
 //                        Safe to commit even to a public repo; you enter the
-//                        passphrase once per browser session to unlock it.
+//                        passphrase once and this device remembers the unlocked
+//                        secret for 30 days.
 //                        Generate the blob offline with tools/encrypt-secret.html.
 //   Fill in ONE of them. If both are set, clientSecret wins.
 //
-// Access/refresh tokens are kept only in this browser's localStorage; the
-// decrypted secret is kept only in sessionStorage (cleared when the tab closes).
+// Access/refresh tokens and the unlocked secret are kept only in this browser's
+// localStorage (never uploaded), and are erased on disconnect / "Reset app".
 
 export const SYNC = {
   fileName: 'kinetos.json',

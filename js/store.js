@@ -351,6 +351,8 @@ export function resetAll() {
   state = defaultState();
   try {
     ['kinetos.tokens', 'kinetos.gdrive.fileId', 'kinetos.sync.meta'].forEach((k) => localStorage.removeItem(k));
+    // remembered decrypted client secrets (kinetos.secret.<provider>)
+    Object.keys(localStorage).filter((k) => k.startsWith('kinetos.secret.')).forEach((k) => localStorage.removeItem(k));
     if (typeof sessionStorage !== 'undefined') {
       Object.keys(sessionStorage).filter((k) => k.startsWith('kinetos.')).forEach((k) => sessionStorage.removeItem(k));
     }

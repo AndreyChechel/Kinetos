@@ -39,7 +39,7 @@
 <h3>The client secret</h3>
 <p>A "Web application" Google client requires a secret at token exchange. A static app can't truly hide it, so pick your trade-off:</p>
 <ul>
-  <li><b>Encrypted (recommended for public repos)</b> — open <code>tools/encrypt-secret.html</code> in a browser, enter the secret + a passphrase, and paste the result into <code>providers.google.clientSecretEnc</code>. The app asks for the passphrase once per session (kept in <code>sessionStorage</code>) to unlock it. The passphrase is never stored.</li>
+  <li><b>Encrypted (recommended for public repos)</b> — open <code>tools/encrypt-secret.html</code> in a browser, enter the secret + a passphrase, and paste the result into <code>providers.google.clientSecretEnc</code>. The app asks for the passphrase once, then remembers the unlocked secret on that device for 30 days (in <code>localStorage</code>, under <code>kinetos.secret.&lt;provider&gt;</code>) so syncing isn't interrupted on every launch. The passphrase itself is never stored, the secret is never uploaded, and both are erased on Disconnect and on Reset app.</li>
   <li><b>Plaintext</b> — put it in <code>providers.google.clientSecret</code>. Simplest, but readable by anyone who can load the deployed JS. Only for private deployments.</li>
 </ul>
 <p>If both are set, <code>clientSecret</code> wins. (A PKCE public client with no secret is the most secure option overall, but requires a client type that omits the secret.)</p>
