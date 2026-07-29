@@ -65,6 +65,45 @@
     }
   },
   {
+    "id": "db-bench-press", "group": "chest", "view": "front", "category": "pushHorizontal",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["chest"], "secondary": ["triceps", "delts"],
+    "names": { "en": "Dumbbell Bench Press", "de": "Bankdrücken mit Kurzhanteln", "fr": "Développé couché haltères", "es": "Press de banca con mancuernas", "ru": "Жим гантелей лёжа" },
+    "cues": {
+      "en": ["Flat bench, dumbbells at chest level, wrists over the elbows.", "Press up and slightly together, lower until you feel the chest stretch."],
+      "de": ["Flachbank, Hanteln auf Brusthöhe, Handgelenke über den Ellenbogen.", "Nach oben und leicht zusammen drücken, bis zur Brustdehnung senken."],
+      "fr": ["Banc plat, haltères au niveau de la poitrine, poignets au-dessus des coudes.", "Pousser vers le haut en rapprochant un peu, descendre jusqu'à l'étirement."],
+      "es": ["Banco plano, mancuernas a la altura del pecho, muñecas sobre los codos.", "Empuja arriba juntándolas un poco, baja hasta notar el estiramiento."],
+      "ru": ["Горизонтальная скамья, гантели у груди, кисти над локтями.", "Выжмите вверх, слегка сводя, опускайте до растяжения груди."]
+    }
+  },
+  {
+    "id": "smith-incline-press", "group": "chest", "view": "front", "category": "pushHorizontal",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["chest"], "secondary": ["delts", "triceps"],
+    "names": { "en": "Smith Machine Incline Chest Press", "de": "Schrägbankdrücken an der Multipresse", "fr": "Développé incliné à la Smith machine", "es": "Press inclinado en máquina Smith", "ru": "Жим от груди в Смите на наклонной скамье" },
+    "cues": {
+      "en": ["Bench at ~30° under the Smith bar, bar tracking over the upper chest.", "Lower to the chest, press straight up along the rails; the bar itself is part of the load."],
+      "de": ["Bank ~30° unter der Führungsstange, Stange über der oberen Brust.", "Zur Brust senken, entlang der Schienen hochdrücken; die Stange zählt mit."],
+      "fr": ["Banc à ~30° sous la barre guidée, barre au-dessus du haut de la poitrine.", "Descendre à la poitrine, pousser le long des rails ; la barre compte dans la charge."],
+      "es": ["Banco a ~30° bajo la barra guiada, barra sobre el pecho superior.", "Baja al pecho y empuja por los rieles; la barra cuenta en la carga."],
+      "ru": ["Скамья под ~30° под грифом Смита, гриф идёт над верхом груди.", "Опустите к груди, выжмите вверх по направляющим; вес грифа тоже считается."]
+    }
+  },
+  {
+    "id": "incline-push-up", "group": "chest", "view": "front", "category": "pushHorizontal",
+    "equipment": "bodyweight", "metric": "reps",
+    "primary": ["chest"], "secondary": ["triceps", "delts", "abs"],
+    "names": { "en": "Incline Push-Up (Hands on Bar)", "de": "Erhöhte Liegestütze (Hände an der Stange)", "fr": "Pompes inclinées (mains sur la barre)", "es": "Flexiones inclinadas (manos en la barra)", "ru": "Отжимания от перекладины (в Смите)" },
+    "cues": {
+      "en": ["Set the bar at hip height, hands just wider than shoulders, body in one line.", "Lower your chest to the bar and press away; a lower bar makes it harder."],
+      "de": ["Stange auf Hüfthöhe, Hände etwas weiter als schulterbreit, Körper in einer Linie.", "Brust zur Stange senken und wegdrücken; tiefere Stange = schwerer."],
+      "fr": ["Barre à hauteur de hanche, mains un peu plus larges que les épaules, corps aligné.", "Descendre la poitrine vers la barre et pousser ; barre plus basse = plus dur."],
+      "es": ["Barra a la altura de la cadera, manos algo más anchas que los hombros, cuerpo alineado.", "Baja el pecho a la barra y empuja; cuanto más baja la barra, más cuesta."],
+      "ru": ["Гриф на высоте бёдер, руки чуть шире плеч, тело одной линией.", "Опустите грудь к грифу и оттолкнитесь; ниже гриф — тяжелее."]
+    }
+  },
+  {
     "id": "pull-up", "group": "back", "view": "back", "category": "pullVertical",
     "equipment": "bodyweight", "metric": "reps",
     "primary": ["lats"], "secondary": ["biceps"],
@@ -127,6 +166,58 @@
       "fr": ["Barre au-dessus du milieu du pied, dos plat, hanches en arrière.", "Pousser dans le sol, se redresser, verrouiller les hanches."],
       "es": ["Barra sobre el medio pie, espalda plana, cadera atrás.", "Empuja el suelo, ponte de pie y bloquea la cadera."],
       "ru": ["Гриф над серединой стопы, спина прямая, таз назад.", "Оттолкнитесь от пола, выпрямитесь, разогните таз."]
+    }
+  },
+  {
+    "id": "db-row", "group": "back", "view": "back", "category": "pullHorizontal",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["lats"], "secondary": ["biceps", "traps", "reardelt"],
+    "names": { "en": "One-Arm Dumbbell Row", "de": "Einarmiges Kurzhantelrudern", "fr": "Rowing haltère à un bras", "es": "Remo con mancuerna a una mano", "ru": "Тяга гантели к поясу в наклоне" },
+    "cues": {
+      "en": ["Brace a hand and knee on the bench, back flat, dumbbell hanging.", "Pull the dumbbell to your waist, elbow past the ribs, lower under control."],
+      "de": ["Hand und Knie auf der Bank abstützen, Rücken flach, Hantel hängt.", "Hantel zur Hüfte ziehen, Ellenbogen an den Rippen vorbei, kontrolliert senken."],
+      "fr": ["Main et genou appuyés sur le banc, dos plat, haltère pendante.", "Tirer l'haltère vers la taille, coude au-delà des côtes, redescendre en contrôle."],
+      "es": ["Apoya mano y rodilla en el banco, espalda plana, mancuerna colgando.", "Lleva la mancuerna a la cintura, codo pasando las costillas, baja controlado."],
+      "ru": ["Упор рукой и коленом в скамью, спина ровная, гантель висит.", "Тяните гантель к поясу, локоть уходит за рёбра, опускайте под контролем."]
+    }
+  },
+  {
+    "id": "incline-bench-db-row", "group": "back", "view": "back", "category": "pullHorizontal",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["lats"], "secondary": ["reardelt", "biceps", "traps"],
+    "names": { "en": "Incline Bench Dumbbell Row", "de": "Kurzhantelrudern auf der Schrägbank", "fr": "Rowing haltères sur banc incliné", "es": "Remo con mancuernas en banco inclinado", "ru": "Тяга гантелей к поясу лёжа на наклонной скамье" },
+    "cues": {
+      "en": ["Lie chest-down on a bench set to ~30°, arms hanging straight.", "Row both dumbbells to your waist, squeeze the shoulder blades, lower slowly."],
+      "de": ["Bauchlage auf der ~30° Schrägbank, Arme hängen gestreckt.", "Beide Hanteln zur Hüfte ziehen, Schulterblätter zusammen, langsam senken."],
+      "fr": ["Allongé ventre contre un banc à ~30°, bras pendants.", "Tirer les deux haltères vers la taille, serrer les omoplates, redescendre lentement."],
+      "es": ["Tumbado boca abajo en banco a ~30°, brazos colgando.", "Rema ambas mancuernas a la cintura, junta las escápulas y baja despacio."],
+      "ru": ["Лягте грудью на скамью под ~30°, руки свободно вниз.", "Тяните обе гантели к поясу, сводя лопатки, медленно опускайте."]
+    }
+  },
+  {
+    "id": "cable-pullover", "group": "back", "view": "back", "category": "pullVertical",
+    "equipment": "cable", "metric": "reps",
+    "primary": ["lats"], "secondary": ["triceps", "abs"],
+    "names": { "en": "Cable Pullover (Straight-Arm Pulldown)", "de": "Kabel-Pullover (gestreckte Arme)", "fr": "Pull-over à la poulie (bras tendus)", "es": "Pullover en polea (brazos rectos)", "ru": "Пуловер в кроссовере" },
+    "cues": {
+      "en": ["High pulley, arms almost straight, hinge slightly forward.", "Sweep the handle down to your thighs with the lats, return without bending the elbows."],
+      "de": ["Hoher Zug, Arme fast gestreckt, leicht nach vorn beugen.", "Griff mit dem Latissimus zu den Oberschenkeln führen, ohne Ellenbogenbeugung zurück."],
+      "fr": ["Poulie haute, bras presque tendus, léger buste en avant.", "Amener la poignée vers les cuisses avec les dorsaux, revenir sans plier les coudes."],
+      "es": ["Polea alta, brazos casi rectos, inclínate un poco al frente.", "Lleva el agarre a los muslos con los dorsales y vuelve sin doblar los codos."],
+      "ru": ["Верхний блок, руки почти прямые, небольшой наклон вперёд.", "Ведите рукоятку к бёдрам широчайшими, возвращайте не сгибая локти."]
+    }
+  },
+  {
+    "id": "inverted-row", "group": "back", "view": "back", "category": "pullHorizontal",
+    "equipment": "bodyweight", "metric": "reps",
+    "primary": ["lats"], "secondary": ["biceps", "traps", "abs"],
+    "names": { "en": "Inverted Row (Low Bar)", "de": "Rudern an der tiefen Stange", "fr": "Rowing inversé (barre basse)", "es": "Remo invertido (barra baja)", "ru": "Подтягивания с нижней перекладины" },
+    "cues": {
+      "en": ["Hang under a low bar, body straight from heels to head.", "Pull your chest to the bar, elbows back; the higher the feet, the harder it is."],
+      "de": ["Unter der tiefen Stange hängen, Körper von Ferse bis Kopf gerade.", "Brust zur Stange ziehen, Ellenbogen nach hinten; höhere Füße = schwerer."],
+      "fr": ["Suspendu sous une barre basse, corps aligné des talons à la tête.", "Tirer la poitrine vers la barre, coudes en arrière ; pieds plus hauts = plus dur."],
+      "es": ["Cuelga bajo una barra baja, cuerpo recto de talones a cabeza.", "Lleva el pecho a la barra, codos atrás; con los pies más altos cuesta más."],
+      "ru": ["Повисните под низкой перекладиной, тело прямое от пяток до головы.", "Тяните грудь к перекладине, локти назад; выше ноги — тяжелее."]
     }
   },
   {
@@ -221,6 +312,136 @@
     }
   },
   {
+    "id": "smith-squat", "group": "legs", "view": "front", "category": "squat",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["quads"], "secondary": ["glutes", "hamstrings"],
+    "names": { "en": "Smith Machine Squat", "de": "Kniebeuge an der Multipresse", "fr": "Squat à la Smith machine", "es": "Sentadilla en máquina Smith", "ru": "Присед в Смите" },
+    "cues": {
+      "en": ["Bar on the upper back, feet slightly in front of the bar line.", "Sit down between the rails to at least parallel, drive up through the heels."],
+      "de": ["Stange auf dem oberen Rücken, Füße etwas vor der Stangenlinie.", "Zwischen den Schienen mindestens bis parallel absitzen, über die Fersen hochdrücken."],
+      "fr": ["Barre sur le haut du dos, pieds légèrement devant l'axe de la barre.", "S'asseoir au moins jusqu'à la parallèle, remonter en poussant sur les talons."],
+      "es": ["Barra en la espalda alta, pies algo delante de la línea de la barra.", "Baja al menos hasta la paralela y sube empujando con los talones."],
+      "ru": ["Гриф на верхней части спины, стопы чуть впереди линии грифа.", "Садитесь между направляющими минимум до параллели, вставайте через пятки."]
+    }
+  },
+  {
+    "id": "smith-lunge", "group": "legs", "view": "front", "category": "lunge",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["quads"], "secondary": ["glutes", "hamstrings"],
+    "names": { "en": "Smith Machine Lunge", "de": "Ausfallschritt an der Multipresse", "fr": "Fente à la Smith machine", "es": "Zancada en máquina Smith", "ru": "Выпады в Смите" },
+    "cues": {
+      "en": ["Bar on the upper back, one foot forward under the bar, rear foot on the toes.", "Drop the back knee toward the floor, press back up with the front leg; swap sides."],
+      "de": ["Stange auf dem oberen Rücken, ein Fuß vorn unter der Stange, hinterer Fuß auf den Ballen.", "Hinteres Knie zum Boden senken, mit dem vorderen Bein hochdrücken; Seite wechseln."],
+      "fr": ["Barre sur le haut du dos, un pied devant sous la barre, pied arrière sur la pointe.", "Descendre le genou arrière vers le sol, remonter avec la jambe avant ; changer de côté."],
+      "es": ["Barra en la espalda alta, un pie delante bajo la barra, el otro de puntillas.", "Baja la rodilla trasera al suelo y sube con la pierna delantera; cambia de lado."],
+      "ru": ["Гриф на верхней части спины, одна стопа впереди под грифом, задняя на носке.", "Опустите заднее колено к полу, поднимитесь передней ногой; смените сторону."]
+    }
+  },
+  {
+    "id": "bulgarian-split-squat", "group": "legs", "view": "front", "category": "lunge",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["quads", "glutes"], "secondary": ["hamstrings"],
+    "names": { "en": "Bulgarian Split Squat", "de": "Bulgarische Kniebeuge", "fr": "Fente bulgare", "es": "Zancada búlgara", "ru": "Болгарские выпады" },
+    "cues": {
+      "en": ["Rear foot on a bench, front foot about two steps ahead, dumbbells at your sides.", "Lower straight down until the front thigh is parallel, push through the front foot."],
+      "de": ["Hinterer Fuß auf der Bank, vorderer Fuß zwei Schritte davor, Hanteln seitlich.", "Senkrecht absenken bis der vordere Oberschenkel parallel ist, über den vorderen Fuß hoch."],
+      "fr": ["Pied arrière sur un banc, pied avant deux pas devant, haltères le long du corps.", "Descendre à la verticale jusqu'à la cuisse parallèle, pousser sur le pied avant."],
+      "es": ["Pie trasero en el banco, pie delantero dos pasos adelante, mancuernas a los lados.", "Baja en vertical hasta el muslo paralelo y empuja con el pie delantero."],
+      "ru": ["Задняя стопа на скамье, передняя в двух шагах впереди, гантели по бокам.", "Опускайтесь строго вниз до параллели переднего бедра, вставайте через переднюю стопу."]
+    }
+  },
+  {
+    "id": "step-up", "group": "legs", "view": "front", "category": "lunge",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["quads", "glutes"], "secondary": ["hamstrings", "calves"],
+    "names": { "en": "Step-Up (Step Platform)", "de": "Step-ups (Stepp-Plattform)", "fr": "Montées sur step", "es": "Subidas al step", "ru": "Зашагивания на степ-платформу" },
+    "cues": {
+      "en": ["Dumbbell(s) in hand, whole foot on the platform, knee tracking over the toes.", "Stand up with the top leg only — no push off the floor — and lower slowly."],
+      "de": ["Hantel(n) in der Hand, ganzer Fuß auf der Plattform, Knie über den Zehen.", "Nur mit dem oberen Bein hochsteigen — nicht abstoßen — und langsam absenken."],
+      "fr": ["Haltère(s) en main, tout le pied sur la plateforme, genou au-dessus des orteils.", "Monter uniquement avec la jambe du haut, sans pousser du sol, puis redescendre lentement."],
+      "es": ["Mancuerna(s) en mano, todo el pie en la plataforma, rodilla sobre los dedos.", "Sube solo con la pierna de arriba, sin impulso del suelo, y baja despacio."],
+      "ru": ["Гантель(и) в руках, стопа полностью на платформе, колено над носком.", "Поднимайтесь только верхней ногой, без толчка снизу, и медленно опускайтесь."]
+    }
+  },
+  {
+    "id": "barbell-glute-bridge", "group": "legs", "view": "back", "category": "hinge",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["glutes"], "secondary": ["hamstrings", "lowerback"],
+    "names": { "en": "Barbell Glute Bridge", "de": "Glute Bridge mit Langhantel", "fr": "Pont fessier à la barre", "es": "Puente de glúteos con barra", "ru": "Ягодичный мост со штангой" },
+    "cues": {
+      "en": ["Lie on your back, bar over the hips (use a pad), heels close to the glutes.", "Drive the hips up until the body is level, squeeze the glutes, lower without arching."],
+      "de": ["Rückenlage, Stange über der Hüfte (Polster nutzen), Fersen nah am Gesäß.", "Hüfte hochdrücken bis der Körper waagerecht ist, Gesäß anspannen, ohne Hohlkreuz senken."],
+      "fr": ["Sur le dos, barre sur les hanches (avec mousse), talons près des fessiers.", "Monter les hanches jusqu'à l'alignement, serrer les fessiers, redescendre sans cambrer."],
+      "es": ["Tumbado de espaldas, barra sobre la cadera (con almohadilla), talones cerca de los glúteos.", "Sube la cadera hasta alinear el cuerpo, aprieta los glúteos y baja sin arquear."],
+      "ru": ["Лягте на спину, гриф на бёдрах (используйте подкладку), пятки близко к тазу.", "Поднимайте таз до прямой линии тела, сжимайте ягодицы, опускайте без прогиба."]
+    }
+  },
+  {
+    "id": "single-leg-rdl", "group": "legs", "view": "back", "category": "hinge",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["hamstrings", "glutes"], "secondary": ["lowerback"],
+    "names": { "en": "Single-Leg Deadlift (Rear Foot on Box)", "de": "Einbeiniges Kreuzheben (hinterer Fuß auf Box)", "fr": "Soulevé de terre unilatéral (pied arrière sur box)", "es": "Peso muerto a una pierna (pie atrás en cajón)", "ru": "Тяга на одной ноге с опорой на тумбу" },
+    "cues": {
+      "en": ["Rear toes resting on a low box for balance, nearly all weight on the front leg.", "Hinge at the hip with a flat back, dumbbells down the front shin, stand up with the glute."],
+      "de": ["Hintere Fußspitze zur Balance auf einer Box, fast alles Gewicht auf dem vorderen Bein.", "Aus der Hüfte beugen, Rücken flach, Hanteln am Schienbein entlang, mit dem Gesäß aufrichten."],
+      "fr": ["Pointe du pied arrière sur un box pour l'équilibre, poids sur la jambe avant.", "Charnière à la hanche, dos plat, haltères le long du tibia, se redresser par le fessier."],
+      "es": ["Punta del pie trasero en un cajón para equilibrio, el peso en la pierna delantera.", "Bisagra de cadera con espalda plana, mancuernas junto a la espinilla, sube con el glúteo."],
+      "ru": ["Носок задней ноги на тумбе для равновесия, вес почти весь на передней ноге.", "Наклон в тазобедренном суставе, спина ровная, гантели вдоль голени, подъём ягодицей."]
+    }
+  },
+  {
+    "id": "hip-abduction", "group": "legs", "view": "back", "category": "isolation",
+    "equipment": "machine", "metric": "reps",
+    "primary": ["glutes"], "secondary": [],
+    "names": { "en": "Seated Hip Abduction", "de": "Abduktoren-Maschine (sitzend)", "fr": "Abduction de hanche assis", "es": "Abducción de cadera sentado", "ru": "Горизонтальное отведение бёдер в тренажёре сидя" },
+    "cues": {
+      "en": ["Sit upright, pads on the outside of the knees, feet flat.", "Push the knees apart with the glutes, pause at the end, return slowly."],
+      "de": ["Aufrecht sitzen, Polster an den Knieaußenseiten, Füße flach.", "Knie mit dem Gesäß auseinander drücken, kurz halten, langsam zurück."],
+      "fr": ["Assis droit, coussins à l'extérieur des genoux, pieds à plat.", "Écarter les genoux avec les fessiers, marquer un temps, revenir lentement."],
+      "es": ["Siéntate erguido, almohadillas en la parte externa de las rodillas, pies apoyados.", "Separa las rodillas con los glúteos, pausa al final y vuelve despacio."],
+      "ru": ["Сядьте прямо, валики снаружи колен, стопы на полу.", "Разводите колени ягодицами, задержка в конце, медленно возвращайте."]
+    }
+  },
+  {
+    "id": "hip-adduction", "group": "legs", "view": "front", "category": "isolation",
+    "equipment": "machine", "metric": "reps",
+    "primary": ["quads"], "secondary": ["glutes"],
+    "names": { "en": "Seated Hip Adduction", "de": "Adduktoren-Maschine (sitzend)", "fr": "Adduction de hanche assis", "es": "Aducción de cadera sentado", "ru": "Горизонтальное приведение бёдер в тренажёре сидя" },
+    "cues": {
+      "en": ["Sit upright with the pads on the inside of the knees, legs apart.", "Squeeze the knees together with the inner thighs, open slowly under control."],
+      "de": ["Aufrecht sitzen, Polster an den Knieinnenseiten, Beine geöffnet.", "Knie mit den Adduktoren zusammendrücken, kontrolliert öffnen."],
+      "fr": ["Assis droit, coussins à l'intérieur des genoux, jambes écartées.", "Serrer les genoux avec les adducteurs, ouvrir lentement en contrôle."],
+      "es": ["Siéntate erguido con las almohadillas por dentro de las rodillas, piernas abiertas.", "Junta las rodillas con los aductores y abre despacio, controlando."],
+      "ru": ["Сядьте прямо, валики с внутренней стороны колен, ноги разведены.", "Сводите колени внутренней поверхностью бёдер, разводите медленно под контролем."]
+    }
+  },
+  {
+    "id": "leg-press-calf-raise", "group": "legs", "view": "back", "category": "calf",
+    "equipment": "machine", "metric": "reps",
+    "primary": ["calves"], "secondary": [],
+    "names": { "en": "Calf Press on Leg Press", "de": "Wadenpresse an der Beinpresse", "fr": "Extension des mollets à la presse", "es": "Elevación de gemelos en prensa", "ru": "Сгибание стоп в жиме ногами" },
+    "cues": {
+      "en": ["Only the balls of the feet on the platform, legs almost straight, safeties set.", "Push the platform away with the toes to a full stretch, then lower the heels deep."],
+      "de": ["Nur die Fußballen auf der Platte, Beine fast gestreckt, Sicherung gesetzt.", "Platte mit den Zehen ganz wegdrücken, dann die Fersen tief absenken."],
+      "fr": ["Seule la plante avant du pied sur la plateforme, jambes presque tendues, sécurités en place.", "Pousser la plateforme avec les orteils en pleine extension, puis descendre les talons."],
+      "es": ["Solo la punta de los pies en la plataforma, piernas casi rectas, seguros puestos.", "Empuja con los dedos hasta la extensión completa y baja los talones a fondo."],
+      "ru": ["На платформе только носки, ноги почти прямые, страховка выставлена.", "Выталкивайте платформу носками до полного разгибания, затем глубоко опускайте пятки."]
+    }
+  },
+  {
+    "id": "smith-calf-raise", "group": "legs", "view": "back", "category": "calf",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["calves"], "secondary": [],
+    "names": { "en": "Smith Machine Calf Raise", "de": "Wadenheben an der Multipresse", "fr": "Extension des mollets à la Smith machine", "es": "Elevación de gemelos en máquina Smith", "ru": "Сгибание стоп в Смите" },
+    "cues": {
+      "en": ["Bar on the upper back, balls of the feet on a step or plate, heels free.", "Rise as high as possible on the toes, hold a beat, lower the heels for a full stretch."],
+      "de": ["Stange auf dem oberen Rücken, Fußballen auf Step oder Scheibe, Fersen frei.", "So hoch wie möglich auf die Zehen, kurz halten, Fersen zur volle Dehnung senken."],
+      "fr": ["Barre sur le haut du dos, avant-pieds sur un step ou un disque, talons libres.", "Monter le plus haut possible sur les pointes, tenir un instant, descendre les talons."],
+      "es": ["Barra en la espalda alta, puntas de los pies en un step o disco, talones libres.", "Sube lo más alto posible de puntillas, aguanta un instante y baja los talones."],
+      "ru": ["Гриф на верхней части спины, носки на степе или блине, пятки свободны.", "Поднимитесь на носки максимально высоко, задержка, опустите пятки до растяжения."]
+    }
+  },
+  {
     "id": "overhead-press", "group": "shoulders", "view": "front", "category": "pushVertical",
     "equipment": "barbell", "metric": "reps",
     "primary": ["delts"], "secondary": ["triceps"],
@@ -283,6 +504,32 @@
       "fr": ["Corde à hauteur des yeux.", "Tirer vers le visage, coudes hauts et écartés."],
       "es": ["Cuerda a la altura de los ojos.", "Tira hacia la cara, codos altos y abiertos."],
       "ru": ["Канат на уровне глаз.", "Тяните к лицу, локти высоко и в стороны."]
+    }
+  },
+  {
+    "id": "seated-db-press", "group": "shoulders", "view": "front", "category": "pushVertical",
+    "equipment": "dumbbell", "metric": "reps",
+    "primary": ["delts"], "secondary": ["triceps", "traps"],
+    "names": { "en": "Seated Dumbbell Shoulder Press", "de": "Schulterdrücken sitzend (Kurzhantel)", "fr": "Développé épaules assis haltères", "es": "Press de hombros sentado con mancuernas", "ru": "Жим гантелей сидя" },
+    "cues": {
+      "en": ["Sit tall against the backrest, dumbbells at ear height, elbows slightly forward.", "Press overhead without arching the lower back, lower to ears under control."],
+      "de": ["Aufrecht an der Lehne sitzen, Hanteln auf Ohrhöhe, Ellenbogen leicht vorn.", "Über Kopf drücken ohne Hohlkreuz, kontrolliert zu den Ohren senken."],
+      "fr": ["Assis bien droit contre le dossier, haltères aux oreilles, coudes légèrement devant.", "Pousser au-dessus de la tête sans cambrer, redescendre aux oreilles en contrôle."],
+      "es": ["Siéntate erguido contra el respaldo, mancuernas a la altura de las orejas.", "Empuja sobre la cabeza sin arquear la lumbar y baja controlado a las orejas."],
+      "ru": ["Сядьте прямо, спина к спинке, гантели на уровне ушей, локти чуть вперёд.", "Выжмите над головой без прогиба в пояснице, опускайте к ушам под контролем."]
+    }
+  },
+  {
+    "id": "upright-row", "group": "shoulders", "view": "front", "category": "raise",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["delts", "traps"], "secondary": ["biceps", "forearms"],
+    "names": { "en": "Upright Row", "de": "Aufrechtes Rudern", "fr": "Rowing menton", "es": "Remo al mentón", "ru": "Тяга штанги к подбородку" },
+    "cues": {
+      "en": ["Stand with the bar at thigh level, hands about shoulder-width.", "Lead with the elbows up to chest height, keep the bar close, lower slowly."],
+      "de": ["Stange auf Oberschenkelhöhe, Hände etwa schulterbreit.", "Mit den Ellenbogen bis Brusthöhe führen, Stange nah am Körper, langsam senken."],
+      "fr": ["Debout, barre au niveau des cuisses, mains à largeur d'épaules.", "Monter par les coudes jusqu'à la poitrine, barre près du corps, redescendre lentement."],
+      "es": ["De pie, barra a la altura de los muslos, manos al ancho de hombros.", "Sube guiando con los codos hasta el pecho, barra cerca, baja despacio."],
+      "ru": ["Стоя, гриф у бёдер, хват примерно по ширине плеч.", "Ведите локтями вверх до уровня груди, гриф близко к телу, опускайте медленно."]
     }
   },
   {
@@ -377,6 +624,32 @@
     }
   },
   {
+    "id": "bench-dip", "group": "triceps", "view": "front", "category": "tricepPush",
+    "equipment": "bodyweight", "metric": "reps",
+    "primary": ["triceps"], "secondary": ["chest", "delts"],
+    "names": { "en": "Bench Dip (Reverse Push-Up)", "de": "Bank-Dips", "fr": "Dips sur banc", "es": "Fondos en banco", "ru": "Обратные отжимания от скамьи" },
+    "cues": {
+      "en": ["Hands on the bench edge behind you, hips close to the bench, legs out front.", "Bend the elbows straight back to ~90°, press up; straighter legs make it harder."],
+      "de": ["Hände auf der Bankkante hinter dir, Hüfte nah an der Bank, Beine vorn.", "Ellenbogen gerade nach hinten auf ~90° beugen, hochdrücken; gestrecktere Beine = schwerer."],
+      "fr": ["Mains sur le bord du banc derrière toi, hanches près du banc, jambes devant.", "Plier les coudes vers l'arrière à ~90°, pousser ; jambes plus tendues = plus dur."],
+      "es": ["Manos en el borde del banco detrás, caderas cerca del banco, piernas al frente.", "Flexiona los codos hacia atrás a ~90° y empuja; piernas más rectas, más difícil."],
+      "ru": ["Руки на край скамьи за спиной, таз близко к скамье, ноги впереди.", "Сгибайте локти строго назад до ~90°, выжимайте вверх; прямее ноги — тяжелее."]
+    }
+  },
+  {
+    "id": "skull-crusher", "group": "triceps", "view": "front", "category": "tricepPush",
+    "equipment": "barbell", "metric": "reps",
+    "primary": ["triceps"], "secondary": ["delts"],
+    "names": { "en": "Lying Triceps Extension (EZ-Bar)", "de": "Stirndrücken (SZ-Stange)", "fr": "Barre au front (barre EZ)", "es": "Press francés tumbado (barra Z)", "ru": "Французский жим лёжа с W-грифом" },
+    "cues": {
+      "en": ["Lie flat, EZ-bar over the forehead, upper arms vertical.", "Bend only the elbows to lower behind the head, extend without moving the shoulders."],
+      "de": ["Flach liegen, SZ-Stange über der Stirn, Oberarme senkrecht.", "Nur die Ellenbogen beugen, hinter den Kopf senken, ohne Schulterbewegung strecken."],
+      "fr": ["Allongé à plat, barre EZ au-dessus du front, bras verticaux.", "Plier seulement les coudes derrière la tête, tendre sans bouger les épaules."],
+      "es": ["Tumbado plano, barra Z sobre la frente, brazos verticales.", "Flexiona solo los codos hacia atrás y extiende sin mover los hombros."],
+      "ru": ["Лягте на скамью, W-гриф над лбом, плечи вертикально.", "Сгибайте только локти, опуская за голову, разгибайте не двигая плечами."]
+    }
+  },
+  {
     "id": "plank", "group": "core", "view": "front", "category": "coreStatic",
     "equipment": "bodyweight", "metric": "time",
     "primary": ["abs"], "secondary": ["obliques"],
@@ -439,6 +712,19 @@
       "fr": ["Saisir la poulie haute, bras tendus.", "Pivoter et tirer en diagonale vers le bas."],
       "es": ["Agarra la polea alta, brazos extendidos.", "Gira y tira en diagonal hacia abajo cruzando el cuerpo."],
       "ru": ["Возьмите верхний блок, руки прямые.", "Поворачивайтесь и тяните по диагонали вниз через корпус."]
+    }
+  },
+  {
+    "id": "decline-crunch", "group": "core", "view": "front", "category": "coreCrunch",
+    "equipment": "bodyweight", "metric": "reps",
+    "primary": ["abs"], "secondary": ["obliques"],
+    "names": { "en": "Decline Bench Crunch", "de": "Crunch auf der Negativbank", "fr": "Crunch sur banc décliné", "es": "Crunch en banco declinado", "ru": "Скручивания лёжа на наклонной скамье" },
+    "cues": {
+      "en": ["Hook your legs on a decline bench, hands at the chest (add a plate to load it).", "Curl the ribs toward the pelvis, exhale at the top, lower without dropping back."],
+      "de": ["Beine auf der Negativbank einhaken, Hände an der Brust (Scheibe für mehr Last).", "Rippen zum Becken einrollen, oben ausatmen, ohne Fallenlassen absenken."],
+      "fr": ["Jambes bloquées sur un banc décliné, mains sur la poitrine (ajouter un disque).", "Enrouler les côtes vers le bassin, souffler en haut, redescendre sans se laisser tomber."],
+      "es": ["Engancha las piernas en el banco declinado, manos en el pecho (añade un disco).", "Acerca las costillas a la pelvis, exhala arriba y baja sin dejarte caer."],
+      "ru": ["Зафиксируйте ноги на наклонной скамье, руки у груди (блин — для утяжеления).", "Скручивайте рёбра к тазу, выдох в верхней точке, опускайтесь без падения."]
     }
   },
   {
