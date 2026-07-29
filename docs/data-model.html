@@ -44,9 +44,32 @@
 <pre>{
   id, name, date,          // date "YYYY-MM-DD"
   notes,
-  exercises: [ { exerciseId, targetSets, targetReps, targetWeightKg } ],
+  exercises: [ TargetRow ],
   source                   // optional; "ai" for plans created by the AI import in Profile
 }</pre>
+
+<h3>Target row (plans and templates)</h3>
+<p>A planned exercise comes in two shapes. <b>Simple</b> prescribes one set of numbers for the whole exercise; <b>detailed</b> ("Per-set" in the editor) prescribes each set on its own, which is what a ramp-up, a drop set, a rep ladder, intervals of different lengths or a one-off rest change need.</p>
+<pre>// simple — every set alike
+{ exerciseId, targetSets, targetReps, targetWeightKg }
+
+// detailed — one entry per set
+{
+  exerciseId,
+  targetSets, targetReps, targetWeightKg,   // kept in sync, see below
+  detailed: true,
+  setTargets: [ {
+    reps, weightKg,        // metric "reps"
+    seconds,               // metric "time"
+    distanceKm, minutes,   // metric "distance"
+    count,                 // metric "count"
+    restSeconds,           // rest AFTER this set; null = profile default
+    note                   // short cue shown on that set ("drop set", "AMRAP")
+  } ]
+}</pre>
+<p>Only the fields matching the exercise's metric are present on a <code>setTargets</code> entry. In detailed mode <code>setTargets</code> is the source of truth: its length <em>is</em> the set count, and <code>syncTargetRow()</code> (<code>js/workout.js</code>) mirrors it back onto <code>targetSets</code> plus, for reps exercises, the heaviest set's <code>targetReps</code>/<code>targetWeightKg</code>. That mirror is what keeps every simple reader working — calendar and import-preview set counts, and a device still running an older build after a sync. Turning per-set mode off collapses the row back to those scalars and drops the rest overrides and cues.</p>
+<p>When a session is created, <code>reps</code>/<code>weightKg</code>/<code>seconds</code>/<code>distanceKm</code>/<code>count</code> are prefilled onto the set (and also recorded as its target), <code>restSeconds</code> and <code>note</code> ride along, and a prescribed <code>minutes</code> becomes <code>targetMinutes</code> — a placeholder hint only, because the set runner fills an empty <code>minutes</code> with its measured time and a prefilled split would masquerade as a real one. A <code>restSeconds</code> override applies only while the profile's own rest timer is on; <code>settings.restSeconds === 0</code> means no timer at all.</p>
+<p>Model helpers, all in <code>js/workout.js</code>: <code>isDetailedTarget</code>, <code>setTargetsOf</code>, <code>setTargetKeys</code>, <code>newSetTarget</code>, <code>syncTargetRow</code>, <code>toDetailedTarget</code>, <code>toSimpleTarget</code>, <code>cloneTargetRow</code>, <code>MAX_SET_TARGETS</code> (20). <code>entriesFromExerciseList()</code> turns either shape into session sets; <code>targetsFromSession()</code> goes back the other way and produces a <em>detailed</em> row whenever the logged sets were not all alike.</p>
 
 <h3>Session</h3>
 <pre>{
@@ -66,6 +89,9 @@
       effort,              // 1=easy | 2=medium | 3=hard | null (RPE-style feedback)
       targetReps,          // planned/suggested reps — drives hit/miss autoregulation
       targetWeightKg,      // planned/suggested load
+      targetMinutes,       // planned pace for a distance set (a hint, never a logged value)
+      restSeconds,         // per-set rest override from the plan; null/0 = profile default
+      note,                // per-set cue from the plan ("drop set", "AMRAP"); "" = none
       done,                // boolean
       timestamp,           // ISO when marked done (seconds precision; for timing analysis)
       startedAt,           // ISO when the set runner was opened (null if logged without it)
@@ -96,19 +122,28 @@
 <h2>AI planning bridge (<code>js/aiplan.js</code>)</h2>
 <p>Profile → Your data has two buttons that let any external AI agent write plans, without the app ever making a network call.</p>
 <p><b>"Generate AI prompt"</b> opens a sheet with the request text (default: plan tomorrow's session) and how many recent sessions to include as reference (default 10, 0 = none; both remembered in <code>settings.aiPrompt</code>). <code>buildPrompt()</code> renders one always-English prompt: the request, the profile + derived metrics, the weight-entry conventions (dumbbell single/pair, barbell included/added, bar weights, plates, rep presets, rest), today's date plus upcoming calendar plans, the allowed exercise catalog (non-hidden built-in + custom, with per-exercise weight steps and any athlete notes), full set-level history and best estimated 1RMs. It is copied to the clipboard (with an <code>execCommand</code> fallback and a preview textarea for manual copy).</p>
-<p><b>"Import AI sessions"</b> takes the agent's answer. <code>parseSessions()</code> strips markdown fences/prose, accepts the documented object as well as a bare array or single session, validates dates and every <code>exerciseId</code> against the catalog, coerces numeric strings, and reports fixable problems as warnings (missing sets → 3, missing reps → 12) or hard errors with the offending session/exercise index. The preview lists each date, name, exercise/set counts and whether that day already has plans; confirming calls <code>importSessions()</code> which saves one <code>Plan</code> per session (<code>source: "ai"</code>) and jumps to the calendar.</p>
-<p>Expected answer shape:</p>
+<p><b>"Import AI sessions"</b> takes the agent's answer. <code>parseSessions()</code> strips markdown fences/prose, accepts the documented object as well as a bare array or single session, validates dates and every <code>exerciseId</code> against the catalog, coerces numeric strings, and reports fixable problems as warnings (missing sets → 3, missing reps → 12) or hard errors with the offending session/exercise/set index. The preview lists each date, name, exercise/set counts and whether that day already has plans; confirming calls <code>importSessions()</code> which saves one <code>Plan</code> per session (<code>source: "ai"</code>) and jumps to the calendar.</p>
+<p>Expected answer shape (schema <code>version: 2</code>; v1 payloads still import unchanged):</p>
 <pre>{
   "kinetos": "sessions",
-  "version": 1,
+  "version": 2,
   "sessions": [ {
     "date": "YYYY-MM-DD",
     "name": "Upper A",
     "notes": "",
-    "exercises": [ { "exerciseId": "bench-press", "sets": 4, "reps": 8, "weightKg": 62.5 } ]
+    "exercises": [
+      // (a) uniform work
+      { "exerciseId": "bench-press", "sets": 4, "reps": 8, "weightKg": 62.5 },
+      // (b) one object per set — a ramp, a drop set, per-set rest and cues
+      { "exerciseId": "back-squat", "setTargets": [
+          { "reps": 8, "weightKg": 60 },
+          { "reps": 6, "weightKg": 70 },
+          { "reps": 4, "weightKg": 80, "restSeconds": 180, "note": "top set" } ] },
+      { "exerciseId": "plank", "setTargets": [ { "seconds": 45 }, { "seconds": 60 } ] }
+    ]
   } ]
 }</pre>
-<p>Only <code>sets</code> is planned for time/distance/count exercises — the plan schema has no target for those metrics, so the prompt asks the agent to put the intended duration or distance in <code>notes</code>.</p>
+<p><code>setTargets</code> length is the set count (1–20) and wins over <code>sets</code>; an array handed over as <code>sets</code> is accepted too, since agents do that often enough. Each entry may only use the metric fields of its exercise (<code>reps</code>/<code>weightKg</code>, <code>seconds</code>, <code>distanceKm</code>/<code>minutes</code>, <code>count</code>) plus <code>restSeconds</code> and <code>note</code>; unusable numbers leave that field blank with a warning rather than failing the import, because the prescribed <em>structure</em> is the valuable part. With form (a) a time/distance/count exercise can still only say how many sets, so the prompt tells the agent to reach for <code>setTargets</code> there.</p>
 
 <footer><a href="index.html">← Back to overview</a></footer>
 </main></body></html>

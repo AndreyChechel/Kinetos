@@ -230,7 +230,7 @@ function logNow(ex, ctx) {
   s.entries = s.entries || [];
   if (!s.entries.some((e) => e.exerciseId === ex.id)) {
     // Same shape/defaults as every other set-creation path (12-rep prefill, no implicit target).
-    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null, effort: null, targetReps: null, barKg: null, done: false, timestamp: null, startedAt: null, durationMs: null }] });
+    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null, effort: null, targetReps: null, targetMinutes: null, barKg: null, done: false, restSeconds: null, note: '', timestamp: null, startedAt: null, durationMs: null }] });
   }
   saveSession(s);
   ctx.navigate('/session/' + s.id);

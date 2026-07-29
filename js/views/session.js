@@ -4,7 +4,7 @@
 // tap-for-chooser / hold-to-type number fields.
 // Finished: read-only by default with an explicit Edit mode; notes stay editable;
 // extended stats with charts.
-import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate } from '../ui.js';
+import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate, getSettings } from '../store.js';
 import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit } from '../data/db.js';
@@ -72,8 +72,13 @@ export default function renderSession(root, params, ctx) {
     h('button', { class: 'restbar__skip', type: 'button', 'aria-label': t('common.close'), onclick: () => stopRest() }, [icon('x', { size: 16 })])
   ]);
   let restEndsAt = 0;
-  function startRest() {
-    const secs = Number(getSettings().restSeconds ?? 90);
+  /** `set` may carry a planned per-set rest override; otherwise the profile default.
+   *  A profile timer of 0 means "no rest timer, ever" — a plan must not override
+   *  a switch the user deliberately turned off. */
+  function startRest(set) {
+    const dflt = Number(getSettings().restSeconds ?? 90);
+    const override = Number(set && set.restSeconds);
+    const secs = (dflt && override > 0) ? override : dflt;
     if (!secs || finished) return;
     restEndsAt = Date.now() + secs * 1000;
     restBar.hidden = false;
@@ -187,7 +192,11 @@ export default function renderSession(root, params, ctx) {
       }
       const perDb = isPerDumbbell(entry.exerciseId);
       const barAdd = isBarbellAdded(entry.exerciseId);
-      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb, barAdd, entry.exerciseId)));
+      entry.sets.forEach((set, si) => {
+        body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb, barAdd, entry.exerciseId));
+        // A cue written into the plan for this one set (e.g. "drop set", "AMRAP").
+        if (set.note) body.appendChild(setNoteBlock(set));
+      });
       body.appendChild(entryNoteBlock(entry));
     }
 
@@ -223,7 +232,8 @@ export default function renderSession(root, params, ctx) {
       fields.append(numInput(set.count, 'count', countUnit(entry.exerciseId), { step: '1' }));
     } else {
       fields.append(numInput(set.distanceKm, 'distanceKm', t('units.km'), { step: '0.1' }),
-        numInput(set.minutes, 'minutes', t('common.min'), { step: '1' }));
+        // A planned pace shows as the placeholder, the way targetReps does.
+        numInput(set.minutes, 'minutes', set.targetMinutes ? String(set.targetMinutes) : t('common.min'), { step: '1' }));
     }
 
     const numEl = h('span', { class: 'set__n', text: String(set.n) });
@@ -368,7 +378,7 @@ export default function renderSession(root, params, ctx) {
     if (wasDone) return;
     if (!finished) {
       set.timestamp = new Date().toISOString();
-      startRest();
+      startRest(set);
     } else if (!set.timestamp) {
       // Editing history: keep the original timing — don't re-stamp with "now".
       set.timestamp = s.endedAt || s.startedAt;
@@ -378,6 +388,7 @@ export default function renderSession(root, params, ctx) {
     const items = [1, 2, 3].map((e) => ({ label: t('session.' + EFFORT[e].label), color: EFFORT_COLOR[e], active: set.done && set.effort === e,
       onClick: () => { markDone(set, e); persist(); onChanged(); } }));
     if (set.done) items.push({ label: t('session.markUndone'), onClick: () => { clearDone(set); persist(); onChanged(); } });
+    items.push({ label: t('plan.setNote'), onClick: () => editSetNote(set) });
     items.push({ label: t('common.delete'), onClick: () => confirmDeleteSet(entry, entry.sets.indexOf(set)) });
     popoverMenu(anchor, items, { title: t('session.effort') });
   }
@@ -459,6 +470,28 @@ export default function renderSession(root, params, ctx) {
     persist(); renderExercises();
   }
 
+  /** A planned per-set cue, shown under its own set row. Tap to edit — notes stay
+   *  editable in a read-only session, like the session and per-entry notes do.
+   *  (The effort menu has the same entry, for sets that carry no cue yet.) */
+  function setNoteBlock(set) {
+    const box = h('div', { class: 'note note--inline note--set', title: t('plan.setNote'), style: 'cursor:pointer' }, [
+      h('div', { class: 'note__text', text: set.n + '. ' + set.note })
+    ]);
+    box.addEventListener('click', () => editSetNote(set));
+    return clickable(box);
+  }
+
+  async function editSetNote(set) {
+    const had = !!set.note;
+    const res = await promptDialog(t('plan.setNote'), {
+      multiline: true, value: set.note || '', placeholder: t('exercises.notePlaceholder'),
+      deleteText: had ? t('common.delete') : undefined
+    });
+    if (res == null) return;
+    set.note = res === PROMPT_DELETE ? '' : String(res).trim();
+    persist(); renderExercises();
+  }
+
   /** Read-only rendering of the note under the set list (edited from the header). */
   function entryNoteBlock(entry) {
     const host = h('div', { class: 'entry-note' });
@@ -503,9 +536,12 @@ export default function renderSession(root, params, ctx) {
     // targetReps only carries over when it was explicitly set (plan target or
     // rep-chooser pick) — stamping the 12-rep default here made every workout
     // that wasn't 12s read as "missed target" and froze the suggestions.
+    // The rest override carries over (same exercise, same pacing); the cue does
+    // not — it was written for the set it sat on.
     return { n: entry.sets.length + 1, reps: prev.reps ?? defReps, weightKg: prev.weightKg ?? null,
       seconds: prev.seconds ?? null, count: prev.count ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
-      effort: null, targetReps: prev.targetReps ?? null, barKg: prev.barKg ?? null, done: false,
+      effort: null, targetReps: prev.targetReps ?? null, targetMinutes: prev.targetMinutes ?? null,
+      barKg: prev.barKg ?? null, done: false, restSeconds: prev.restSeconds ?? null, note: '',
       timestamp: null, startedAt: null, durationMs: null };
   }
 
@@ -557,7 +593,8 @@ export default function renderSession(root, params, ctx) {
     const defReps = metric === 'reps' ? 12 : null;
     // See nextSet(): 12 reps stays a prefill, never an implicit target.
     return { n: 1, reps: defReps, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null,
-      effort: null, targetReps: null, barKg: null, done: false, timestamp: null, startedAt: null, durationMs: null };
+      effort: null, targetReps: null, targetMinutes: null, barKg: null, done: false, restSeconds: null, note: '',
+      timestamp: null, startedAt: null, durationMs: null };
   }
   function toggleEdit() {
     // Re-render in place (no navigation) — route:change resets editMode.

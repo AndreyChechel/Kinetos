@@ -14,19 +14,26 @@
 // must stay stable anyway.
 import { getProfile, getSettings, getPlans, getExerciseMeta, savePlan } from './store.js';
 import { browseExercises, getExercise, barbellAdded, barbellWeights, repPresets, effectiveWeight } from './data/db.js';
-import { completedSessions, performed } from './workout.js';
+import { completedSessions, performed, cloneTargetRow, syncTargetRow, MAX_SET_TARGETS } from './workout.js';
 import { weightStepFor } from './suggest.js';
 import { age, maxHR, bmi, bmr, tdee, oneRepMax } from './calc.js';
 import { uid, todayISO, localISO } from './ui.js';
 
-export const SCHEMA_VERSION = 1;
+// v2 added per-set prescriptions ("setTargets"); v1 payloads still import.
+export const SCHEMA_VERSION = 2;
 export const DEFAULT_MAX_SESSIONS = 10;
 
 const EFFORT = { 1: 'easy', 2: 'medium', 3: 'hard' };
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const MAX_SETS = 20;
+const MAX_SETS = MAX_SET_TARGETS;
 const MAX_REPS = 200;
 const MAX_WEIGHT = 500;
+const MAX_SECONDS = 7200;
+const MAX_DISTANCE_KM = 500;
+const MAX_MINUTES = 1440;
+const MAX_COUNT = 99999;
+const MAX_REST = 3600;
+const MAX_NOTE = 200;
 
 /** English default request: tomorrow's session, informed by the history below. */
 export function defaultUserMessage() {
@@ -178,7 +185,8 @@ function conventionsBlock() {
     '- Available plates (kg, per side pairs): ' + (Array.isArray(st.plates) && st.plates.length ? st.plates.map(num).join(', ') : 'unknown')
       + '. Keep barbell weights achievable with these.',
     '- Preferred rep counts: ' + repPresets().join(', ') + '.',
-    '- Rest between sets: ' + (st.restSeconds ? st.restSeconds + ' s' : 'no timer configured') + '.',
+    '- Rest between sets: ' + (st.restSeconds ? st.restSeconds + ' s' : 'no timer configured')
+      + ' — you can override it for individual sets with "restSeconds".',
     '- Effort ratings in the history are the athlete\'s own rating right after the set: easy / medium / hard.',
     '- "[42s]" after a set is how long that set took; "(target 8)" is the rep target they were given.'
   ];
@@ -212,7 +220,12 @@ const SCHEMA = `{
       "notes": "optional coaching notes for the athlete, or \\"\\"",
       "exercises": [
         { "exerciseId": "bench-press", "sets": 4, "reps": 8, "weightKg": 62.5 },
-        { "exerciseId": "plank", "sets": 3 }
+        { "exerciseId": "back-squat", "setTargets": [
+            { "reps": 8, "weightKg": 60 },
+            { "reps": 6, "weightKg": 70 },
+            { "reps": 4, "weightKg": 80, "restSeconds": 180, "note": "top set — stop 1 rep short" }
+        ] },
+        { "exerciseId": "plank", "setTargets": [ { "seconds": 45 }, { "seconds": 60 } ] }
       ]
     }
   ]
@@ -240,9 +253,23 @@ export function buildPrompt({ userMessage, maxSessions } = {}) {
     'Rules:',
     '- "exerciseId" MUST be copied verbatim from the catalog in section 6. Never invent, translate or guess an id.',
     '- "date" is a calendar date "YYYY-MM-DD" (see section 5 for today). One object per training day; multiple days are allowed.',
-    '- "sets" is an integer from 1 to ' + MAX_SETS + '.',
-    '- "reps" and "weightKg" apply only to exercises whose metric is "reps". Omit them for time/distance/count exercises.',
-    '- For time / distance / count exercises only "sets" is planned — state the intended duration, distance or tally in "notes".',
+    '',
+    'Each exercise is prescribed in ONE of two ways:',
+    '  (a) UNIFORM — "sets" (integer 1 to ' + MAX_SETS + ') plus, for reps exercises, "reps" and "weightKg". Every set is identical.',
+    '  (b) PER SET — "setTargets": an array with exactly one object per set, in the order they are performed.',
+    '- Use "setTargets" whenever the sets are NOT identical: ramping or descending weight, a heavier top set, a rep',
+    '  ladder, drop sets, back-off sets, intervals of different length, or a different rest between specific sets.',
+    '- "setTargets" length IS the set count (1 to ' + MAX_SETS + '). Never send both "sets" and "setTargets" for the same exercise.',
+    '- Inside a "setTargets" object use only the fields that match the exercise metric from section 6:',
+    '    metric reps     -> "reps" (integer) and optionally "weightKg"',
+    '    metric time     -> "seconds" (integer)',
+    '    metric distance -> "distanceKm" and optionally "minutes" (the intended pace/split)',
+    '    metric count    -> "count" (integer tally)',
+    '- Any "setTargets" object may additionally carry:',
+    '    "restSeconds" — rest AFTER that set, overriding the athlete\'s default rest. Omit to use the default.',
+    '    "note" — one short cue shown on that set only, max ' + MAX_NOTE + ' chars (e.g. "drop set", "AMRAP", "3s eccentric").',
+    '- With form (a), "reps"/"weightKg" apply only to reps exercises; for a uniform time/distance/count exercise send just',
+    '  "sets" and describe the intended duration/distance/tally in the session "notes" — or better, use "setTargets".',
     '- "weightKg" is in kilograms, following the entry conventions in section 4; omit it (or use null) for bodyweight work.',
     '- Prefer weights the athlete can actually load (see plates in section 4) and rep counts from their presets.',
     '- Put warm-up work in the session as normal exercises from the "warmup" group if you want it done.',
@@ -301,6 +328,44 @@ function floatIn(v, lo, hi) {
   if (!Number.isFinite(n)) return null;
   return n >= lo && n <= hi ? Math.round(n * 100) / 100 : null;
 }
+/** First argument that is actually an array (used for key aliases). */
+function firstArray(...cands) {
+  return cands.find(Array.isArray) || null;
+}
+
+/** Validate one per-set prescription against the exercise's metric. A set whose
+ *  numbers are unusable is kept but left blank (warned about) rather than failing
+ *  the whole import — the athlete can fill it in, and the structure is the point. */
+function setTargetFrom(rs, ex, at, warnings) {
+  const st = { restSeconds: null, note: '' };
+  if (ex.metric === 'reps') {
+    st.reps = intIn(rs.reps ?? rs.targetReps, 1, MAX_REPS);
+    st.weightKg = floatIn(rs.weightKg ?? rs.targetWeightKg ?? rs.weight, 0, MAX_WEIGHT);
+    if (st.reps == null) { st.reps = 12; warnings.push(at + ': no usable "reps" — using 12.'); }
+    if (st.weightKg === 0) st.weightKg = null;
+  } else if (ex.metric === 'time') {
+    st.seconds = intIn(rs.seconds ?? rs.time ?? rs.durationSeconds, 1, MAX_SECONDS);
+    if (st.seconds == null) warnings.push(at + ': no usable "seconds" — left blank.');
+  } else if (ex.metric === 'distance') {
+    st.distanceKm = floatIn(rs.distanceKm ?? rs.km ?? rs.distance, 0, MAX_DISTANCE_KM);
+    st.minutes = floatIn(rs.minutes ?? rs.min, 0, MAX_MINUTES);
+    if (st.distanceKm === 0) st.distanceKm = null;
+    if (st.minutes === 0) st.minutes = null;
+    if (st.distanceKm == null && st.minutes == null) warnings.push(at + ': no usable "distanceKm"/"minutes" — left blank.');
+  } else {
+    st.count = intIn(rs.count ?? rs.reps, 1, MAX_COUNT);
+    if (st.count == null) warnings.push(at + ': no usable "count" — left blank.');
+  }
+  const rest = intIn(rs.restSeconds ?? rs.rest, 0, MAX_REST);
+  if (rest) st.restSeconds = rest;
+  // A cue must be text. Anything else would stringify into nonsense like
+  // "[object Object]" and then sit on the set forever.
+  const raw = rs.note ?? rs.cue;
+  if (typeof raw === 'string') st.note = raw.trim().slice(0, MAX_NOTE);
+  else if (raw != null) warnings.push(at + ': "note" is not text — ignored.');
+  return st;
+}
+
 function validDate(s) {
   if (typeof s !== 'string' || !DATE_RE.test(s.slice(0, 10))) return null;
   const d = s.slice(0, 10);
@@ -344,6 +409,26 @@ export function parseSessions(text) {
       const ex = getExercise(id);
       if (!ex || ex.deleted) fail(where + ': unknown exerciseId "' + id + '". It must come from the catalog in the prompt.');
 
+      // Per-set form: "setTargets" (or an array handed to us as "sets", which
+      // agents do often enough to be worth accepting). An empty array only fails
+      // when there is no usable uniform "sets" to fall back on — otherwise a
+      // stray "setTargets": [] would reject an otherwise perfect exercise.
+      const given = firstArray(pe.setTargets, pe.setsDetail, pe.setList, pe.sets);
+      const rawSets = given && given.length ? given : null;
+      if (given && !rawSets && intIn(pe.sets ?? pe.targetSets, 1, MAX_SETS) == null) {
+        fail(where + ' (' + ex.id + '): "setTargets" is empty.');
+      }
+      if (rawSets) {
+        if (rawSets.length > MAX_SETS) fail(where + ' (' + ex.id + '): ' + rawSets.length + ' sets — max ' + MAX_SETS + '.');
+        const row = { exerciseId: ex.id, targetSets: rawSets.length, targetReps: null, targetWeightKg: null, detailed: true, setTargets: [] };
+        rawSets.forEach((rs, k) => {
+          if (!rs || typeof rs !== 'object' || Array.isArray(rs)) fail(where + ' (' + ex.id + '), set ' + (k + 1) + ': not an object.');
+          row.setTargets.push(setTargetFrom(rs, ex, where + ' (' + ex.id + '), set ' + (k + 1), warnings));
+        });
+        exercises.push(syncTargetRow(row, ex.metric));
+        return;
+      }
+
       const sets = intIn(pe.sets ?? pe.targetSets, 1, MAX_SETS);
       if (sets == null) {
         warnings.push(where + ': "sets" missing or out of range — using 3.');
@@ -381,7 +466,7 @@ export function importSessions(sessions) {
       name: s.name || '',
       date: s.date,
       notes: s.notes || '',
-      exercises: s.exercises.map((x) => ({ ...x })),
+      exercises: s.exercises.map(cloneTargetRow),
       source: 'ai'
     };
     savePlan(plan);

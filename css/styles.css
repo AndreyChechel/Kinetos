@@ -172,6 +172,18 @@ p { line-height: 1.5; }
   .target-fields__wide { grid-column: auto; }
 }
 
+/* Per-set mode of the same editor: one boxed sub-card per prescribed set,
+   sitting inside the exercise card, so the set count reads as a list length. */
+.set-targets { display: flex; flex-direction: column; gap: 8px; }
+.set-target { border: 1px solid var(--border); border-radius: 12px; padding: 8px 10px; background: var(--surface-2); }
+.set-target .set__n { width: 22px; }
+.set-target__note { overflow-wrap: anywhere; }
+/* Generic "this toggle is on" pill (per-set switch). */
+.btn--on { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+/* Planned cue attached to a single set in the session list. */
+.note--set { margin-top: 2px; padding: 6px 10px; }
+.note--set .note__text { font-size: .82rem; }
+
 /* Chips / tags */
 .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; }
 .chip {
