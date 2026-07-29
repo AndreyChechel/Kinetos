@@ -4,6 +4,7 @@ import { t, getLang, SUPPORTED } from '../i18n.js';
 import { getProfile, setProfile, getSettings, setSettings, exportJSON, importJSON, resetAll } from '../store.js';
 import { completedSessions } from '../workout.js';
 import { getExercise, exName } from '../data/db.js';
+import { buildPrompt, getPromptOptions, defaultUserMessage, parseSessions, importSessions, plansOnDate } from '../aiplan.js';
 import { age, maxHR, hrZones, bmi, bodyFat, bmr, tdee } from '../calc.js';
 import { sheet, confirmDialog } from '../components.js';
 import { applyTheme, changeLanguage } from '../app.js';
@@ -282,6 +283,9 @@ export default function renderProfile(root, params, ctx) {
       h('button', { class: 'btn btn--primary btn--block', onclick: doExport }, [icon('download', { size: 16 }), ' ' + t('profile.exportData')]),
       h('button', { class: 'btn btn--block', onclick: doExportCSV }, [icon('download', { size: 16 }), ' ' + t('profile.exportCSV')]),
       h('button', { class: 'btn btn--block', onclick: doImport }, [icon('upload', { size: 16 }), ' ' + t('profile.importData')]),
+      h('button', { class: 'btn btn--block', onclick: aiPromptSheet }, [icon('clipboard', { size: 16 }), ' ' + t('profile.aiPrompt')]),
+      h('button', { class: 'btn btn--block', onclick: () => aiImportSheet(ctx) }, [icon('calendar', { size: 16 }), ' ' + t('profile.aiImport')]),
+      h('div', { class: 'small muted', text: t('profile.aiHint') }),
       h('button', { class: 'btn btn--danger btn--block', onclick: doReset }, [t('profile.resetApp')])
     ])
   ]);
@@ -367,6 +371,123 @@ export default function renderProfile(root, params, ctx) {
     if (await confirmDialog(t('profile.resetConfirm'), { danger: true, okText: t('common.delete') })) {
       resetAll(); applyTheme(); changeLanguage(getSettings().lang); toast(t('toast.deleted')); ctx.navigate('/');
     }
+  }
+}
+
+// ---- AI planning bridge ----------------------------------------------------
+// Two one-way doors: copy a prompt out to any AI agent, paste its JSON answer
+// back in as calendar plans. No network, no vendor lock-in.
+
+/** Copy to clipboard with an execCommand fallback (iOS / non-secure origins). */
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(text); return true; }
+  } catch (_) { /* fall through to the legacy path */ }
+  try {
+    const ta = h('textarea', { style: 'position:fixed;left:-9999px;top:0', 'aria-hidden': 'true' });
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  } catch (_) { return false; }
+}
+
+function aiPromptSheet() {
+  const saved = getPromptOptions();
+  const msg = h('textarea', { class: 'textarea', rows: '4', placeholder: defaultUserMessage() }, [saved.userMessage]);
+  const count = h('input', { class: 'input', type: 'number', inputmode: 'numeric', min: '0', max: '100', step: '1', value: String(saved.maxSessions) });
+  const preview = h('textarea', { class: 'textarea', rows: '10', readonly: true, style: 'font-family:ui-monospace,monospace;font-size:.72rem' });
+  const previewWrap = h('details', {}, [h('summary', { class: 'small muted', style: 'cursor:pointer', text: t('profile.aiPreview') }), preview]);
+  const info = h('div', { class: 'small muted' });
+
+  const read = () => {
+    const n = parseInt(count.value, 10);
+    return {
+      userMessage: msg.value.trim() || defaultUserMessage(),
+      maxSessions: isNaN(n) || n < 0 ? 0 : Math.min(n, 100)
+    };
+  };
+
+  async function copy() {
+    const opts = read();
+    setSettings({ aiPrompt: opts });
+    const text = buildPrompt(opts);
+    preview.value = text;
+    info.textContent = t('profile.aiPromptSize', { n: Math.round(text.length / 100) / 10 });
+    const ok = await copyText(text);
+    if (ok) toast(t('profile.aiCopied'));
+    else { previewWrap.open = true; preview.focus(); preview.select(); toast(t('profile.aiCopyFailed')); }
+  }
+
+  const content = h('div', { class: 'stack' }, [
+    h('p', { class: 'small muted', style: 'margin:0', text: t('profile.aiPromptAbout') }),
+    field(t('profile.aiUserMessage'), msg),
+    h('button', { class: 'btn btn--sm btn--ghost', style: 'align-self:flex-start', onclick: () => { msg.value = defaultUserMessage(); } }, [t('profile.aiResetMessage')]),
+    field(t('profile.aiMaxSessions'), count),
+    h('div', { class: 'small muted', text: t('profile.aiMaxSessionsHint') }),
+    h('button', { class: 'btn btn--primary btn--block', onclick: copy }, [icon('clipboard', { size: 16 }), ' ' + t('profile.aiCopyPrompt')]),
+    info,
+    previewWrap
+  ]);
+  sheet(t('profile.aiPrompt'), content);
+}
+
+function aiImportSheet(ctx) {
+  const lang = getLang();
+  const ta = h('textarea', { class: 'textarea', rows: '8', placeholder: '{ "kinetos": "sessions", ... }', style: 'font-family:ui-monospace,monospace;font-size:.75rem' });
+  const status = h('div', {});
+  const actions = h('div', { class: 'stack' });
+  let parsed = null;
+
+  const content = h('div', { class: 'stack' }, [
+    h('p', { class: 'small muted', style: 'margin:0', text: t('profile.aiImportAbout') }),
+    ta,
+    h('button', { class: 'btn btn--block', onclick: check }, [t('profile.aiCheckJSON')]),
+    status,
+    actions
+  ]);
+  const ctl = sheet(t('profile.aiImport'), content);
+  setTimeout(() => ta.focus(), 250);
+
+  function check() {
+    status.innerHTML = ''; actions.innerHTML = ''; parsed = null;
+    let res;
+    try { res = parseSessions(ta.value); }
+    catch (e) {
+      status.appendChild(h('div', { class: 'small', style: 'color:var(--danger);word-break:break-word', text: t('profile.aiInvalid') + ' ' + (e.message || '') }));
+      return;
+    }
+    parsed = res.sessions;
+    status.appendChild(h('div', { class: 'section-title', style: 'margin-top:0', text: t('profile.aiWillAdd', { n: parsed.length }) }));
+    const ul = h('ul', { class: 'list card card--pad-0' });
+    parsed.forEach((s) => {
+      const existing = plansOnDate(s.date);
+      ul.appendChild(h('li', { class: 'list__item' }, [
+        h('div', { class: 'list__thumb' }, [icon('calendar', { size: 22 })]),
+        h('div', { class: 'list__body' }, [
+          h('div', { class: 'list__title', text: fmtDate(s.date, lang, { weekday: 'short' }) + (s.name ? ' · ' + s.name : '') }),
+          h('div', { class: 'list__sub', text: t('exercises.count', { n: s.exercises.length })
+            + ' · ' + t('profile.aiSetsTotal', { n: s.exercises.reduce((a, x) => a + (x.targetSets || 0), 0) })
+            + (existing ? ' · ' + t('profile.aiDateBusy', { n: existing }) : '') })
+        ])
+      ]));
+    });
+    status.appendChild(ul);
+    res.warnings.slice(0, 8).forEach((w) => status.appendChild(h('div', { class: 'small muted', style: 'word-break:break-word', text: '⚠ ' + w })));
+
+    actions.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: add }, [
+      icon('plus', { size: 16 }), ' ' + t('profile.aiAddToCalendar', { n: parsed.length })
+    ]));
+  }
+
+  function add() {
+    if (!parsed || !parsed.length) return;
+    importSessions(parsed);
+    ctl.close();
+    toast(t('profile.aiImported', { n: parsed.length }));
+    ctx.navigate('/plan');
   }
 }
 

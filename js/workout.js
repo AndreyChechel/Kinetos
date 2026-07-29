@@ -7,7 +7,7 @@ import { sessionVolume, oneRepMax } from './calc.js';
 /** A set counts as performed only if it has data AND wasn't left/marked not-done.
  *  (Plan-prefilled sets carry reps but done:false until the user taps them —
  *  without this check they'd poison history, suggestions and "Previous" hints.) */
-function performed(st) {
+export function performed(st) {
   return !!(st && st.done !== false && (st.reps || st.seconds || st.count || st.distanceKm));
 }
 

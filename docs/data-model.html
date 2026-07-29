@@ -44,7 +44,8 @@
 <pre>{
   id, name, date,          // date "YYYY-MM-DD"
   notes,
-  exercises: [ { exerciseId, targetSets, targetReps, targetWeightKg } ]
+  exercises: [ { exerciseId, targetSets, targetReps, targetWeightKg } ],
+  source                   // optional; "ai" for plans created by the AI import in Profile
 }</pre>
 
 <h3>Session</h3>
@@ -91,6 +92,23 @@
 
 <h2>Export / import</h2>
 <p>Profile → "Export data" downloads the whole state as <code>kinetos-backup-YYYY-MM-DD.json</code>. Import validates that the file is a Kinetos backup, then offers <b>merge</b> (adds templates/plans/sessions/custom exercises by id; local profile/settings win, the import only fills gaps) or <b>replace</b> (overwrites everything). The device-local sync provider choice is never taken from an imported file. Encourage regular exports — data is device-local only.</p>
+
+<h2>AI planning bridge (<code>js/aiplan.js</code>)</h2>
+<p>Profile → Your data has two buttons that let any external AI agent write plans, without the app ever making a network call.</p>
+<p><b>"Generate AI prompt"</b> opens a sheet with the request text (default: plan tomorrow's session) and how many recent sessions to include as reference (default 10, 0 = none; both remembered in <code>settings.aiPrompt</code>). <code>buildPrompt()</code> renders one always-English prompt: the request, the profile + derived metrics, the weight-entry conventions (dumbbell single/pair, barbell included/added, bar weights, plates, rep presets, rest), today's date plus upcoming calendar plans, the allowed exercise catalog (non-hidden built-in + custom, with per-exercise weight steps and any athlete notes), full set-level history and best estimated 1RMs. It is copied to the clipboard (with an <code>execCommand</code> fallback and a preview textarea for manual copy).</p>
+<p><b>"Import AI sessions"</b> takes the agent's answer. <code>parseSessions()</code> strips markdown fences/prose, accepts the documented object as well as a bare array or single session, validates dates and every <code>exerciseId</code> against the catalog, coerces numeric strings, and reports fixable problems as warnings (missing sets → 3, missing reps → 12) or hard errors with the offending session/exercise index. The preview lists each date, name, exercise/set counts and whether that day already has plans; confirming calls <code>importSessions()</code> which saves one <code>Plan</code> per session (<code>source: "ai"</code>) and jumps to the calendar.</p>
+<p>Expected answer shape:</p>
+<pre>{
+  "kinetos": "sessions",
+  "version": 1,
+  "sessions": [ {
+    "date": "YYYY-MM-DD",
+    "name": "Upper A",
+    "notes": "",
+    "exercises": [ { "exerciseId": "bench-press", "sets": 4, "reps": 8, "weightKg": 62.5 } ]
+  } ]
+}</pre>
+<p>Only <code>sets</code> is planned for time/distance/count exercises — the plan schema has no target for those metrics, so the prompt asks the agent to put the intended duration or distance in <code>notes</code>.</p>
 
 <footer><a href="index.html">← Back to overview</a></footer>
 </main></body></html>
