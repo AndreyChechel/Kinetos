@@ -53,6 +53,13 @@ export function suggestNext(exerciseId, excludeSessionId) {
     const seconds = trend === 'up' ? sec + 15 : trend === 'down' ? Math.max(10, sec - 10) : sec + 5;
     return { ...base, trend, reason, values: { seconds } };
   }
+  if (metric === 'count') {
+    // Counted work (e.g. stairs) has no load to add, so progress the tally itself.
+    const c = heaviestBy(sets, 'count').count || 0;
+    const [trend, reason] = pickTrend(effortTrend, false, false);
+    const count = trend === 'up' ? Math.round(c * 1.1) + 1 : trend === 'down' ? Math.max(1, Math.round(c * 0.9)) : c + 1;
+    return { ...base, trend, reason, values: { count } };
+  }
   if (metric === 'distance') {
     const ref = heaviestBy(sets, 'distanceKm');
     const km = ref.distanceKm || 0, min = ref.minutes || 0;
@@ -110,10 +117,12 @@ export function applyToSet(set, sug) {
   if (sug.values.weightKg != null) set.targetWeightKg = sug.values.weightKg;
 }
 
-/** Localized "42.5 kg × 8" / "8 reps" / "45 s" / "3.2 km · 18 min". */
-export function formatSuggestion(sug, metric) {
+/** Localized "42.5 kg × 8" / "8 reps" / "45 s" / "3.2 km · 18 min" / "120 stairs".
+ *  `unitLabel` names the tally for the 'count' metric (see db.countUnit). */
+export function formatSuggestion(sug, metric, unitLabel) {
   const v = sug.values;
   if (metric === 'time') return `${v.seconds} ${t('common.sec')}`;
+  if (metric === 'count') return `${v.count} ${unitLabel || t('units.count')}`;
   if (metric === 'distance') {
     const d = v.distanceKm ? `${v.distanceKm} ${t('units.km')}` : '';
     const m = v.minutes ? `${v.minutes} ${t('common.min')}` : '';

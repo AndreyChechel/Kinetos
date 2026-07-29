@@ -3,7 +3,7 @@
 // exercises.json (and an SVG) or let users add custom ones at runtime.
 
 import { getCustomExercises, isExerciseHidden, getSettings } from '../store.js';
-import { pick } from '../i18n.js';
+import { pick, t } from '../i18n.js';
 
 let builtin = [];
 let muscleMeta = { groups: [], muscles: [] };
@@ -95,6 +95,36 @@ export function effectiveWeight(exOrId, weightKg, set) {
 /** Resolver for calc.js sessionVolume: entry-aware effective set weight. */
 export function volumeWeightOf(set, entry) {
   return effectiveWeight(entry && entry.exerciseId, set.weightKg, set) || 0;
+}
+
+// --- Rep presets ------------------------------------------------------------
+// The quick-pick rep counts offered by the rep chooser. Configurable in
+// Profile (like the bar weights) so 5×5 / 3×3 lifters aren't stuck with 6–20.
+const DEFAULT_REP_PRESETS = [6, 8, 10, 12, 15, 20];
+
+/** Configured quick-pick rep counts (ascending, de-duplicated). */
+export function repPresets() {
+  const raw = getSettings().repPresets;
+  const list = [...new Set((Array.isArray(raw) ? raw : []).map(Number).filter((n) => Number.isFinite(n) && n > 0))]
+    .sort((a, b) => a - b);
+  return list.length ? list : DEFAULT_REP_PRESETS.slice();
+}
+
+// --- Counted exercises ('count' metric) ------------------------------------
+// Some machines are logged as a plain tally rather than reps/time/distance —
+// e.g. a stair stepper counts stairs. The exercise carries a `countUnit` key
+// that resolves to a localized label; time comes from the set runner's clock.
+
+/** True when this exercise is logged as a counted tally. */
+export function usesCount(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  return !!(ex && ex.metric === 'count');
+}
+
+/** Localized unit label for a counted exercise (e.g. "stairs"). */
+export function countUnit(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  return t('units.' + ((ex && ex.countUnit) || 'count'));
 }
 
 export function groups() { return muscleMeta.groups; }

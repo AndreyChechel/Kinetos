@@ -139,6 +139,7 @@ export default function renderProfile(root, params, ctx) {
   });
   const barWeightsHost = h('div', { style: 'margin-top:10px' });
   const platesHost = h('div', { style: 'margin-top:10px' });
+  const repPresetsHost = h('div', { style: 'margin-top:10px' });
   root.appendChild(h('div', { class: 'card' }, [
     h('div', { class: 'card__title', text: t('profile.settings') }),
     h('div', { class: 'grid2' }, [
@@ -153,70 +154,72 @@ export default function renderProfile(root, params, ctx) {
     h('div', { class: 'small muted', style: 'margin-top:4px', text: t('profile.barbellHint') }),
     h('div', { class: 'small muted', style: 'margin-top:4px', text: t('profile.restTimerHint') }),
     barWeightsHost,
-    platesHost
+    platesHost,
+    repPresetsHost
   ]));
 
-  // Editable list of bar weights — only relevant in "add bar weight" mode.
-  function drawBarWeights() {
-    barWeightsHost.innerHTML = '';
-    if ((getSettings().barbellInput || 'included') !== 'added') return;
-    const weights = (getSettings().barbellWeights || []).slice();
-    barWeightsHost.appendChild(h('div', { class: 'field__label', style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:6px', text: t('profile.barbellWeights') }));
-    const chips = h('div', { class: 'chips' });
-    weights.forEach((w, i) => {
-      chips.appendChild(h('span', { class: 'tag', style: 'display:inline-flex;align-items:center;gap:6px;padding-right:5px' + (i === 0 ? ';background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)' : '') }, [
-        w + ' ' + t('units.kg'),
-        h('button', { class: 'btn btn--icon btn--ghost btn--sm', style: 'width:20px;height:20px;min-height:0;padding:0', 'aria-label': t('common.remove'),
-          onclick: () => { const arr = weights.filter((_, j) => j !== i); setSettings({ barbellWeights: arr }); drawBarWeights(); } }, [icon('x', { size: 14 })])
+  /** Editable list of numbers rendered as removable chips + an "add" row.
+   *  Shared by bar weights, plate sizes and rep presets. `firstIsDefault`
+   *  highlights entry 0 (the bar weights list treats it as the default). */
+  function numberListEditor(host, { label, hint, key, unit = '', step = '0.5', placeholder, sort, firstIsDefault = false, fallback = [] }) {
+    const draw = () => {
+      host.innerHTML = '';
+      const raw = getSettings()[key];
+      let values = (Array.isArray(raw) && raw.length ? raw : fallback).slice();
+      if (sort) values.sort(sort);
+      host.appendChild(h('div', { class: 'field__label', style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:6px', text: label }));
+      const chips = h('div', { class: 'chips' });
+      values.forEach((v, i) => {
+        const accent = firstIsDefault && i === 0;
+        chips.appendChild(h('span', { class: 'tag', style: 'display:inline-flex;align-items:center;gap:6px;padding-right:5px' + (accent ? ';background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)' : '') }, [
+          unit ? v + ' ' + unit : String(v),
+          h('button', { class: 'btn btn--icon btn--ghost btn--sm', style: 'width:20px;height:20px;min-height:0;padding:0', 'aria-label': t('common.remove'),
+            onclick: () => { setSettings({ [key]: values.filter((_, j) => j !== i) }); draw(); } }, [icon('x', { size: 14 })])
+        ]));
+      });
+      host.appendChild(chips);
+      const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step, min: '0', placeholder: placeholder || t('profile.barbellAddWeight'), style: 'flex:1' });
+      const add = () => {
+        const n = parseFloat(inp.value);
+        if (isNaN(n) || n <= 0) return;
+        const arr = values.slice();
+        if (!arr.includes(n)) arr.push(n);
+        setSettings({ [key]: arr }); inp.value = ''; draw();
+      };
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+      host.appendChild(h('div', { class: 'row', style: 'gap:8px;margin-top:8px' }, [
+        inp, h('button', { class: 'btn btn--sm', onclick: add }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
       ]));
-    });
-    barWeightsHost.appendChild(chips);
-    const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step: '0.5', min: '0', placeholder: t('profile.barbellAddWeight'), style: 'flex:1' });
-    const add = () => {
-      const n = parseFloat(inp.value);
-      if (isNaN(n) || n <= 0) return;
-      const arr = weights.slice();
-      if (!arr.includes(n)) arr.push(n);
-      setSettings({ barbellWeights: arr }); inp.value = ''; drawBarWeights();
+      if (hint) host.appendChild(h('div', { class: 'small muted', style: 'margin-top:6px', text: hint }));
     };
-    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
-    barWeightsHost.appendChild(h('div', { class: 'row', style: 'gap:8px;margin-top:8px' }, [
-      inp, h('button', { class: 'btn btn--sm', onclick: add }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
-    ]));
-    barWeightsHost.appendChild(h('div', { class: 'small muted', style: 'margin-top:6px', text: t('profile.barbellWeightsHint') }));
+    return draw;
+  }
+
+  // Bar weights — only relevant in "add bar weight" mode.
+  const drawBarWeightList = numberListEditor(barWeightsHost, {
+    label: t('profile.barbellWeights'), hint: t('profile.barbellWeightsHint'),
+    key: 'barbellWeights', unit: t('units.kg'), step: '0.5', firstIsDefault: true, fallback: [20, 10, 5]
+  });
+  function drawBarWeights() {
+    if ((getSettings().barbellInput || 'included') !== 'added') { barWeightsHost.innerHTML = ''; return; }
+    drawBarWeightList();
   }
   drawBarWeights();
 
-  // Available plate sizes (kg) — feeds the per-side plate calculator in the
-  // session view (long-press a barbell weight field).
-  function drawPlates() {
-    platesHost.innerHTML = '';
-    const plates = (getSettings().plates || []).slice().sort((a, b) => b - a);
-    platesHost.appendChild(h('div', { class: 'field__label', style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:6px', text: t('profile.plates') }));
-    const chips = h('div', { class: 'chips' });
-    plates.forEach((w, i) => {
-      chips.appendChild(h('span', { class: 'tag', style: 'display:inline-flex;align-items:center;gap:6px;padding-right:5px' }, [
-        w + ' ' + t('units.kg'),
-        h('button', { class: 'btn btn--icon btn--ghost btn--sm', style: 'width:20px;height:20px;min-height:0;padding:0', 'aria-label': t('common.remove'),
-          onclick: () => { const arr = plates.filter((_, j) => j !== i); setSettings({ plates: arr }); drawPlates(); } }, [icon('x', { size: 14 })])
-      ]));
-    });
-    platesHost.appendChild(chips);
-    const inp = h('input', { class: 'input', type: 'number', inputmode: 'decimal', step: '0.25', min: '0', placeholder: t('profile.barbellAddWeight'), style: 'flex:1' });
-    const add = () => {
-      const n = parseFloat(inp.value);
-      if (isNaN(n) || n <= 0) return;
-      const arr = plates.slice();
-      if (!arr.includes(n)) arr.push(n);
-      setSettings({ plates: arr }); inp.value = ''; drawPlates();
-    };
-    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
-    platesHost.appendChild(h('div', { class: 'row', style: 'gap:8px;margin-top:8px' }, [
-      inp, h('button', { class: 'btn btn--sm', onclick: add }, [icon('plus', { size: 16 }), ' ' + t('common.add')])
-    ]));
-    platesHost.appendChild(h('div', { class: 'small muted', style: 'margin-top:6px', text: t('profile.platesHint') }));
-  }
-  drawPlates();
+  // Available plate sizes (kg) — feeds the per-side plate calculator shown when
+  // you tap a barbell weight field during a session.
+  numberListEditor(platesHost, {
+    label: t('profile.plates'), hint: t('profile.platesHint'),
+    key: 'plates', unit: t('units.kg'), step: '0.25', sort: (a, b) => b - a,
+    fallback: [25, 20, 15, 10, 5, 2.5, 1.25]
+  })();
+
+  // Quick-pick rep counts offered when you tap a set's reps field.
+  numberListEditor(repPresetsHost, {
+    label: t('profile.repPresets'), hint: t('profile.repPresetsHint'),
+    key: 'repPresets', step: '1', placeholder: t('profile.repPresetsAdd'),
+    sort: (a, b) => a - b, fallback: [6, 8, 10, 12, 15, 20]
+  })();
 
   // ---------- Cloud sync ----------
   const syncCard = h('div', { class: 'card' });
@@ -316,15 +319,15 @@ export default function renderProfile(root, params, ctx) {
   // Flat one-row-per-set CSV — what people actually want for spreadsheets.
   function doExportCSV() {
     const q = (v) => { v = v == null ? '' : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-    const rows = [['date', 'session', 'exercise', 'set', 'weightKg', 'barKg', 'reps', 'seconds', 'distanceKm', 'minutes', 'effort', 'done']];
+    const rows = [['date', 'session', 'exercise', 'set', 'weightKg', 'barKg', 'reps', 'count', 'seconds', 'distanceKm', 'minutes', 'durationSec', 'effort', 'done']];
     completedSessions().slice().reverse().forEach((s) => {
       (s.entries || []).forEach((e) => {
         const ex = getExercise(e.exerciseId);
         (e.sets || []).forEach((set) => {
           rows.push([
             (s.startedAt || '').slice(0, 10), s.name || '', ex ? exName(ex) : e.exerciseId, set.n,
-            set.weightKg ?? '', set.barKg ?? '', set.reps ?? '', set.seconds ?? '', set.distanceKm ?? '', set.minutes ?? '',
-            set.effort ?? '', set.done === false ? 0 : 1
+            set.weightKg ?? '', set.barKg ?? '', set.reps ?? '', set.count ?? '', set.seconds ?? '', set.distanceKm ?? '', set.minutes ?? '',
+            set.durationMs > 0 ? Math.round(set.durationMs / 1000) : '', set.effort ?? '', set.done === false ? 0 : 1
           ]);
         });
       });

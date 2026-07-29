@@ -2,7 +2,7 @@
 // notes, hide/unhide and (soft) deletion.
 import { h, uid, toast, fmtDate, todayISO } from '../ui.js';
 import { t, pick, getLang } from '../i18n.js';
-import { byGroup, groups, exName, getExercise, isCustom } from '../data/db.js';
+import { byGroup, groups, exName, getExercise, isCustom, countUnit } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import { buildExerciseSVG, GROUP_VIEW, GROUP_MUSCLE } from '../exsvg.js';
 import { sheet, confirmDialog, promptDialog, popoverMenu, attachLongPress } from '../components.js';
@@ -230,7 +230,7 @@ function logNow(ex, ctx) {
   s.entries = s.entries || [];
   if (!s.entries.some((e) => e.exerciseId === ex.id)) {
     // Same shape/defaults as every other set-creation path (12-rep prefill, no implicit target).
-    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, targetReps: null, barKg: null, done: false, timestamp: null }] });
+    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null, effort: null, targetReps: null, barKg: null, done: false, timestamp: null, startedAt: null, durationMs: null }] });
   }
   saveSession(s);
   ctx.navigate('/session/' + s.id);
@@ -304,7 +304,7 @@ function suggestionCard(ex) {
     h('div', { class: 'suggest', style: 'margin:0' }, [
       h('span', { class: 'suggest__ico' }, [icon('bulb', { size: 18 })]),
       h('div', { class: 'suggest__txt' }, [
-        h('span', { class: 'suggest__val', text: formatSuggestion(sug, ex.metric) }),
+        h('span', { class: 'suggest__val', text: formatSuggestion(sug, ex.metric, countUnit(ex)) }),
         h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })
       ])
     ])

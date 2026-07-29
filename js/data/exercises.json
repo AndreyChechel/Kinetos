@@ -534,7 +534,7 @@
   },
   {
     "id": "stair-stepper", "group": "warmup", "view": "front", "category": "cardio",
-    "equipment": "cardio", "metric": "time",
+    "equipment": "cardio", "metric": "count", "countUnit": "stairs",
     "primary": ["quads"], "secondary": ["glutes", "calves"],
     "names": { "en": "Stair Stepper", "de": "Stepper", "fr": "Stepper (escaliers)", "es": "Escaladora (stepper)", "ru": "Степпер" },
     "cues": {

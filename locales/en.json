@@ -57,7 +57,9 @@
     "cm": "cm",
     "km": "km",
     "bpm": "bpm",
-    "kcal": "kcal"
+    "kcal": "kcal",
+    "stairs": "stairs",
+    "count": "count"
   },
   "home": {
     "greeting": "Hi, {name}",
@@ -246,7 +248,13 @@
     "restDone": "Rest over — next set!",
     "perSide": "Per side",
     "pr": "PR",
-    "newPR": "New personal record: {names}!"
+    "newPR": "New personal record: {names}!",
+    "startSet": "Start set",
+    "setRunning": "Set in progress",
+    "timeAutoHint": "Time is recorded automatically",
+    "finishWithEffort": "Finish with how hard it felt",
+    "repsHint": "Tap to pick reps · hold to type",
+    "weightHint": "Tap to pick weight · hold to type"
   },
   "progress": {
     "title": "Progress",
@@ -342,8 +350,11 @@
     "restTimer": "Rest timer (sec)",
     "restTimerHint": "Countdown after you mark a set done. 0 turns it off.",
     "plates": "Plates (kg)",
-    "platesHint": "Available plate sizes for the plate calculator — long-press a barbell weight field during a session.",
-    "exportCSV": "Export CSV (sets)"
+    "platesHint": "Available plate sizes for the plate calculator — tap a barbell weight field during a session.",
+    "exportCSV": "Export CSV (sets)",
+    "repPresets": "Rep presets",
+    "repPresetsHint": "The quick-pick options shown when you tap a set's reps field. Remove any you don't need, or add your own.",
+    "repPresetsAdd": "e.g. 5"
   },
   "sync": {
     "title": "Cloud sync",

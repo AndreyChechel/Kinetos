@@ -118,7 +118,7 @@ export default function renderProgress(root, params, ctx) {
     const groupSets = {};
     inWin.forEach((s) => (s.entries || []).forEach((e) => {
       const ex = getExercise(e.exerciseId); if (!ex) return;
-      const done = (e.sets || []).filter((x) => x.done !== false && (x.reps || x.seconds || x.distanceKm)).length;
+      const done = (e.sets || []).filter((x) => x.done !== false && (x.reps || x.seconds || x.count || x.distanceKm)).length;
       if (done) groupSets[ex.group] = (groupSets[ex.group] || 0) + done;
     }));
     const gLabels = Object.keys(groupSets);

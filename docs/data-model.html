@@ -59,12 +59,16 @@
       n,                   // set number
       reps, weightKg,      // strength
       seconds,             // time-based (plank, jump rope)
+      count,               // counted tally (metric "count", e.g. stair-stepper stairs)
       distanceKm, minutes, // cardio
+      barKg,               // chosen bar weight (only when Profile → Barbell = "add bar")
       effort,              // 1=easy | 2=medium | 3=hard | null (RPE-style feedback)
       targetReps,          // planned/suggested reps — drives hit/miss autoregulation
       targetWeightKg,      // planned/suggested load
       done,                // boolean
-      timestamp            // ISO when marked done (seconds precision; for timing analysis)
+      timestamp,           // ISO when marked done (seconds precision; for timing analysis)
+      startedAt,           // ISO when the set runner was opened (null if logged without it)
+      durationMs           // measured set duration from the set runner's stopwatch
     } ]
   } ]
 }</pre>
@@ -76,7 +80,8 @@
   view: "front"|"back",    // which silhouette the SVG uses
   category,                // movement pattern (informational)
   equipment,               // barbell|dumbbell|cable|machine|bodyweight|cardio|band
-  metric: "reps"|"time"|"distance",
+  metric: "reps"|"time"|"distance"|"count",
+  countUnit,               // metric "count" only: locales key under units.* (e.g. "stairs")
   primary:   [ muscleKey ],  // highlighted strongly in the SVG
   secondary: [ muscleKey ],  // highlighted lightly
   names: { en, de, fr, es, ru },

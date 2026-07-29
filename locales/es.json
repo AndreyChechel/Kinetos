@@ -57,7 +57,9 @@
     "cm": "cm",
     "km": "km",
     "bpm": "ppm",
-    "kcal": "kcal"
+    "kcal": "kcal",
+    "stairs": "escalones",
+    "count": "cantidad"
   },
   "home": {
     "greeting": "Hola, {name}",
@@ -246,7 +248,13 @@
     "restDone": "¡Descanso terminado — siguiente serie!",
     "perSide": "Por lado",
     "pr": "PR",
-    "newPR": "¡Nuevo récord personal: {names}!"
+    "newPR": "¡Nuevo récord personal: {names}!",
+    "startSet": "Empezar serie",
+    "setRunning": "Serie en curso",
+    "timeAutoHint": "El tiempo se registra automáticamente",
+    "finishWithEffort": "Termina indicando el esfuerzo",
+    "repsHint": "Toca para elegir · mantén para escribir",
+    "weightHint": "Toca para elegir · mantén para escribir"
   },
   "progress": {
     "title": "Progreso",
@@ -342,8 +350,11 @@
     "restTimer": "Temporizador de descanso (s)",
     "restTimerHint": "Cuenta atrás tras marcar una serie como hecha. 0 lo desactiva.",
     "plates": "Discos (kg)",
-    "platesHint": "Discos disponibles para la calculadora — mantén pulsado el campo de peso de una barra durante la sesión.",
-    "exportCSV": "Exportar CSV (series)"
+    "platesHint": "Tamaños de discos disponibles para la calculadora — toca un campo de peso con barra durante una sesión.",
+    "exportCSV": "Exportar CSV (series)",
+    "repPresets": "Repeticiones predefinidas",
+    "repPresetsHint": "Las opciones rápidas que aparecen al tocar el campo de repeticiones. Quita las que no necesites o añade las tuyas.",
+    "repPresetsAdd": "p. ej. 5"
   },
   "sync": {
     "title": "Sincronización en la nube",

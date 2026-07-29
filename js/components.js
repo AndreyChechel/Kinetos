@@ -1,8 +1,8 @@
 // Reusable UI pieces: bottom sheet, confirm dialog, exercise picker, stepper,
-// long-press, popover menus, rep chooser, swipe-to-delete.
-import { h, clickable } from './ui.js';
+// long-press, popover menus, rep/weight choosers, set runner, swipe-to-delete.
+import { h, clickable, fmtDuration } from './ui.js';
 import { t } from './i18n.js';
-import { byGroup, groups, exName } from './data/db.js';
+import { byGroup, groups, exName, repPresets } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
 import { icon } from './icons.js';
 
@@ -73,10 +73,15 @@ export function confirmDialog(message, { danger = false, okText, cancelText } = 
   });
 }
 
-/** Promise-based text/password prompt. Resolves to the string or null.
+/** Sentinel resolved by promptDialog when the optional Delete action is used.
+ *  Compare by identity: `if (res === PROMPT_DELETE) …`. */
+export const PROMPT_DELETE = Object.freeze({ promptDelete: true });
+
+/** Promise-based text/password prompt. Resolves to the string, null (cancel),
+ *  or PROMPT_DELETE when `deleteText` is given and that button is pressed.
  *  Pass multiline:true for a textarea (used by notes). value pre-fills it.
  *  Pass type (e.g. 'datetime-local', 'number') for a typed single-line input. */
-export function promptDialog(message, { password = false, placeholder = '', value = '', okText, cancelText, multiline = false, type } = {}) {
+export function promptDialog(message, { password = false, placeholder = '', value = '', okText, cancelText, multiline = false, type, deleteText } = {}) {
   return new Promise((resolve) => {
     const inputType = password ? 'password' : (type || 'text');
     const input = multiline
@@ -86,6 +91,8 @@ export function promptDialog(message, { password = false, placeholder = '', valu
       h('p', { class: 'dialog__msg', text: message }),
       input,
       h('div', { class: 'dialog__actions' }, [
+        // Destructive action lives on the far left, away from the confirm button.
+        deleteText ? h('button', { class: 'btn btn--ghost', style: 'color:var(--danger);margin-right:auto', onclick: () => done(PROMPT_DELETE) }, [deleteText]) : null,
         h('button', { class: 'btn btn--ghost', onclick: () => done(null) }, [cancelText || t('common.cancel')]),
         h('button', { class: 'btn btn--primary', onclick: () => done(input.value) }, [okText || t('common.ok')])
       ])
@@ -247,11 +254,143 @@ export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) 
   return { close };
 }
 
-/** Rep-count chooser popover: 6 / 8 / 10 / 12 / 15 / 20.
- *  (No "custom" entry — a custom value can just be typed into the field.) */
+/** Rep-count chooser popover. Options come from Profile → Rep presets.
+ *  (No "custom" entry — long-press the field to type any value.) */
 export function repChooser(anchorEl, current, onPick) {
-  const items = [6, 8, 10, 12, 15, 20].map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
+  const items = repPresets().map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
   popoverMenu(anchorEl, items, { title: t('common.reps'), grid: true });
+}
+
+/** Quick weight chooser popover: values around `base` in `step` increments
+ *  (or the first few multiples of `step` when there's nothing to anchor to).
+ *  `title` lets the caller add context — the session view puts the barbell
+ *  per-side plate breakdown there. */
+export function weightChooser(anchorEl, base, step, onPick, { title } = {}) {
+  const st = step > 0 ? step : 2.5;
+  const round2 = (n) => Math.round(n * 100) / 100;
+  const vals = [];
+  if (base > 0) {
+    for (let k = -3; k <= 3; k++) { const v = round2(base + k * st); if (v > 0) vals.push(v); }
+  } else {
+    for (let k = 1; k <= 8; k++) vals.push(round2(k * st));
+  }
+  const items = vals.map((v) => ({ label: String(v), active: v === base, onClick: () => onPick(v) }));
+  popoverMenu(anchorEl, items, { title: title || `${t('common.weight')} (${t('units.kg')})`, grid: true });
+}
+
+/** Effort swatches, shared by the set runner, the effort menu and the stats charts. */
+export const EFFORT_COLORS = Object.freeze({ 1: 'var(--success)', 2: '#f0b429', 3: 'var(--danger)' });
+const EFFORT_LABEL_KEY = { 1: 'session.effortEasy', 2: 'session.effortMedium', 3: 'session.effortHard' };
+
+/**
+ * "Set in progress" panel — opened by tapping a pending set's done control.
+ * Runs a stopwatch (so the set's real duration is recorded), offers a ±
+ * adjuster for the set's value, and is closed by one of three effort buttons
+ * (which finish the set) or cancel (which changes nothing).
+ *
+ * For metric 'time' the stopwatch *is* the value, so the ± row is hidden.
+ *
+ * onFinish({ effort, value, durationMs, startedAt }) — value is null when timed.
+ */
+export function setRunner({ title = '', metric = 'reps', value = null, step = 1, min = 0, max = 9999, decimals = 0, unitLabel = '', onFinish, onCancel } = {}) {
+  const timed = metric === 'time';
+  const startedAt = new Date();
+  let val = Number.isFinite(value) ? value : 0;
+  let settled = false;
+
+  const fmtVal = (v) => (decimals ? Number(v).toFixed(decimals) : String(v));
+  const clock = h('div', { class: 'runner__clock', role: 'timer', text: '0:00' });
+  const valEl = h('div', { class: 'runner__value', text: fmtVal(val), 'aria-live': 'polite' });
+  const bump = (d) => {
+    val = Math.min(max, Math.max(min, Math.round((val + d * step) * 100) / 100));
+    valEl.textContent = fmtVal(val);
+  };
+  // ± with hold-to-repeat (accelerating): getting from 0 to 120 stairs one tap
+  // at a time would be unusable.
+  const stoppers = [];
+  const adj = (label, d) => {
+    const btn = h('button', { class: 'runner__adj', type: 'button', 'aria-label': label }, [icon(d < 0 ? 'minus' : 'plus', { size: 26 })]);
+    let rep = null, viaPointer = false;
+    const stop = () => { if (rep) { clearTimeout(rep); clearInterval(rep); rep = null; } };
+    stoppers.push(stop);
+    btn.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      viaPointer = true; bump(d);
+      rep = setTimeout(() => {
+        let n = 0;
+        rep = setInterval(() => { bump(d); if (++n === 8) { stop(); rep = setInterval(() => bump(d), 45); } }, 110);
+      }, 400);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => btn.addEventListener(ev, stop));
+    // Keyboard activation fires click without any pointer sequence.
+    btn.addEventListener('click', () => { if (viaPointer) { viaPointer = false; return; } bump(d); });
+    return btn;
+  };
+
+  const effortBtn = (e) => h('div', { class: 'runner__act' }, [
+    h('button', {
+      class: 'runner__circle runner__circle--eff', type: 'button', style: `--swatch:${EFFORT_COLORS[e]}`,
+      'aria-label': t(EFFORT_LABEL_KEY[e]), onclick: () => finish(e)
+    }, [icon('check', { size: 26 })]),
+    h('span', { class: 'runner__act-label', text: t(EFFORT_LABEL_KEY[e]) })
+  ]);
+
+  const panel = h('div', { class: 'runner__panel', 'aria-label': title || t('session.setRunning') }, [
+    h('div', { class: 'runner__title', text: title || t('session.setRunning') }),
+    clock,
+    timed
+      ? h('div', { class: 'runner__unit', text: t('session.timeAutoHint') })
+      : h('div', {}, [
+          h('div', { class: 'runner__row' }, [adj('−', -1), valEl, adj('+', 1)]),
+          h('div', { class: 'runner__unit', text: unitLabel })
+        ]),
+    h('div', { class: 'runner__hint', text: t('session.finishWithEffort') }),
+    h('div', { class: 'runner__actions' }, [
+      effortBtn(1), effortBtn(2), effortBtn(3),
+      h('div', { class: 'runner__act' }, [
+        h('button', { class: 'runner__circle runner__circle--cancel', type: 'button', 'aria-label': t('common.cancel'), onclick: () => cancel() }, [icon('x', { size: 26 })]),
+        h('span', { class: 'runner__act-label', text: t('common.cancel') })
+      ])
+    ])
+  ]);
+  const overlay = h('div', { class: 'runner' }, [panel]);
+  // Backdrop tap cancels — but only when the gesture *started* on the backdrop.
+  // A finger sliding off a held ± button must not discard the set.
+  let downOnBackdrop = false;
+  overlay.addEventListener('pointerdown', (e) => { downOnBackdrop = e.target === overlay; });
+  overlay.addEventListener('click', (e) => { if (downOnBackdrop && e.target === overlay) cancel(); });
+  document.body.appendChild(overlay);
+  const unmodal = modalize(overlay, panel, () => cancel());
+  requestAnimationFrame(() => overlay.classList.add('is-open'));
+
+  const tick = () => { clock.textContent = fmtDuration(Date.now() - startedAt.getTime()); };
+  const int = setInterval(tick, 200);
+  tick();
+  // A navigation (hardware back) while the panel is open must not leave the
+  // interval running against a detached node.
+  const onRoute = () => cancel();
+  window.addEventListener('route:change', onRoute);
+
+  function teardown() {
+    clearInterval(int);
+    stoppers.forEach((fn) => fn());
+    window.removeEventListener('route:change', onRoute);
+    unmodal();
+    overlay.classList.remove('is-open');
+    setTimeout(() => overlay.remove(), 180);
+  }
+  function finish(effort) {
+    if (settled) return; settled = true;
+    const durationMs = Date.now() - startedAt.getTime();
+    teardown();
+    onFinish && onFinish({ effort, value: timed ? null : val, durationMs, startedAt: startedAt.toISOString() });
+  }
+  function cancel() {
+    if (settled) return; settled = true;
+    teardown();
+    onCancel && onCancel();
+  }
+  return { close: cancel };
 }
 
 /** Bar-weight chooser popover — pick from the configured barbell weights only

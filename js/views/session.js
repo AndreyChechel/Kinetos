@@ -1,21 +1,22 @@
 // Active workout logging + finished (read-only) summary.
-// Active: live timer, per-set logging, combined effort+done control, swipe/long-
-// press set deletion, drag-reorder exercises, per-entry notes, rep chooser.
+// Active: live timer, per-set logging via the set runner (stopwatch + effort),
+// swipe/long-press set deletion, hold-to-drag exercise reorder, per-entry notes,
+// tap-for-chooser / hold-to-type number fields.
 // Finished: read-only by default with an explicit Edit mode; notes stay editable;
 // extended stats with charts.
 import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate, getSettings } from '../store.js';
-import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf } from '../data/db.js';
+import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
-  exercisePicker, confirmDialog, promptDialog, popoverMenu, repChooser, barChooser,
-  attachLongPress, attachSwipeToDelete
+  exercisePicker, confirmDialog, promptDialog, PROMPT_DELETE, popoverMenu, repChooser, barChooser,
+  weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
 import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore } from '../workout.js';
 import { sessionVolume, oneRepMax, platesPerSide } from '../calc.js';
-import { suggestNext, formatSuggestion, suggestionReason, applyToSet } from '../suggest.js';
+import { suggestNext, formatSuggestion, suggestionReason, applyToSet, weightStepFor } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
 import { icon } from '../icons.js';
 
@@ -34,12 +35,19 @@ window.addEventListener('route:change', () => {
 });
 
 const EFFORT = { 1: { label: 'effortEasy' }, 2: { label: 'effortMedium' }, 3: { label: 'effortHard' } };
-const EFFORT_COLOR = { 1: 'var(--success)', 2: '#f0b429', 3: 'var(--danger)' };
+const EFFORT_COLOR = EFFORT_COLORS;
+
+// Which set field holds a metric's primary logged value.
+const VALUE_KEY = { reps: 'reps', count: 'count', time: 'seconds', distance: 'distanceKm' };
+// Long-press duration before an exercise card becomes draggable.
+const DRAG_HOLD_MS = 400;
 
 // Inline SVG glyphs for the done control — SVG (not text) so a long-press can't
 // trigger native text selection / callout on touch devices.
 const ICON_DONE = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M5 12.5l4.2 4.3L19 7.2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ICON_TODO = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+// Pending set in a live session: a "go" glyph, since tapping starts the set runner.
+const ICON_START = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.3 8.8l4.9 3.2-4.9 3.2z" fill="currentColor"/></svg>';
 
 export default function renderSession(root, params, ctx) {
   if (timer) { clearInterval(timer); timer = null; }
@@ -129,19 +137,21 @@ export default function renderSession(root, params, ctx) {
   }
   // Attach drag-reorder once (exWrap persists across re-renders); handles are
   // resolved at drag time so rebuilding children is fine.
-  // Reorder by dragging the exercise thumbnail (a tap on it still opens the
-  // exercise); the sortable's movement threshold keeps tap and drag distinct.
-  if (editable) makeSortable(exWrap, { handle: '.list__thumb', onReorder: (from, to) => { const [it] = s.entries.splice(from, 1); s.entries.splice(to, 0, it); persist(); renderExercises(); } });
+  // Reorder by pressing and holding the exercise thumbnail, then dragging — a
+  // plain tap on it still opens the exercise detail.
+  if (editable) makeSortable(exWrap, { handle: '.list__thumb', holdMs: DRAG_HOLD_MS, onReorder: (from, to) => { const [it] = s.entries.splice(from, 1); s.entries.splice(to, 0, it); persist(); renderExercises(); } });
 
   function entryCard(entry, idx) {
     const ex = getExercise(entry.exerciseId);
     const metric = ex ? ex.metric : 'reps';
     const isCollapsed = collapsed.has(entry.id);
-    const thumb = h('div', { class: 'list__thumb' + (editable ? ' entry-grip' : ''), style: editable ? '' : 'cursor:pointer', title: t('exercises.title') });
+    const thumb = h('div', { class: 'list__thumb' + (editable ? ' entry-grip' : ''), style: editable ? '' : 'cursor:pointer', title: editable ? t('common.reorder') : t('exercises.title') });
     if (ex) injectExerciseSVG(thumb, ex);
     thumb.addEventListener('click', (e) => { e.stopPropagation(); ctx.navigate('/exercises/' + entry.exerciseId); });
 
     const doneCount = entry.sets.filter((x) => x.done).length;
+    // Every set logged: tint the card so finished exercises stand out at a glance.
+    const allDone = entry.sets.length > 0 && doneCount === entry.sets.length;
 
     const header = h('div', { class: 'row', style: 'cursor:pointer; gap:10px', onclick: (e) => {
       if (e.target.closest('.entry-tools') || e.target.closest('.list__thumb')) return;
@@ -155,10 +165,18 @@ export default function renderSession(root, params, ctx) {
           ? h('div', { class: 'list__sub', text: `${doneCount}/${entry.sets.length} ${t('common.sets')}` })
           : prevHint(entry.exerciseId)
       ]),
-      editable ? h('div', { class: 'entry-tools row', style: 'gap:2px' }, [
-        h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'),
-          onclick: () => confirmRemoveExercise(idx) }, [icon('trash', { size: 18 })])
-      ]) : null
+      // Add set, then note, then remove — the destructive action stays on the outside.
+      h('div', { class: 'entry-tools row', style: 'gap:2px' }, [
+        editable ? h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.addSet'), title: t('session.addSet'),
+          onclick: () => {
+            entry.sets.push(nextSet(entry, metric));
+            collapsed.delete(entry.id); // a new set should be visible straight away
+            persist(); renderExercises();
+          } }, [icon('plus', { size: 18 })]) : null,
+        noteButton(entry),
+        editable ? h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'), title: t('session.removeExercise'),
+          onclick: () => confirmRemoveExercise(idx) }, [icon('trash', { size: 18 })]) : null
+      ])
     ]);
 
     const body = h('div', { class: 'stack', style: 'margin-top:10px' });
@@ -169,13 +187,11 @@ export default function renderSession(root, params, ctx) {
       }
       const perDb = isPerDumbbell(entry.exerciseId);
       const barAdd = isBarbellAdded(entry.exerciseId);
-      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb, barAdd)));
-      if (editable) body.appendChild(h('button', { class: 'btn btn--sm btn--block', style: 'margin-top:4px',
-        onclick: () => { entry.sets.push(nextSet(entry, metric)); persist(); renderExercises(); } }, [icon('plus', { size: 16 }), ' ' + t('session.addSet')]));
+      entry.sets.forEach((set, si) => body.appendChild(editable ? setRow(entry, set, si, metric) : setRowRO(set, metric, perDb, barAdd, entry.exerciseId)));
       body.appendChild(entryNoteBlock(entry));
     }
 
-    return h('div', { class: 'card' }, [header, isCollapsed ? null : body]);
+    return h('div', { class: 'card' + (allDone ? ' card--complete' : '') }, [header, isCollapsed ? null : body]);
   }
 
   // --- editable set row ---
@@ -192,17 +208,19 @@ export default function renderSession(root, params, ctx) {
     const fields = h('div', { class: 'set__fields' });
     if (metric === 'reps') {
       const repsInp = numInput(set.reps, 'reps', set.targetReps ? String(set.targetReps) : t('common.reps'), { step: '1' });
-      // Picking from the chooser is an explicit target — record it so the
-      // suggestion engine judges next time against what the user actually aimed for.
-      attachLongPress(repsInp, { onLongPress: () => repChooser(repsInp, set.reps ?? set.targetReps ?? 12, (v) => { set.reps = v; set.targetReps = v; repsInp.value = v; persist(); }) });
+      // Tap = pick from the presets, hold = type a free value. Picking from the
+      // chooser is an explicit target — recorded so the suggestion engine judges
+      // next time against what the user actually aimed for.
+      tapToChoose(repsInp, t('session.repsHint'), () => repChooser(repsInp, set.reps ?? set.targetReps ?? null, (v) => { set.reps = v; set.targetReps = v; repsInp.value = v; persist(); }));
       if (isPerDumbbell(entry.exerciseId)) fields.append(x2Badge());
       if (isBarbellAdded(entry.exerciseId)) fields.append(barButton(set));
-      const weightInp = numInput(set.weightKg, 'weightKg', set.targetWeightKg ? String(set.targetWeightKg) : t('units.kg'), { step: '2.5' });
-      // Plate calculator: long-press the weight field on barbell exercises.
-      if (usesBarbell(entry.exerciseId)) attachLongPress(weightInp, { onLongPress: () => showPlates(weightInp, set, entry) });
+      const weightInp = numInput(set.weightKg, 'weightKg', set.targetWeightKg ? String(set.targetWeightKg) : t('units.kg'), { step: String(weightStepFor(entry.exerciseId)) });
+      tapToChoose(weightInp, t('session.weightHint'), () => showWeightChooser(weightInp, set, entry));
       fields.append(weightInp, repsInp);
     } else if (metric === 'time') {
       fields.append(numInput(set.seconds, 'seconds', t('common.sec'), { step: '5' }));
+    } else if (metric === 'count') {
+      fields.append(numInput(set.count, 'count', countUnit(entry.exerciseId), { step: '1' }));
     } else {
       fields.append(numInput(set.distanceKm, 'distanceKm', t('units.km'), { step: '0.1' }),
         numInput(set.minutes, 'minutes', t('common.min'), { step: '1' }));
@@ -210,9 +228,10 @@ export default function renderSession(root, params, ctx) {
 
     const numEl = h('span', { class: 'set__n', text: String(set.n) });
 
-    row = h('div', { class: 'set' + (set.done ? ' set--done' : '') }, [numEl, fields, doneControl(entry, set, repaintRow)]);
+    row = h('div', { class: 'set' + (set.done ? ' set--done' : '') }, [numEl, fields, doneControl(entry, set, repaintRow, metric)]);
     if (set.done && set.timestamp) {
-      const ts = h('div', { class: 'set__ts set__ts--edit small muted', style: 'cursor:pointer', title: t('session.editTime'), text: fmtTimeSec(set.timestamp, lang) });
+      const ts = h('div', { class: 'set__ts set__ts--edit small muted', style: 'cursor:pointer', title: t('session.editTime'),
+        text: fmtTimeSec(set.timestamp, lang) + durationSuffix(set) });
       attachLongPress(ts, { onLongPress: () => editSetTime(set) });
       row.appendChild(ts);
     }
@@ -220,17 +239,54 @@ export default function renderSession(root, params, ctx) {
     return row;
   }
 
-  // --- plate calculator (long-press on a barbell weight field) ---
-  function showPlates(anchor, set, entry) {
-    if (set.weightKg == null) return;
+  /** Set duration recorded by the set runner, as " · 0:42" (empty when unknown). */
+  function durationSuffix(set) {
+    return set.durationMs > 0 ? ' · ' + fmtDuration(set.durationMs) : '';
+  }
+
+  /** Tap a number field to pick from a chooser; press and hold to type freely.
+   *  The field is read-only until unlocked, so a tap can't pop the keyboard. */
+  function tapToChoose(inp, hint, openChooser) {
+    const lock = () => { inp.readOnly = true; inp.classList.add('set__in--locked'); };
+    const unlock = () => {
+      inp.readOnly = false; inp.classList.remove('set__in--locked');
+      try { inp.focus(); inp.select(); } catch (_) { /* ignore */ }
+    };
+    lock();
+    inp.title = hint;
+    inp.addEventListener('blur', lock);
+    // Keyboard path: Enter opens the chooser, F2 unlocks for typing.
+    inp.addEventListener('keydown', (e) => {
+      if (!inp.readOnly) return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChooser(); }
+      else if (e.key === 'F2') { e.preventDefault(); unlock(); }
+    });
+    attachLongPress(inp, {
+      onTap: () => { if (inp.readOnly) { inp.blur(); openChooser(); } },
+      onLongPress: unlock
+    });
+  }
+
+  // --- quick weight chooser (tap a weight field) ---
+  // On barbell exercises the popover title doubles as the plate calculator:
+  // it shows what the current weight needs per side.
+  function showWeightChooser(anchor, set, entry) {
+    const base = set.weightKg ?? set.targetWeightKg ?? 0;
+    weightChooser(anchor, base, weightStepFor(entry.exerciseId), (v) => {
+      set.weightKg = v; anchor.value = v; persist();
+    }, { title: usesBarbell(entry.exerciseId) ? platesTitle(set, entry) : `${t('common.weight')} (${t('units.kg')})` });
+  }
+  /** "60 kg · per side: 20 + 5" for the weight chooser's title on barbell lifts. */
+  function platesTitle(set, entry) {
+    const label = `${t('common.weight')} (${t('units.kg')})`;
+    if (set.weightKg == null) return label;
     const barAdd = isBarbellAdded(entry.exerciseId);
     const bar = barAdd ? barKgOf(set) : defaultBarKg();
     const total = barAdd ? set.weightKg + bar : set.weightKg;
     const res = platesPerSide(total, bar, getSettings().plates || []);
-    const text = !res ? '—'
-      : (res.plates.length ? res.plates.join(' + ') : '0') + (res.remainder ? ` (+${res.remainder})` : '');
-    popoverMenu(anchor, [{ label: `${t('session.perSide')}: ${text} ${t('units.kg')}` }],
-      { title: `${total} ${t('units.kg')} · ${t('session.barWeight')} ${bar}` });
+    if (!res) return label;
+    const text = (res.plates.length ? res.plates.join(' + ') : '0') + (res.remainder ? ` (+${res.remainder})` : '');
+    return `${total} ${t('units.kg')} · ${t('session.perSide')}: ${text}`;
   }
 
   // --- barbell bar-weight chooser (only when Profile → Barbell = "add bar") ---
@@ -241,27 +297,75 @@ export default function renderSession(root, params, ctx) {
     return btn;
   }
 
-  // --- combined effort + done control (feature 10) ---
-  function doneControl(entry, set, onChanged) {
+  // --- combined effort + done control ---
+  // Pending set + tap  -> open the set runner (stopwatch, value ±, effort)
+  // Done set    + tap  -> mark not done again
+  // Any set     + hold -> effort menu (log instantly without the stopwatch)
+  function doneControl(entry, set, onChanged, metric) {
     const btn = h('button', { class: 'donebtn', 'aria-label': t('session.done'), 'aria-pressed': set.done ? 'true' : 'false' });
     paint();
     attachLongPress(btn, {
       onTap: () => {
-        if (set.done) { set.done = false; set.effort = null; set.timestamp = null; }
-        else markDone(set, 2);
-        persist(); onChanged();
+        if (set.done) { clearDone(set); persist(); onChanged(); }
+        else if (finished) { markDone(set, 2); persist(); onChanged(); }
+        else runSet(entry, set, metric, onChanged);
       },
       onLongPress: () => effortMenu(btn, entry, set, onChanged)
     });
     function paint() {
       btn.className = 'donebtn' + (set.done ? ' donebtn--done done-eff--' + (set.effort || 2) : '');
-      btn.innerHTML = set.done ? ICON_DONE : ICON_TODO;
-      btn.title = set.done ? t('session.' + EFFORT[set.effort || 2].label) : t('session.markDone');
+      btn.innerHTML = set.done ? ICON_DONE : (finished ? ICON_TODO : ICON_START);
+      btn.title = set.done ? t('session.' + EFFORT[set.effort || 2].label) : t('session.startSet');
     }
     return btn;
   }
+
+  /** Open the stopwatch panel for a pending set, then log it on finish. */
+  function runSet(entry, set, metric, onChanged) {
+    const ex = getExercise(entry.exerciseId);
+    const key = VALUE_KEY[metric] || 'reps';
+    const opts = { reps: { step: 1, min: 0, max: 999, unitLabel: t('common.reps') },
+      // Counted machines run into the hundreds — step in 5s (hold ± to repeat),
+      // and the exact figure can still be corrected in the set row afterwards.
+      count: { step: 5, min: 0, max: 99999, unitLabel: countUnit(entry.exerciseId) },
+      time: { step: 5, min: 0, max: 7200, unitLabel: t('common.sec') },
+      distance: { step: 0.1, min: 0, max: 500, decimals: 1, unitLabel: t('units.km') } }[metric] || {};
+    setRunner({
+      ...opts,
+      title: `${ex ? exName(ex) : entry.exerciseId} · ${t('common.set')} ${set.n}`,
+      metric,
+      value: set[key] ?? (metric === 'reps' ? set.targetReps : null) ?? 0,
+      onFinish: ({ effort, value, durationMs, startedAt }) => {
+        if (value != null) set[key] = value;
+        applyMeasuredTime(set, metric, durationMs);
+        set.startedAt = startedAt;
+        set.durationMs = durationMs;
+        markDone(set, effort);
+        persist(); onChanged();
+      }
+    });
+  }
+
+  /** Fold the stopwatch reading into the set's own time fields where it IS the
+   *  measurement. Distance keeps a value the user typed — the clock only fills
+   *  an empty minutes field so a mis-tap can't overwrite a real split. */
+  function applyMeasuredTime(set, metric, durationMs) {
+    if (metric === 'time') set.seconds = Math.max(1, Math.round(durationMs / 1000));
+    else if (metric === 'distance' && !set.minutes) set.minutes = Math.round(durationMs / 6000) / 10;
+  }
+
+  function clearDone(set) {
+    set.done = false; set.effort = null; set.timestamp = null;
+    set.startedAt = null; set.durationMs = null;
+  }
+
+  /** Mark a set done at the given effort. Re-rating an already-done set only
+   *  changes the rating: re-stamping its time would rewrite history, and
+   *  restarting the rest countdown mid-rest is just wrong. */
   function markDone(set, eff) {
+    const wasDone = !!set.done;
     set.done = true; set.effort = eff;
+    if (wasDone) return;
     if (!finished) {
       set.timestamp = new Date().toISOString();
       startRest();
@@ -273,15 +377,16 @@ export default function renderSession(root, params, ctx) {
   function effortMenu(anchor, entry, set, onChanged) {
     const items = [1, 2, 3].map((e) => ({ label: t('session.' + EFFORT[e].label), color: EFFORT_COLOR[e], active: set.done && set.effort === e,
       onClick: () => { markDone(set, e); persist(); onChanged(); } }));
-    if (set.done) items.push({ label: t('session.markUndone'), onClick: () => { set.done = false; set.effort = null; set.timestamp = null; persist(); onChanged(); } });
+    if (set.done) items.push({ label: t('session.markUndone'), onClick: () => { clearDone(set); persist(); onChanged(); } });
     items.push({ label: t('common.delete'), onClick: () => confirmDeleteSet(entry, entry.sets.indexOf(set)) });
     popoverMenu(anchor, items, { title: t('session.effort') });
   }
 
   // --- read-only set row ---
-  function setRowRO(set, metric, perDb, barAdd) {
+  function setRowRO(set, metric, perDb, barAdd, exerciseId) {
     let val;
     if (metric === 'time') val = set.seconds ? `${set.seconds} ${t('common.sec')}` : '—';
+    else if (metric === 'count') val = set.count ? `${set.count} ${countUnit(exerciseId)}` : '—';
     else if (metric === 'distance') val = [set.distanceKm ? `${set.distanceKm} ${t('units.km')}` : null, set.minutes ? `${set.minutes} ${t('common.min')}` : null].filter(Boolean).join(' · ') || '—';
     else val = set.weightKg ? `${set.weightKg} ${t('units.kg')} × ${set.reps ?? '—'}` : (set.reps ? `${set.reps} ${t('common.reps')}` : '—');
     const showX2 = perDb && metric === 'reps' && !!set.weightKg;
@@ -291,7 +396,7 @@ export default function renderSession(root, params, ctx) {
       h('div', { class: 'set__ro-val' }, [val, showX2 ? x2Badge() : null, showBar ? barBadge(barKgOf(set)) : null]),
       set.effort ? h('span', { class: 'eff-dot done-eff--' + set.effort, title: t('session.' + EFFORT[set.effort].label) }) : null,
       set.done ? h('span', { class: 'set__done-mark', style: 'color:var(--success)' }, [icon('check', { size: 16 })]) : null,
-      set.timestamp ? h('span', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) }) : null
+      set.timestamp ? h('span', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) + durationSuffix(set) }) : null
     ]);
   }
 
@@ -325,30 +430,42 @@ export default function renderSession(root, params, ctx) {
     if (iso) { set.timestamp = iso; persist(); renderExercises(); }
   }
 
-  // --- per-entry note (feature 8) — editable in read-only too ---
+  // --- per-entry note — editable in read-only too ---
+  // The control lives in the card header (left of the remove button) so it
+  // costs no vertical space in the set list; deleting happens inside the dialog.
+  function noteButton(entry) {
+    const btn = h('button', {
+      class: 'btn btn--icon btn--ghost btn--sm' + (entry.note ? ' btn--note-on' : ''),
+      'aria-label': entry.note ? t('session.entryNote') : t('session.addNote'),
+      title: entry.note ? t('session.entryNote') : t('session.addNote'),
+      onclick: (e) => { e.stopPropagation(); editEntryNote(entry); }
+    }, [icon('note', { size: 18 })]);
+    return btn;
+  }
+
+  async function editEntryNote(entry) {
+    const had = !!entry.note;
+    const res = await promptDialog(t('session.entryNote'), {
+      multiline: true, value: entry.note || '', placeholder: t('exercises.notePlaceholder'),
+      deleteText: had ? t('common.delete') : undefined
+    });
+    if (res == null) return;
+    if (res === PROMPT_DELETE) {
+      if (!(await confirmDialog(t('exercises.deleteNote'), { danger: true, okText: t('common.delete') }))) return;
+      entry.note = '';
+    } else {
+      entry.note = String(res).trim();
+    }
+    persist(); renderExercises();
+  }
+
+  /** Read-only rendering of the note under the set list (edited from the header). */
   function entryNoteBlock(entry) {
     const host = h('div', { class: 'entry-note' });
-    draw();
-    function draw() {
-      host.innerHTML = '';
-      if (entry.note) {
-        host.appendChild(h('div', { class: 'note note--inline' }, [
-          h('div', { class: 'note__text', text: entry.note })
-        ]));
-        host.appendChild(h('div', { class: 'note__row' }, [
-          h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.edit'), onclick: edit }, [icon('pencil', { size: 16 })]),
-          h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('common.delete'), onclick: del }, [icon('trash', { size: 16 })])
-        ]));
-      } else {
-        host.appendChild(h('button', { class: 'btn btn--sm btn--ghost', onclick: edit }, [icon('plus', { size: 16 }), ' ' + t('session.addNote')]));
-      }
-    }
-    async function edit() {
-      const txt = await promptDialog(t('session.entryNote'), { multiline: true, value: entry.note || '', placeholder: t('exercises.notePlaceholder') });
-      if (txt != null) { entry.note = txt.trim(); persist(); draw(); }
-    }
-    async function del() {
-      if (await confirmDialog(t('exercises.deleteNote'), { danger: true, okText: t('common.delete') })) { entry.note = ''; persist(); draw(); }
+    if (entry.note) {
+      host.appendChild(h('div', { class: 'note note--inline' }, [
+        h('div', { class: 'note__text', text: entry.note })
+      ]));
     }
     return host;
   }
@@ -387,15 +504,16 @@ export default function renderSession(root, params, ctx) {
     // rep-chooser pick) — stamping the 12-rep default here made every workout
     // that wasn't 12s read as "missed target" and froze the suggestions.
     return { n: entry.sets.length + 1, reps: prev.reps ?? defReps, weightKg: prev.weightKg ?? null,
-      seconds: prev.seconds ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
-      effort: null, targetReps: prev.targetReps ?? null, barKg: prev.barKg ?? null, done: false, timestamp: null };
+      seconds: prev.seconds ?? null, count: prev.count ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
+      effort: null, targetReps: prev.targetReps ?? null, barKg: prev.barKg ?? null, done: false,
+      timestamp: null, startedAt: null, durationMs: null };
   }
 
   function suggestionChip(entry, sug, metric) {
     return h('div', { class: 'suggest' }, [
       h('span', { class: 'suggest__ico' }, [icon('bulb', { size: 18 })]),
       h('div', { class: 'suggest__txt' }, [
-        h('span', { class: 'suggest__val', text: t('session.suggested') + ': ' + formatSuggestion(sug, metric) }),
+        h('span', { class: 'suggest__val', text: t('session.suggested') + ': ' + formatSuggestion(sug, metric, countUnit(entry.exerciseId)) }),
         h('span', { class: 'suggest__reason', text: ' · ' + suggestionReason(sug) })
       ]),
       h('button', { class: 'btn btn--sm btn--primary', onclick: () => applySuggestion(entry, sug, metric) }, [t('session.use')])
@@ -403,7 +521,8 @@ export default function renderSession(root, params, ctx) {
   }
 
   function applySuggestion(entry, sug, metric) {
-    const filled = (st) => metric === 'time' ? st.seconds : metric === 'distance' ? (st.distanceKm || st.minutes) : (st.weightKg || st.reps);
+    const filled = (st) => metric === 'time' ? st.seconds : metric === 'count' ? st.count
+      : metric === 'distance' ? (st.distanceKm || st.minutes) : (st.weightKg || st.reps);
     // Prefer an empty pending set, else fill the first not-done one (plan-prefilled
     // sets count as "filled" but should be updated, not duplicated with a 4th set).
     let target = entry.sets.find((st) => !st.done && !filled(st)) || entry.sets.find((st) => !st.done);
@@ -437,7 +556,8 @@ export default function renderSession(root, params, ctx) {
   function freshSet(metric) {
     const defReps = metric === 'reps' ? 12 : null;
     // See nextSet(): 12 reps stays a prefill, never an implicit target.
-    return { n: 1, reps: defReps, weightKg: null, seconds: null, distanceKm: null, minutes: null, effort: null, targetReps: null, barKg: null, done: false, timestamp: null };
+    return { n: 1, reps: defReps, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null,
+      effort: null, targetReps: null, barKg: null, done: false, timestamp: null, startedAt: null, durationMs: null };
   }
   function toggleEdit() {
     // Re-render in place (no navigation) — route:change resets editMode.
@@ -511,7 +631,7 @@ async function renderFinishedStats(host, s, lang) {
     const name = ex ? exName(ex) : e.exerciseId;
     let vol = 0, best = null, e1rm = 0;
     (e.sets || []).forEach((st) => {
-      const counted = st.done !== false && (st.reps || st.seconds || st.distanceKm);
+      const counted = st.done !== false && (st.reps || st.seconds || st.count || st.distanceKm);
       if (!counted) return;
       const effW = effectiveWeight(e.exerciseId, st.weightKg, st);
       if (st.reps) vol += (effW || 0) * st.reps;

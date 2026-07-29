@@ -57,7 +57,9 @@
     "cm": "cm",
     "km": "km",
     "bpm": "bpm",
-    "kcal": "kcal"
+    "kcal": "kcal",
+    "stairs": "Stufen",
+    "count": "Anzahl"
   },
   "home": {
     "greeting": "Hallo, {name}",
@@ -246,7 +248,13 @@
     "restDone": "Pause vorbei — nächster Satz!",
     "perSide": "Pro Seite",
     "pr": "PR",
-    "newPR": "Neuer persönlicher Rekord: {names}!"
+    "newPR": "Neuer persönlicher Rekord: {names}!",
+    "startSet": "Satz starten",
+    "setRunning": "Satz läuft",
+    "timeAutoHint": "Die Zeit wird automatisch erfasst",
+    "finishWithEffort": "Zum Beenden die Anstrengung wählen",
+    "repsHint": "Tippen zum Auswählen · halten zum Eingeben",
+    "weightHint": "Tippen zum Auswählen · halten zum Eingeben"
   },
   "progress": {
     "title": "Fortschritt",
@@ -342,8 +350,11 @@
     "restTimer": "Pausen-Timer (Sek.)",
     "restTimerHint": "Countdown, nachdem ein Satz als erledigt markiert wurde. 0 schaltet ihn aus.",
     "plates": "Hantelscheiben (kg)",
-    "platesHint": "Verfügbare Scheibengrößen für den Scheibenrechner — im Training das Gewichtsfeld einer Langhantel lange drücken.",
-    "exportCSV": "CSV exportieren (Sätze)"
+    "platesHint": "Verfügbare Scheibengrößen für den Scheibenrechner — tippe während einer Session auf ein Langhantel-Gewichtsfeld.",
+    "exportCSV": "CSV exportieren (Sätze)",
+    "repPresets": "Wiederholungs-Vorgaben",
+    "repPresetsHint": "Die Schnellauswahl, die beim Antippen des Wiederholungsfelds erscheint. Entferne, was du nicht brauchst, oder füge eigene hinzu.",
+    "repPresetsAdd": "z. B. 5"
   },
   "sync": {
     "title": "Cloud-Sync",

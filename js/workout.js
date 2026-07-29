@@ -8,7 +8,7 @@ import { sessionVolume, oneRepMax } from './calc.js';
  *  (Plan-prefilled sets carry reps but done:false until the user taps them —
  *  without this check they'd poison history, suggestions and "Previous" hints.) */
 function performed(st) {
-  return !!(st && st.done !== false && (st.reps || st.seconds || st.distanceKm));
+  return !!(st && st.done !== false && (st.reps || st.seconds || st.count || st.distanceKm));
 }
 
 const DEFAULT_REPS = 12; // app-wide default target reps (feature: default to 12)
@@ -24,13 +24,16 @@ export function entriesFromExerciseList(list) {
       reps: pe.targetReps ?? null,
       weightKg: pe.targetWeightKg || null,
       seconds: null,
+      count: null,
       distanceKm: null,
       minutes: null,
       effort: null,
       targetReps: pe.targetReps ?? null,
       targetWeightKg: pe.targetWeightKg || null,
       done: false,
-      timestamp: null
+      timestamp: null,
+      startedAt: null,
+      durationMs: null
     }))
   }));
 }

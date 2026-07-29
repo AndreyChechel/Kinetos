@@ -31,6 +31,7 @@ function defaultState() {
       barbellInput: 'included', // 'included' => logged weight already includes the bar; 'added' => log plates only, add the chosen bar
       barbellWeights: [20, 10, 5], // selectable bar weights (kg) when barbellInput==='added'; first is the default
       plates: [25, 20, 15, 10, 5, 2.5, 1.25], // available plate sizes (kg) — drives the per-side plate calculator
+      repPresets: [6, 8, 10, 12, 15, 20], // quick-pick rep counts offered by the rep chooser
       restSeconds: 90,      // rest countdown after a set is marked done; 0 = off
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },

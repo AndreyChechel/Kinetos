@@ -119,8 +119,8 @@ export function sessionVolume(session, weightOf) {
         vol += (wOf(s, e) || 0) * s.reps;
         reps += s.reps;
         sets += 1;
-      } else if (s.seconds || s.distanceKm) {
-        sets += 1; // time/distance work counts as a set even without reps
+      } else if (s.seconds || s.distanceKm || s.count) {
+        sets += 1; // time/distance/counted work counts as a set even without reps
       }
     });
   });
