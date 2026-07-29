@@ -9,6 +9,16 @@
 //                     into plan-shaped rows; importSessions() saves them as
 //                     dated calendar plans.
 //
+// buildPrompt has two MODES (same schema, same reference sections, different job
+// for the agent):
+//   'plan'     — "coach me": the agent invents the session, informed by the last
+//                N logged sessions.
+//   'describe' — "transcribe this": the athlete typed the workout(s) themselves
+//                in free text and the agent's only job is to convert that text
+//                into valid JSON (map names to catalog ids, keep the prescribed
+//                structure, fill nothing it wasn't told). History is optional
+//                here and off by default — the description IS the input.
+//
 // The prompt is deliberately English regardless of app language: agents follow
 // English instructions/schemas most reliably, and the data in it (exercise ids)
 // must stay stable anyway.
@@ -35,19 +45,46 @@ const MAX_COUNT = 99999;
 const MAX_REST = 3600;
 const MAX_NOTE = 200;
 
+export const MODES = ['plan', 'describe'];
+/** Describe mode is about the text the athlete typed, so history defaults to off. */
+export const DEFAULT_DESCRIBE_SESSIONS = 0;
+const MAX_DESCRIPTION = 8000;
+
 /** English default request: tomorrow's session, informed by the history below. */
 export function defaultUserMessage() {
   return 'Plan my next training session for tomorrow. Use my recent sessions to progress sensibly '
     + '(respect how hard the last sets felt), keep the workout balanced, and stay with equipment I already use.';
 }
 
-/** The user's saved prompt options (message + how many sessions to include). */
+/** Placeholder example for the "describe" box — shows the shape, not a rule. */
+export function describeExample() {
+  return 'Tomorrow — Upper A\n'
+    + 'Bench press 4x8 @ 62.5kg\n'
+    + 'Back squat: 8 @ 60, 6 @ 70, 4 @ 80 (3 min rest before the top set)\n'
+    + 'Lat pulldown 3x12\n'
+    + 'Plank 2 x 45s\n'
+    + '\n'
+    + 'Friday — easy cardio: treadmill 5 km in about 30 min';
+}
+
+const clampSessions = (v, dflt) => {
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) && n >= 0 ? Math.min(n, 100) : dflt;
+};
+
+/** The user's saved prompt options (mode + message/description + history size). */
 export function getPromptOptions() {
   const o = getSettings().aiPrompt || {};
-  const n = parseInt(o.maxSessions, 10);
+  const mode = MODES.includes(o.mode) ? o.mode : 'plan';
   return {
+    mode,
+    // Plan mode's request and describe mode's optional extra instructions are
+    // remembered separately, so using one mode never wipes the other's text.
     userMessage: typeof o.userMessage === 'string' && o.userMessage.trim() ? o.userMessage : defaultUserMessage(),
-    maxSessions: Number.isFinite(n) && n >= 0 ? Math.min(n, 100) : DEFAULT_MAX_SESSIONS
+    extraMessage: typeof o.extraMessage === 'string' ? o.extraMessage : '',
+    description: typeof o.description === 'string' ? o.description.slice(0, MAX_DESCRIPTION) : '',
+    maxSessions: clampSessions(o.maxSessions, DEFAULT_MAX_SESSIONS),
+    describeSessions: clampSessions(o.describeSessions, DEFAULT_DESCRIBE_SESSIONS)
   };
 }
 
@@ -193,7 +230,7 @@ function conventionsBlock() {
   return rows.join('\n');
 }
 
-function scheduleBlock() {
+function scheduleBlock(describe) {
   const today = todayISO();
   const upcoming = getPlans()
     .filter((p) => (p.date || '').slice(0, 10) >= today)
@@ -201,7 +238,9 @@ function scheduleBlock() {
     .slice(0, 20);
   const rows = ['- Today is ' + today + ' (' + new Date(today + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' }) + ').'];
   if (upcoming.length) {
-    rows.push('- Sessions already on the calendar (do NOT duplicate these dates unless asked):');
+    rows.push(describe
+      ? '- Sessions already on the calendar (context only — the athlete\'s dates in section 1 win):'
+      : '- Sessions already on the calendar (do NOT duplicate these dates unless asked):');
     upcoming.forEach((p) => rows.push('  - ' + (p.date || '').slice(0, 10) + ': ' + (p.name || 'untitled')
       + ' (' + (p.exercises || []).map((x) => x.exerciseId).join(', ') + ')'));
   } else {
@@ -231,13 +270,40 @@ const SCHEMA = `{
   ]
 }`;
 
-/** Build the full prompt text. */
-export function buildPrompt({ userMessage, maxSessions } = {}) {
-  const opts = getPromptOptions();
-  const msg = (userMessage != null && String(userMessage).trim()) ? String(userMessage).trim() : opts.userMessage;
-  const n = Number.isFinite(maxSessions) ? Math.max(0, Math.min(maxSessions, 100)) : opts.maxSessions;
-  const notes = exerciseNotesBlock();
-
+/** Intro + section 1, per mode. Section 1 is the only place the athlete's own
+ *  words appear, so the mode's job description sits right next to them. */
+function taskBlock(mode, msg, description) {
+  if (mode === 'describe') {
+    return [
+      'You are a careful data-entry assistant for a workout-logging app.',
+      'The athlete has written out the training session(s) they want, in their own words, in section 1.',
+      'Your ONLY job is to convert that text into the JSON described in section 2 — faithfully, without coaching it.',
+      'Everything you need is in this message. Answer ONLY with the JSON object described in section 2.',
+      '',
+      '## 1. THE SESSION(S) THE ATHLETE WROTE',
+      description,
+      ...(msg ? ['', 'Additional instructions from the athlete:', msg] : []),
+      '',
+      '### How to transcribe (strict)',
+      '- TRANSCRIBE, DO NOT COACH. Keep every exercise the athlete named, in the order they wrote it. Do not add',
+      '  exercises (no warm-ups, no accessories, no cool-down) and do not remove or reorder any.',
+      '- Do not change prescribed sets, reps, weights, times, distances or rest that the athlete stated. Notation like',
+      '  "4x8", "3 x 12 @ 40kg", "8/6/4", "2 x 45s", "5 km in 30 min" must survive exactly as written.',
+      '- Map each exercise name to the closest id in the catalog (section 6) — including synonyms, abbreviations and',
+      '  other languages. Copy the id verbatim. If nothing in the catalog matches, SKIP that exercise and say which',
+      '  one you skipped in the session "notes"; never invent an id and never substitute a different exercise silently.',
+      '- Fill in only what is genuinely missing: if no weight is given, leave "weightKg" out (or take the athlete\'s',
+      '  recent working weight from section 7 if history was shared); if no reps are given for a reps exercise, use',
+      '  their usual rep count. List every such assumption in the session "notes".',
+      '- Dates: resolve relative wording ("tomorrow", "Friday", "next Monday") against today\'s date in section 5.',
+      '  If a block of text carries no date at all, put it on the next free day and mention that in "notes".',
+      '- One JSON session object per training day the athlete described.',
+      '- Keep the athlete\'s own cues/comments: a remark about a specific set goes in that set\'s "note", a remark about',
+      '  the whole workout goes in the session "notes". Do not editorialise beyond recording your assumptions.',
+      '',
+      '## 2. HOW TO ANSWER (strict)'
+    ];
+  }
   return [
     'You are an experienced strength & conditioning coach planning workouts for the athlete described below.',
     'Everything you need is in this message. Answer ONLY with the JSON object described in section 2.',
@@ -245,7 +311,30 @@ export function buildPrompt({ userMessage, maxSessions } = {}) {
     '## 1. WHAT THE ATHLETE ASKED FOR',
     msg,
     '',
-    '## 2. HOW TO ANSWER (strict)',
+    '## 2. HOW TO ANSWER (strict)'
+  ];
+}
+
+/**
+ * Build the full prompt text.
+ * @param {{mode?:'plan'|'describe', userMessage?:string, description?:string, maxSessions?:number}} [o]
+ */
+export function buildPrompt({ mode, userMessage, description, maxSessions } = {}) {
+  const opts = getPromptOptions();
+  const m = MODES.includes(mode) ? mode : opts.mode;
+  const describe = m === 'describe';
+  // In describe mode an empty message is fine (the description carries the task);
+  // in plan mode we fall back to the saved/default request.
+  const typed = userMessage != null ? String(userMessage).trim() : (describe ? opts.extraMessage : opts.userMessage);
+  const msg = typed.trim() || (describe ? '' : opts.userMessage);
+  const desc = String(description != null ? description : opts.description).trim().slice(0, MAX_DESCRIPTION);
+  const n = Number.isFinite(maxSessions)
+    ? Math.max(0, Math.min(maxSessions, 100))
+    : (describe ? opts.describeSessions : opts.maxSessions);
+  const notes = exerciseNotesBlock();
+
+  return [
+    ...taskBlock(m, msg, desc || '(the athlete left this blank — say so in "notes" and return no sessions)'),
     'Output exactly one JSON object and nothing else — no explanation before or after, no markdown code fence.',
     '',
     SCHEMA,
@@ -271,9 +360,16 @@ export function buildPrompt({ userMessage, maxSessions } = {}) {
     '- With form (a), "reps"/"weightKg" apply only to reps exercises; for a uniform time/distance/count exercise send just',
     '  "sets" and describe the intended duration/distance/tally in the session "notes" — or better, use "setTargets".',
     '- "weightKg" is in kilograms, following the entry conventions in section 4; omit it (or use null) for bodyweight work.',
-    '- Prefer weights the athlete can actually load (see plates in section 4) and rep counts from their presets.',
-    '- Put warm-up work in the session as normal exercises from the "warmup" group if you want it done.',
-    '- Keep "name" short; put reasoning, tempo, RPE hints or substitutions in "notes".',
+    ...(describe ? [
+      '- Weights the athlete stated go in unchanged. Only a weight YOU had to invent should be rounded to something',
+      '  loadable with the plates in section 4.',
+      '- Keep "name" short — reuse the athlete\'s own title for the day if they gave one, otherwise leave it out.',
+      '- Use "notes" only for skipped exercises, assumptions you made and anything in the text you could not encode.'
+    ] : [
+      '- Prefer weights the athlete can actually load (see plates in section 4) and rep counts from their presets.',
+      '- Put warm-up work in the session as normal exercises from the "warmup" group if you want it done.',
+      '- Keep "name" short; put reasoning, tempo, RPE hints or substitutions in "notes".'
+    ]),
     '',
     '## 3. THE ATHLETE',
     athleteBlock(),
@@ -282,20 +378,25 @@ export function buildPrompt({ userMessage, maxSessions } = {}) {
     conventionsBlock(),
     '',
     '## 5. CALENDAR',
-    scheduleBlock(),
+    scheduleBlock(describe),
     '',
     '## 6. ALLOWED EXERCISES (id | name | muscle group | equipment | metric | weight step)',
     catalogBlock(),
     ...(notes ? ['', '### Athlete notes on specific exercises', notes] : []),
     '',
     '## 7. RECENT SESSIONS' + (n ? ' (newest first, up to ' + n + ')' : ' (omitted)'),
-    n ? historyBlock(n) : 'The athlete chose not to share history this time.',
+    n ? historyBlock(n) : (describe
+      ? 'Not shared — work from the description in section 1 alone.'
+      : 'The athlete chose not to share history this time.'),
+    ...(n && describe ? ['', 'Reference only — for filling in a weight the athlete did not state. Do not let it override section 1.'] : []),
     '',
     '## 8. BEST ESTIMATED 1RM PER EXERCISE (true total load: bar and both dumbbells included)',
     bestsBlock(),
     '',
     '## 9. NOW ANSWER',
-    'Return the JSON object from section 2 — only valid exercise ids, only JSON.'
+    describe
+      ? 'Return the JSON object from section 2 — the athlete\'s own session as written, only valid exercise ids, only JSON.'
+      : 'Return the JSON object from section 2 — only valid exercise ids, only JSON.'
   ].join('\n');
 }
 

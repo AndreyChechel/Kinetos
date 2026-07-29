@@ -33,7 +33,10 @@ function defaultState() {
       plates: [25, 20, 15, 10, 5, 2.5, 1.25], // available plate sizes (kg) — drives the per-side plate calculator
       repPresets: [6, 8, 10, 12, 15, 20], // quick-pick rep counts offered by the rep chooser
       restSeconds: 90,      // rest countdown after a set is marked done; 0 = off
-      aiPrompt: { userMessage: '', maxSessions: 10 }, // remembered options for the "AI prompt" generator in Profile
+      // remembered options for the "AI prompt" generator in Profile.
+      // mode 'plan' = agent designs the session from history; 'describe' = agent
+      // only transcribes the athlete's own written session into importable JSON.
+      aiPrompt: { mode: 'plan', userMessage: '', extraMessage: '', description: '', maxSessions: 10, describeSessions: 0 },
       sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
     },
     templates: [],          // reusable, dateless workout blueprints

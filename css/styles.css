@@ -41,6 +41,9 @@
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* The UA's [hidden] rule loses to any author `display` (e.g. `.field {display:block}`),
+   so el.hidden = true silently does nothing on those. Make it always win. */
+[hidden] { display: none !important; }
 html, body { margin: 0; padding: 0; height: 100%; }
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -560,6 +563,7 @@ canvas { max-width: 100%; }
   box-shadow: 0 6px 18px rgba(47,109,246,.45); z-index: 30;
   font-variant-numeric: tabular-nums;
 }
+/* (the global [hidden] rule near the top covers this — kept for clarity) */
 .restbar[hidden] { display: none; }
 .restbar__skip {
   display: grid; place-items: center; width: 24px; height: 24px;

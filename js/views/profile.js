@@ -4,7 +4,7 @@ import { t, getLang, SUPPORTED } from '../i18n.js';
 import { getProfile, setProfile, getSettings, setSettings, exportJSON, importJSON, resetAll } from '../store.js';
 import { completedSessions } from '../workout.js';
 import { getExercise, exName } from '../data/db.js';
-import { buildPrompt, getPromptOptions, defaultUserMessage, parseSessions, importSessions, plansOnDate } from '../aiplan.js';
+import { buildPrompt, getPromptOptions, defaultUserMessage, describeExample, parseSessions, importSessions, plansOnDate } from '../aiplan.js';
 import { age, maxHR, hrZones, bmi, bodyFat, bmr, tdee } from '../calc.js';
 import { sheet, confirmDialog } from '../components.js';
 import { applyTheme, changeLanguage } from '../app.js';
@@ -396,24 +396,89 @@ async function copyText(text) {
 
 function aiPromptSheet() {
   const saved = getPromptOptions();
-  const msg = h('textarea', { class: 'textarea', rows: '4', placeholder: defaultUserMessage() }, [saved.userMessage]);
+  // 'plan'     = let the agent design the session from recent history.
+  // 'describe' = the athlete writes the session out and the agent only transcribes
+  //              it into importable JSON. Both prompts carry the same schema,
+  //              conventions and exercise catalog, so the import side is unchanged.
+  let mode = saved.mode;
+
+  const msg = h('textarea', { class: 'textarea', rows: '4' });
+  const desc = h('textarea', { class: 'textarea', rows: '8', placeholder: describeExample() }, [saved.description]);
   const count = h('input', { class: 'input', type: 'number', inputmode: 'numeric', min: '0', max: '100', step: '1', value: String(saved.maxSessions) });
+
   const preview = h('textarea', { class: 'textarea', rows: '10', readonly: true, style: 'font-family:ui-monospace,monospace;font-size:.72rem' });
   const previewWrap = h('details', {}, [h('summary', { class: 'small muted', style: 'cursor:pointer', text: t('profile.aiPreview') }), preview]);
   const info = h('div', { class: 'small muted' });
 
+  const about = h('p', { class: 'small muted', style: 'margin:0' });
+  const msgField = field(t('profile.aiUserMessage'), msg);
+  const resetMsg = h('button', { class: 'btn btn--sm btn--ghost', style: 'align-self:flex-start', onclick: () => { msg.value = defaultUserMessage(); } }, [t('profile.aiResetMessage')]);
+  const descField = field(t('profile.aiDescription'), desc);
+  const descHint = h('div', { class: 'small muted', text: t('profile.aiDescriptionHint') });
+  const countField = field(t('profile.aiMaxSessions'), count);
+  const countHint = h('div', { class: 'small muted' });
+
+  const modeBtns = ['plan', 'describe'].map((m) => h('button', {
+    class: 'btn btn--sm', style: 'flex:1', 'aria-pressed': 'false',
+    onclick: () => {
+      if (mode === m) return;
+      // Remember the count the user typed for the mode they're leaving.
+      const n = parseInt(count.value, 10);
+      const keep = isNaN(n) || n < 0 ? 0 : Math.min(n, 100);
+      if (mode === 'describe') { saved.describeSessions = keep; saved.extraMessage = msg.value; }
+      else { saved.maxSessions = keep; saved.userMessage = msg.value.trim() || defaultUserMessage(); }
+      mode = m;
+      draw();
+    }
+  }, [t('profile.aiMode' + (m === 'plan' ? 'Plan' : 'Describe'))]));
+  const modeRow = h('div', { style: 'display:flex;gap:8px', role: 'group', 'aria-label': t('profile.aiMode') }, modeBtns);
+
+  function draw() {
+    const describe = mode === 'describe';
+    modeBtns.forEach((b, i) => {
+      const on = (i === 0) === !describe;
+      b.className = 'btn btn--sm' + (on ? ' btn--primary' : '');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    about.textContent = t(describe ? 'profile.aiDescribeAbout' : 'profile.aiPromptAbout');
+    descField.hidden = descHint.hidden = !describe;
+    // The free-text box stays in both modes but changes job: the request in plan
+    // mode, optional extra instructions on top of the description in describe mode.
+    // Each mode's text is held separately so switching doesn't lose either.
+    msgField.firstChild.textContent = t(describe ? 'profile.aiExtraMessage' : 'profile.aiUserMessage');
+    msg.placeholder = describe ? t('profile.aiExtraPlaceholder') : defaultUserMessage();
+    msg.value = describe ? saved.extraMessage : saved.userMessage;
+    resetMsg.hidden = describe;
+    // Describe mode keeps its own history count: the description is the input, so
+    // history is only a fallback for weights the athlete didn't state.
+    count.value = String(describe ? saved.describeSessions : saved.maxSessions);
+    countHint.textContent = t(describe ? 'profile.aiDescribeSessionsHint' : 'profile.aiMaxSessionsHint');
+  }
+
   const read = () => {
     const n = parseInt(count.value, 10);
+    const sessions = isNaN(n) || n < 0 ? 0 : Math.min(n, 100);
+    const describe = mode === 'describe';
     return {
-      userMessage: msg.value.trim() || defaultUserMessage(),
-      maxSessions: isNaN(n) || n < 0 ? 0 : Math.min(n, 100)
+      mode,
+      userMessage: describe ? saved.userMessage : (msg.value.trim() || defaultUserMessage()),
+      extraMessage: describe ? msg.value : saved.extraMessage,
+      description: desc.value,
+      maxSessions: describe ? saved.maxSessions : sessions,
+      describeSessions: describe ? sessions : saved.describeSessions
     };
   };
 
   async function copy() {
     const opts = read();
+    if (opts.mode === 'describe' && !opts.description.trim()) { desc.focus(); toast(t('profile.aiDescriptionMissing')); return; }
     setSettings({ aiPrompt: opts });
-    const text = buildPrompt(opts);
+    Object.assign(saved, opts);
+    const text = buildPrompt({
+      ...opts,
+      userMessage: opts.mode === 'describe' ? opts.extraMessage : opts.userMessage,
+      maxSessions: opts.mode === 'describe' ? opts.describeSessions : opts.maxSessions
+    });
     preview.value = text;
     info.textContent = t('profile.aiPromptSize', { n: Math.round(text.length / 100) / 10 });
     const ok = await copyText(text);
@@ -422,15 +487,19 @@ function aiPromptSheet() {
   }
 
   const content = h('div', { class: 'stack' }, [
-    h('p', { class: 'small muted', style: 'margin:0', text: t('profile.aiPromptAbout') }),
-    field(t('profile.aiUserMessage'), msg),
-    h('button', { class: 'btn btn--sm btn--ghost', style: 'align-self:flex-start', onclick: () => { msg.value = defaultUserMessage(); } }, [t('profile.aiResetMessage')]),
-    field(t('profile.aiMaxSessions'), count),
-    h('div', { class: 'small muted', text: t('profile.aiMaxSessionsHint') }),
+    modeRow,
+    about,
+    descField,
+    descHint,
+    msgField,
+    resetMsg,
+    countField,
+    countHint,
     h('button', { class: 'btn btn--primary btn--block', onclick: copy }, [icon('clipboard', { size: 16 }), ' ' + t('profile.aiCopyPrompt')]),
     info,
     previewWrap
   ]);
+  draw();
   sheet(t('profile.aiPrompt'), content);
 }
 
