@@ -411,8 +411,13 @@
     "statusError": "Sync failed",
     "statusNeedsAuth": "Connect to sync",
     "statusOffline": "Offline",
-    "passphrasePrompt": "Enter your passphrase to unlock cloud sync",
-    "passphraseError": "Wrong passphrase"
+    "signIn": "Sign in to sync",
+    "sessionNote": "Google access lasts about an hour; after that one tap re-authorizes.",
+    "authPreparing": "Preparing sign-in — tap again in a moment",
+    "popupBlocked": "The Google sign-in window was blocked. Tap the button again.",
+    "reauthDirty": "Changes not synced yet",
+    "reauthIdle": "Sync with your cloud",
+    "reauthAction": "Sync"
   },
   "bmi": {
     "under": "Underweight",

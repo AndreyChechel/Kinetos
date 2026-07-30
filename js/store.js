@@ -37,7 +37,7 @@ function defaultState() {
       // mode 'plan' = agent designs the session from history; 'describe' = agent
       // only transcribes the athlete's own written session into importable JSON.
       aiPrompt: { mode: 'plan', userMessage: '', extraMessage: '', description: '', maxSessions: 10, describeSessions: 0 },
-      sync: { provider: '' } // '' | 'google' | 'onedrive' | 'yandex'
+      sync: { provider: '' } // '' | 'google'
     },
     templates: [],          // reusable, dateless workout blueprints
     plans: [],              // scheduled sessions on the calendar (a date + exercises)
@@ -356,7 +356,9 @@ export function resetAll() {
   state = defaultState();
   try {
     ['kinetos.tokens', 'kinetos.gdrive.fileId', 'kinetos.sync.meta'].forEach((k) => localStorage.removeItem(k));
-    // remembered decrypted client secrets (kinetos.secret.<provider>)
+    // legacy: decrypted client secrets cached by pre-1.14 builds, which used the
+    // authorization-code flow (kinetos.secret.<provider>). Nothing writes these
+    // any more; the sweep stays so an upgraded device doesn't keep one forever.
     Object.keys(localStorage).filter((k) => k.startsWith('kinetos.secret.')).forEach((k) => localStorage.removeItem(k));
     if (typeof sessionStorage !== 'undefined') {
       Object.keys(sessionStorage).filter((k) => k.startsWith('kinetos.')).forEach((k) => sessionStorage.removeItem(k));

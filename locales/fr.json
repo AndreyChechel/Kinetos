@@ -411,8 +411,13 @@
     "statusError": "Échec de la sync",
     "statusNeedsAuth": "Se connecter pour synchroniser",
     "statusOffline": "Hors ligne",
-    "passphrasePrompt": "Saisissez votre phrase secrète pour déverrouiller la sync",
-    "passphraseError": "Phrase secrète incorrecte"
+    "signIn": "Se connecter pour synchroniser",
+    "sessionNote": "L'accès Google dure environ une heure ; ensuite une seule touche suffit.",
+    "authPreparing": "Préparation de la connexion — retouchez dans un instant",
+    "popupBlocked": "La fenêtre de connexion Google a été bloquée. Appuyez à nouveau.",
+    "reauthDirty": "Modifications pas encore synchronisées",
+    "reauthIdle": "Synchroniser avec votre cloud",
+    "reauthAction": "Synchroniser"
   },
   "bmi": {
     "under": "Insuffisance",

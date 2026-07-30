@@ -411,8 +411,13 @@
     "statusError": "Sync fehlgeschlagen",
     "statusNeedsAuth": "Zum Sync verbinden",
     "statusOffline": "Offline",
-    "passphrasePrompt": "Passphrase eingeben, um Cloud-Sync zu entsperren",
-    "passphraseError": "Falsche Passphrase"
+    "signIn": "Zum Sync anmelden",
+    "sessionNote": "Der Google-Zugriff gilt etwa eine Stunde; danach genügt ein Tippen.",
+    "authPreparing": "Anmeldung wird vorbereitet — gleich nochmal tippen",
+    "popupBlocked": "Das Google-Anmeldefenster wurde blockiert. Tippe erneut.",
+    "reauthDirty": "Änderungen noch nicht synchronisiert",
+    "reauthIdle": "Mit deiner Cloud synchronisieren",
+    "reauthAction": "Sync"
   },
   "bmi": {
     "under": "Untergewicht",

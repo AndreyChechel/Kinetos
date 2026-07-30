@@ -242,7 +242,9 @@ export default function renderProfile(root, params, ctx) {
     const provOpts = [['', t('sync.off')]];
     Object.entries(SYNC.providers).forEach(([id, cfg]) => { if (cfg.enabled !== false) provOpts.push([id, cfg.label]); });
     const providerSel = select(provOpts, st.provider,
-      (v) => { if (!v) sync.disconnect(); else setSettings({ sync: { provider: v } }); renderSync(); });
+      // Warm the auth library as soon as a provider is picked, so the Connect
+      // click below can open the popup without awaiting (js/sync/gis.js).
+      (v) => { if (!v) sync.disconnect(); else { setSettings({ sync: { provider: v } }); sync.prepareAuth(); } renderSync(); });
     syncCard.appendChild(field(t('sync.provider'), providerSel));
 
     if (st.provider) {
@@ -251,8 +253,14 @@ export default function renderProfile(root, params, ctx) {
       } else if (!st.connected) {
         syncCard.appendChild(h('button', { class: 'btn btn--primary btn--block', onclick: () => sync.connect(st.provider) }, [t('sync.connect')]));
       } else {
+        // Access tokens last ~1h and the token model issues no refresh token, so
+        // once one lapses the way back is a tap: sync.authorize() opens Google's
+        // popup straight from this click (awaiting first would get it blocked).
+        const primary = st.live
+          ? h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.syncNow() }, [icon('refresh', { size: 16 }), ' ' + t('sync.syncNow')])
+          : h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.authorize() }, [icon('refresh', { size: 16 }), ' ' + t('sync.signIn')]);
         syncCard.appendChild(h('div', { class: 'row', style: 'gap:8px' }, [
-          h('button', { class: 'btn btn--primary', style: 'flex:1', onclick: () => sync.syncNow() }, [icon('refresh', { size: 16 }), ' ' + t('sync.syncNow')]),
+          primary,
           h('button', { class: 'btn', onclick: () => { sync.disconnect(); renderSync(); } }, [t('sync.disconnect')])
         ]));
       }
@@ -267,13 +275,17 @@ export default function renderProfile(root, params, ctx) {
       h('span', { text: statusText }),
       h('span', { text: t('sync.lastSynced', { when }) })
     ]));
-    if (st.status === 'error' && st.message) {
+    if ((st.status === 'error' || st.status === 'needsAuth') && st.message) {
       syncCard.appendChild(h('div', { class: 'small', style: 'color:var(--danger); margin-top:4px; word-break:break-word', text: st.message }));
     }
     if (st.provider && st.configured) {
       syncCard.appendChild(h('div', { class: 'small muted', text: t('sync.auto', { n: SYNC.autoEveryMinutes }) }));
+      syncCard.appendChild(h('div', { class: 'small muted', text: t('sync.sessionNote') }));
     }
   }
+  // Warm the authorization library while the user is on this card, so the
+  // buttons above can open the Google popup with no awaiting (js/sync/gis.js).
+  if (sync.provider() && sync.providerConfigured(sync.provider())) sync.prepareAuth();
 
   // ---------- Data ----------
   const dataCard = h('div', { class: 'card' }, [

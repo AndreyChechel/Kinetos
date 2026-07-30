@@ -37,8 +37,8 @@
 <tr><td><code>svg.js</code></td><td><code>injectSVG(el,path)</code> — fetch + inline an SVG so it inherits theme colors.</td></tr>
 <tr><td><code>pwa.js</code></td><td>Service-worker registration + install prompt handling.</td></tr>
 <tr><td><code>data/db.js</code></td><td>Loads exercise/muscle JSON, merges custom exercises, query helpers (<code>byGroup</code>, <code>getExercise</code>, <code>exName</code>, <code>svgPath</code>).</td></tr>
-<tr><td><code>config.js</code></td><td>Cloud-sync config (Client IDs, scopes, secret). Sync is off until filled. See <a href="sync.html">Cloud sync</a>.</td></tr>
-<tr><td><code>sync/{manager,providers,secret}.js</code></td><td>Optional cloud sync: orchestration, OAuth + file I/O, client-secret handling. Only Google Drive enabled.</td></tr>
+<tr><td><code>config.js</code></td><td>Cloud-sync config (Client ID, scope — no secret). Sync is off until filled. See <a href="sync.html">Cloud sync</a>.</td></tr>
+<tr><td><code>sync/{manager,providers,gis}.js</code></td><td>Optional cloud sync: orchestration, token storage + Drive file I/O, Google Identity Services token client. Google Drive only.</td></tr>
 <tr><td><code>views/*.js</code></td><td>One module per screen. Each exports a render function <code>(root, params, ctx)</code>.</td></tr>
 </table>
 

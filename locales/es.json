@@ -411,8 +411,13 @@
     "statusError": "Error de sincronización",
     "statusNeedsAuth": "Conéctate para sincronizar",
     "statusOffline": "Sin conexión",
-    "passphrasePrompt": "Introduce tu frase de contraseña para desbloquear la sincronización",
-    "passphraseError": "Frase de contraseña incorrecta"
+    "signIn": "Inicia sesión para sincronizar",
+    "sessionNote": "El acceso de Google dura unos 60 minutos; después basta un toque.",
+    "authPreparing": "Preparando el inicio de sesión — toca de nuevo en un momento",
+    "popupBlocked": "Se bloqueó la ventana de inicio de sesión de Google. Toca otra vez.",
+    "reauthDirty": "Cambios sin sincronizar",
+    "reauthIdle": "Sincroniza con tu nube",
+    "reauthAction": "Sincronizar"
   },
   "bmi": {
     "under": "Bajo peso",

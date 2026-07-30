@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetos — GIS popup test</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 20px; max-width: 640px; }
+  h1 { font-size: 18px; }
+  button { font: inherit; padding: 10px 16px; border-radius: 8px; border: 1px solid #888; background: #f4f4f5; cursor: pointer; }
+  button[disabled] { opacity: .5; cursor: default; }
+  pre { background: #111; color: #eee; padding: 12px; border-radius: 8px; white-space: pre-wrap; word-break: break-word; font-size: 13px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+  code { background: #eee; padding: 1px 4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>GIS popup test</h1>
+<p>Throwaway harness for the Google Identity Services token flow — it isolates
+authorization from the rest of Kinetos. Serve it from an origin registered under
+<b>Authorized JavaScript origins</b> (e.g. <code>http://localhost:8080</code>) and
+tap the buttons in order. Delete this file once you trust the real flow.</p>
+<p><b>Standalone PWA caveat:</b> a plain page can't reproduce the installed-app
+window. To check that case, use the real app (Profile → Cloud sync → Connect)
+after deploying.</p>
+
+<div class="row">
+  <button id="load">1. Load library</button>
+  <button id="auth" disabled>2. Get token (tap me)</button>
+  <button id="drive" disabled>3. Call Drive</button>
+  <button id="revoke" disabled>Revoke</button>
+</div>
+<pre id="log">ready</pre>
+
+<script>
+// Same client id as js/config.js — public by design, authorizes nothing alone.
+const CLIENT_ID = '805781969476-d7d1avrm57rahugqdm55fv9mkfv136c1.apps.googleusercontent.com';
+const SCOPE = 'https://www.googleapis.com/auth/drive.file';
+
+const logEl = document.getElementById('log');
+const $ = (id) => document.getElementById(id);
+let client = null, token = null;
+
+function log(...parts) {
+  const line = parts.map((p) => (typeof p === 'string' ? p : JSON.stringify(p, null, 2))).join(' ');
+  logEl.textContent += '\n' + new Date().toLocaleTimeString() + '  ' + line;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+$('load').addEventListener('click', () => {
+  $('load').disabled = true;
+  log('loading gsi/client…');
+  const s = document.createElement('script');
+  s.src = 'https://accounts.google.com/gsi/client';
+  s.async = true; s.defer = true;
+  s.onload = () => {
+    // Built here, BEFORE the click that needs it — awaiting inside a click
+    // handler consumes the user activation and the popup gets blocked.
+    client = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPE,
+      prompt: '',            // no account chooser once the grant exists
+      callback: (r) => {
+        if (r && r.access_token) {
+          token = r.access_token;
+          log('TOKEN OK — expires_in', String(r.expires_in), 'scope', r.scope);
+          $('drive').disabled = false; $('revoke').disabled = false;
+        } else {
+          log('token response with no access_token:', r);
+        }
+      },
+      error_callback: (e) => log('ERROR error_callback type =', (e && e.type) || 'unknown',
+        '(popup_failed_to_open means the gesture was lost or a blocker fired)')
+    });
+    log('library ready — now tap step 2');
+    $('auth').disabled = false;
+  };
+  s.onerror = () => { log('FAILED to load gsi/client (offline? blocked?)'); $('load').disabled = false; };
+  document.head.appendChild(s);
+});
+
+// Synchronous on purpose: no await before requestAccessToken().
+$('auth').addEventListener('click', () => {
+  log('requestAccessToken()…');
+  client.requestAccessToken();
+});
+
+$('drive').addEventListener('click', async () => {
+  try {
+    const res = await fetch("https://www.googleapis.com/drive/v3/files?q=" +
+      encodeURIComponent("name='kinetos.json' and trashed=false") + "&fields=files(id,name,modifiedTime)",
+      { headers: { Authorization: 'Bearer ' + token } });
+    log('Drive', String(res.status), await res.text());
+  } catch (e) { log('Drive call failed:', String(e)); }
+});
+
+$('revoke').addEventListener('click', () => {
+  google.accounts.oauth2.revoke(token, (r) => log('revoke →', r));
+});
+</script>
+</body>
+</html>

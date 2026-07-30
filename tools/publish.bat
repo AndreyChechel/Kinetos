@@ -61,7 +61,8 @@ if errorlevel 1 (
 )
 
 echo Copying files...
-robocopy "." ".gh-pages-tmp" /E /XD ".git" ".gh-pages-tmp" "node_modules" /XF "*.bat" >nul
+REM gis-test.html is a throwaway local harness for the Google auth popup — never ship it.
+robocopy "." ".gh-pages-tmp" /E /XD ".git" ".gh-pages-tmp" "node_modules" /XF "*.bat" "gis-test.html" >nul
 REM robocopy exit codes 0-7 mean success; anything >=8 is a real error.
 if %ERRORLEVEL% GEQ 8 (
     echo [ERROR] Copying files failed.
