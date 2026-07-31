@@ -1,7 +1,7 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates.
    Keep the version in sync with js/version.js (APP_VERSION). */
-const CACHE = 'kinetos-1.14.1';
+const CACHE = 'kinetos-1.14.2';
 
 const CORE = [
   './',

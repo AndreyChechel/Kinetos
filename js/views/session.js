@@ -217,14 +217,21 @@ export default function renderSession(root, params, ctx) {
     const fields = h('div', { class: 'set__fields' });
     if (metric === 'reps') {
       const repsInp = numInput(set.reps, 'reps', set.targetReps ? String(set.targetReps) : t('common.reps'), { step: '1' });
-      // Tap = pick from the presets, hold = type a free value. Picking from the
-      // chooser is an explicit target — recorded so the suggestion engine judges
-      // next time against what the user actually aimed for.
-      tapToChoose(repsInp, t('session.repsHint'), () => repChooser(repsInp, set.reps ?? set.targetReps ?? null, (v) => { set.reps = v; set.targetReps = v; repsInp.value = v; persist(); }));
+      // Tap = pick from the presets, hold (or "Custom…") = enter a free value.
+      // Picking a value is an explicit target — recorded so the suggestion engine
+      // judges next time against what the user actually aimed for.
+      const applyReps = (v) => { set.reps = v; set.targetReps = v; repsInp.value = v; persist(); };
+      const repsCustom = () => customNumberPrompt(set.reps ?? set.targetReps ?? null, t('common.reps'), (n) => applyReps(Math.round(n)));
+      tapToChoose(repsInp, t('session.repsHint'),
+        () => repChooser(repsInp, set.reps ?? set.targetReps ?? null, applyReps, repsCustom),
+        repsCustom);
       if (isPerDumbbell(entry.exerciseId)) fields.append(x2Badge());
       if (isBarbellAdded(entry.exerciseId)) fields.append(barButton(set));
       const weightInp = numInput(set.weightKg, 'weightKg', set.targetWeightKg ? String(set.targetWeightKg) : t('units.kg'), { step: String(weightStepFor(entry.exerciseId)) });
-      tapToChoose(weightInp, t('session.weightHint'), () => showWeightChooser(weightInp, set, entry));
+      const weightCustom = () => customNumberPrompt(set.weightKg ?? set.targetWeightKg ?? null, `${t('common.weight')} (${t('units.kg')})`, (n) => { set.weightKg = n; weightInp.value = n; persist(); });
+      tapToChoose(weightInp, t('session.weightHint'),
+        () => showWeightChooser(weightInp, set, entry, weightCustom),
+        weightCustom);
       fields.append(weightInp, repsInp);
     } else if (metric === 'time') {
       fields.append(numInput(set.seconds, 'seconds', t('common.sec'), { step: '5' }));
@@ -254,43 +261,49 @@ export default function renderSession(root, params, ctx) {
     return set.durationMs > 0 ? ' · ' + fmtDuration(set.durationMs) : '';
   }
 
-  /** Tap a number field to pick from a chooser; press and hold to type freely.
-   *  The field is read-only until unlocked, so a tap can't pop the keyboard. */
-  function tapToChoose(inp, hint, openChooser) {
-    const lock = () => { inp.readOnly = true; inp.classList.add('set__in--locked'); };
-    const unlock = () => {
-      inp.readOnly = false; inp.classList.remove('set__in--locked');
-      try { inp.focus(); inp.select(); } catch (_) { /* ignore */ }
-    };
-    lock();
+  /** Tap a number field to pick from a chooser; press and hold (or the chooser's
+   *  "Custom…" option) to enter a free value. The field stays read-only: inline
+   *  typing is unreliable on mobile — a long-press on a number input makes the OS
+   *  select the value / pop a "Search" toolbar instead of letting you type — so
+   *  custom entry goes through a modal prompt (which can also raise the keyboard). */
+  function tapToChoose(inp, hint, openChooser, openCustom) {
+    inp.readOnly = true;
+    inp.classList.add('set__in--locked');
     inp.title = hint;
-    inp.addEventListener('blur', lock);
-    // While locked, a long-press must arm the chooser/unlock — not the OS
-    // text-selection / "Search" menu, which otherwise steals the gesture and
-    // leaves the value highlighted so a custom entry can't be typed. Once
-    // unlocked (readOnly = false) normal selection returns for keyboard editing.
-    inp.addEventListener('contextmenu', (e) => { if (inp.readOnly) e.preventDefault(); });
-    inp.addEventListener('selectstart', (e) => { if (inp.readOnly) e.preventDefault(); });
-    // Keyboard path: Enter opens the chooser, F2 unlocks for typing.
+    // Never inline-edited, so block the native selection/callout outright.
+    inp.addEventListener('contextmenu', (e) => e.preventDefault());
+    inp.addEventListener('selectstart', (e) => e.preventDefault());
+    // Keyboard path: Enter/Space opens the chooser, F2 opens the custom prompt.
     inp.addEventListener('keydown', (e) => {
-      if (!inp.readOnly) return;
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChooser(); }
-      else if (e.key === 'F2') { e.preventDefault(); unlock(); }
+      else if (e.key === 'F2' && openCustom) { e.preventDefault(); openCustom(); }
     });
     attachLongPress(inp, {
-      onTap: () => { if (inp.readOnly) { inp.blur(); openChooser(); } },
-      onLongPress: unlock
+      onTap: () => { inp.blur(); openChooser(); },
+      onLongPress: openCustom
     });
+  }
+
+  /** Prompt for a free numeric value via a modal (mobile-safe, unlike inline
+   *  editing of the list field). `apply(n)` gets a parsed, non-negative number. */
+  function customNumberPrompt(current, title, apply) {
+    promptDialog(title, { type: 'number', value: current != null ? String(current) : '', placeholder: title })
+      .then((res) => {
+        if (res == null) return;                       // cancelled
+        const n = parseFloat(String(res).replace(',', '.'));
+        if (!isFinite(n) || n < 0) return;             // ignore blanks / bad input
+        apply(n);
+      });
   }
 
   // --- quick weight chooser (tap a weight field) ---
   // On barbell exercises the popover title doubles as the plate calculator:
   // it shows what the current weight needs per side.
-  function showWeightChooser(anchor, set, entry) {
+  function showWeightChooser(anchor, set, entry, onCustom) {
     const base = set.weightKg ?? set.targetWeightKg ?? 0;
     weightChooser(anchor, base, weightStepFor(entry.exerciseId), (v) => {
       set.weightKg = v; anchor.value = v; persist();
-    }, { title: usesBarbell(entry.exerciseId) ? platesTitle(set, entry) : `${t('common.weight')} (${t('units.kg')})` });
+    }, { title: usesBarbell(entry.exerciseId) ? platesTitle(set, entry) : `${t('common.weight')} (${t('units.kg')})`, onCustom });
   }
   /** "60 kg · per side: 20 + 5" for the weight chooser's title on barbell lifts. */
   function platesTitle(set, entry) {

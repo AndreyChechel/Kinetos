@@ -256,8 +256,11 @@ export function popoverMenu(anchorEl, items, { title = '', grid = false } = {}) 
 
 /** Rep-count chooser popover. Options come from Profile → Rep presets.
  *  (No "custom" entry — long-press the field to type any value.) */
-export function repChooser(anchorEl, current, onPick) {
+export function repChooser(anchorEl, current, onPick, onCustom) {
   const items = repPresets().map((v) => ({ label: String(v), active: v === current, onClick: () => onPick(v) }));
+  // A gesture-driven path to a free value: tapping this pill is a real click, so
+  // the prompt's input can raise the mobile keyboard (a held field can't).
+  if (onCustom) items.push({ label: t('common.custom'), onClick: onCustom });
   popoverMenu(anchorEl, items, { title: t('common.reps'), grid: true });
 }
 
@@ -265,7 +268,7 @@ export function repChooser(anchorEl, current, onPick) {
  *  (or the first few multiples of `step` when there's nothing to anchor to).
  *  `title` lets the caller add context — the session view puts the barbell
  *  per-side plate breakdown there. */
-export function weightChooser(anchorEl, base, step, onPick, { title } = {}) {
+export function weightChooser(anchorEl, base, step, onPick, { title, onCustom } = {}) {
   const st = step > 0 ? step : 2.5;
   const round2 = (n) => Math.round(n * 100) / 100;
   const vals = [];
@@ -275,6 +278,7 @@ export function weightChooser(anchorEl, base, step, onPick, { title } = {}) {
     for (let k = 1; k <= 8; k++) vals.push(round2(k * st));
   }
   const items = vals.map((v) => ({ label: String(v), active: v === base, onClick: () => onPick(v) }));
+  if (onCustom) items.push({ label: t('common.custom'), onClick: onCustom });
   popoverMenu(anchorEl, items, { title: title || `${t('common.weight')} (${t('units.kg')})`, grid: true });
 }
 

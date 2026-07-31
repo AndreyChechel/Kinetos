@@ -28,6 +28,7 @@
     "name": "Name",
     "date": "Date",
     "confirm": "Confirm",
+    "custom": "Custom…",
     "search": "Search",
     "all": "All",
     "export": "Export",
