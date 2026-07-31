@@ -297,6 +297,7 @@ export function setRunner({ title = '', metric = 'reps', value = null, step = 1,
   const startedAt = new Date();
   let val = Number.isFinite(value) ? value : 0;
   let settled = false;
+  let confirming = false;
 
   const fmtVal = (v) => (decimals ? Number(v).toFixed(decimals) : String(v));
   const clock = h('div', { class: 'runner__clock', role: 'timer', text: '0:00' });
@@ -348,7 +349,7 @@ export function setRunner({ title = '', metric = 'reps', value = null, step = 1,
     h('div', { class: 'runner__actions' }, [
       effortBtn(1), effortBtn(2), effortBtn(3),
       h('div', { class: 'runner__act' }, [
-        h('button', { class: 'runner__circle runner__circle--cancel', type: 'button', 'aria-label': t('common.cancel'), onclick: () => cancel() }, [icon('x', { size: 26 })]),
+        h('button', { class: 'runner__circle runner__circle--cancel', type: 'button', 'aria-label': t('common.cancel'), onclick: () => requestCancel() }, [icon('x', { size: 26 })]),
         h('span', { class: 'runner__act-label', text: t('common.cancel') })
       ])
     ])
@@ -358,9 +359,11 @@ export function setRunner({ title = '', metric = 'reps', value = null, step = 1,
   // A finger sliding off a held ± button must not discard the set.
   let downOnBackdrop = false;
   overlay.addEventListener('pointerdown', (e) => { downOnBackdrop = e.target === overlay; });
-  overlay.addEventListener('click', (e) => { if (downOnBackdrop && e.target === overlay) cancel(); });
+  overlay.addEventListener('click', (e) => { if (downOnBackdrop && e.target === overlay) requestCancel(); });
   document.body.appendChild(overlay);
-  const unmodal = modalize(overlay, panel, () => cancel());
+  // Backdrop tap / Escape / the Cancel button all confirm first: the stopwatch is
+  // timing a live set, so a stray tap shouldn't silently throw the set away.
+  const unmodal = modalize(overlay, panel, () => requestCancel());
   requestAnimationFrame(() => overlay.classList.add('is-open'));
 
   const tick = () => { clock.textContent = fmtDuration(Date.now() - startedAt.getTime()); };
@@ -389,6 +392,15 @@ export function setRunner({ title = '', metric = 'reps', value = null, step = 1,
     if (settled) return; settled = true;
     teardown();
     onCancel && onCancel();
+  }
+  // Ask before discarding. `confirming` guards against a second dismiss gesture
+  // (e.g. Escape) stacking another dialog while this one is open.
+  async function requestCancel() {
+    if (settled || confirming) return;
+    confirming = true;
+    const ok = await confirmDialog(t('session.cancelSetConfirm'), { danger: true, okText: t('session.discard') });
+    confirming = false;
+    if (ok) cancel();
   }
   return { close: cancel };
 }

@@ -36,6 +36,14 @@ if (typeof window !== 'undefined') window.addEventListener('route:change', reapC
 
 const PALETTE = ['--primary', '--accent', '--success', '--danger', '#f0b429', '#8b5cf6', '#14b8a6', '#ec4899'];
 function palette(i) { const p = PALETTE[i % PALETTE.length]; return p.startsWith('--') ? (cssVar(p) || '#2f6df6') : p; }
+// Canvas can't parse `var(--x)`; an unrecognised fillStyle is silently ignored
+// (so two `var(...)` slices would draw in the same leftover color). Resolve any
+// CSS-variable references to concrete values before handing them to Chart.js.
+function resolveColor(c) {
+  if (typeof c !== 'string') return c;
+  const m = c.match(/^var\(\s*(--[\w-]+)\s*\)$/);
+  return m ? (cssVar(m[1]) || c) : c;
+}
 
 /** type: 'line' | 'bar' | 'doughnut'. colors: optional array (per-datapoint). */
 export function chartOrFallback(hasChart, type, labels, data, { colors, height = 200 } = {}) {
@@ -46,7 +54,7 @@ export function chartOrFallback(hasChart, type, labels, data, { colors, height =
       const primary = cssVar('--primary') || '#2f6df6';
       const grid = cssVar('--border') || '#ddd';
       const text = cssVar('--text-muted') || '#888';
-      const multi = colors || (type !== 'line' ? labels.map((_, i) => palette(i)) : primary);
+      const multi = (colors ? colors.map(resolveColor) : (type !== 'line' ? labels.map((_, i) => palette(i)) : primary));
       const isPie = type === 'doughnut' || type === 'pie';
       // eslint-disable-next-line no-undef
       liveCharts.add(new Chart(canvas.getContext('2d'), {

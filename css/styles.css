@@ -205,7 +205,10 @@ p { line-height: 1.5; }
 }
 .list__item:last-child { border-bottom: none; }
 .list__item:active { background: var(--surface-2); }
-.list__thumb { width: 52px; height: 52px; border-radius: 12px; background: var(--surface-2); flex: none; display: grid; place-items: center; overflow: hidden; }
+.list__thumb { width: 52px; height: 52px; border-radius: 12px; background: var(--surface-2); flex: none; display: grid; place-items: center; overflow: hidden; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+/* The thumbnail doubles as the press-and-hold drag handle in the session editor;
+   suppress the OS long-press selection/callout so the hold can arm a drag. */
+.entry-grip { touch-action: pan-y; }
 .list__thumb svg { width: 100%; height: 100%; color: var(--figure); }
 .list__body { flex: 1; min-width: 0; }
 .list__title { font-weight: 700; }
@@ -491,7 +494,7 @@ canvas { max-width: 100%; }
 .set__n { cursor: default; }
 
 /* Drag-to-reorder */
-.drag-handle { cursor: grab; touch-action: none; color: var(--text-muted); font-size: 1rem; letter-spacing: -3px; padding: 0 4px 0 2px; user-select: none; flex: none; }
+.drag-handle { cursor: grab; touch-action: none; color: var(--text-muted); font-size: 1rem; letter-spacing: -3px; padding: 0 4px 0 2px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; flex: none; }
 .drag-handle:active { cursor: grabbing; }
 /* Draggable exercise thumbnail (session): reorder by dragging, tap to open. */
 .entry-grip { cursor: grab; touch-action: none; }

@@ -265,6 +265,12 @@ export default function renderSession(root, params, ctx) {
     lock();
     inp.title = hint;
     inp.addEventListener('blur', lock);
+    // While locked, a long-press must arm the chooser/unlock — not the OS
+    // text-selection / "Search" menu, which otherwise steals the gesture and
+    // leaves the value highlighted so a custom entry can't be typed. Once
+    // unlocked (readOnly = false) normal selection returns for keyboard editing.
+    inp.addEventListener('contextmenu', (e) => { if (inp.readOnly) e.preventDefault(); });
+    inp.addEventListener('selectstart', (e) => { if (inp.readOnly) e.preventDefault(); });
     // Keyboard path: Enter opens the chooser, F2 unlocks for typing.
     inp.addEventListener('keydown', (e) => {
       if (!inp.readOnly) return;

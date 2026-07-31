@@ -259,6 +259,7 @@
     "setRunning": "Serie en curso",
     "timeAutoHint": "El tiempo se registra automáticamente",
     "finishWithEffort": "Termina indicando el esfuerzo",
+    "cancelSetConfirm": "¿Descartar el cronometraje de esta serie?",
     "repsHint": "Toca para elegir · mantén para escribir",
     "weightHint": "Toca para elegir · mantén para escribir"
   },

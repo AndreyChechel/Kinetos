@@ -55,15 +55,17 @@ export function renderExerciseTargets(wrap, list, { onChange, emptyText } = {}) 
     const thumb = h('div', { class: 'list__thumb' });
     injectExerciseSVG(thumb, ex);
 
+    // Icon button (was a text button) so the exercise title gets the space back.
     const modeBtn = h('button', {
-      class: 'btn btn--sm' + (detailed ? ' btn--on' : ' btn--ghost'),
+      class: 'btn btn--icon' + (detailed ? ' btn--on' : ' btn--ghost'),
       'aria-pressed': detailed ? 'true' : 'false',
-      title: t('plan.perSetHint'),
+      'aria-label': t('plan.perSet'),
+      title: t('plan.perSet') + ' · ' + t('plan.perSetHint'),
       onclick: () => {
         if (detailed) toSimpleTarget(pe, ex.metric); else toDetailedTarget(pe, ex.metric);
         changed();
       }
-    }, [t('plan.perSet')]);
+    }, [icon('sliders', { size: 18 })]);
 
     const card = h('div', { class: 'card', dataset: { idx } }, [
       h('div', { class: 'row', style: 'margin-bottom:10px' }, [

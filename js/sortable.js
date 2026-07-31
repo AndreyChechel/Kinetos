@@ -122,8 +122,17 @@ export function makeSortable(listEl, { handle = '.drag-handle', onReorder, thres
     pending = null;
   }
 
+  // A press-and-hold on a handle otherwise pops the OS text-selection / "Search"
+  // menu on mobile, which hijacks the gesture. Swallow the context menu when it
+  // originates on a handle so the hold can arm a drag instead.
+  function onContext(e) {
+    const hdl = e.target.closest(handle);
+    if (hdl && listEl.contains(hdl)) e.preventDefault();
+  }
+
   listEl.addEventListener('pointerdown', onDown);
-  return () => { cleanup(); listEl.removeEventListener('pointerdown', onDown); };
+  listEl.addEventListener('contextmenu', onContext);
+  return () => { cleanup(); listEl.removeEventListener('pointerdown', onDown); listEl.removeEventListener('contextmenu', onContext); };
 }
 
 /** Eat the click that a finished drag would otherwise synthesise on the handle. */

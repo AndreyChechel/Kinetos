@@ -259,6 +259,7 @@
     "setRunning": "Set in progress",
     "timeAutoHint": "Time is recorded automatically",
     "finishWithEffort": "Finish with how hard it felt",
+    "cancelSetConfirm": "Discard this set's timing?",
     "repsHint": "Tap to pick reps · hold to type",
     "weightHint": "Tap to pick weight · hold to type"
   },

@@ -259,6 +259,7 @@
     "setRunning": "Satz läuft",
     "timeAutoHint": "Die Zeit wird automatisch erfasst",
     "finishWithEffort": "Zum Beenden die Anstrengung wählen",
+    "cancelSetConfirm": "Zeitmessung dieses Satzes verwerfen?",
     "repsHint": "Tippen zum Auswählen · halten zum Eingeben",
     "weightHint": "Tippen zum Auswählen · halten zum Eingeben"
   },
