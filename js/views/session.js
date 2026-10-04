@@ -7,7 +7,7 @@
 import { h, uid, toast, fmtDuration, fmtTime, fmtTimeSec, fmtDate, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate, getSettings } from '../store.js';
-import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit } from '../data/db.js';
+import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit, usesLevel } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
   exercisePicker, confirmDialog, promptDialog, PROMPT_DELETE, popoverMenu, repChooser, barChooser,
@@ -289,6 +289,13 @@ export default function renderSession(root, params, ctx) {
         // A planned pace shows as the placeholder, the way targetReps does.
         numInput(set.minutes, 'minutes', set.targetMinutes ? String(set.targetMinutes) : t('common.min'), { step: '1' }));
     }
+    // Cardio machine level (resistance/intensity set on the machine).
+    if (metric !== 'reps' && usesLevel(entry.exerciseId)) {
+      const lv = numInput(set.level, 'level', t('common.level'), { step: '1', min: '0' });
+      lv.classList.add('set__in--level');
+      lv.title = t('common.level');
+      fields.prepend(lv);
+    }
 
     const numEl = h('span', { class: 'set__n', text: String(set.n) });
 
@@ -462,10 +469,11 @@ export default function renderSession(root, params, ctx) {
   // --- read-only set row ---
   function setRowRO(set, metric, perDb, barAdd, exerciseId) {
     let val;
-    if (metric === 'time') val = set.seconds ? `${set.seconds} ${t('common.sec')}` : '—';
+    if (metric === 'time') val = set.seconds ? fmtSeconds(set.seconds) : '—';
     else if (metric === 'count') val = set.count ? `${set.count} ${countUnit(exerciseId)}` : '—';
     else if (metric === 'distance') val = [set.distanceKm ? `${set.distanceKm} ${t('units.km')}` : null, set.minutes ? `${set.minutes} ${t('common.min')}` : null].filter(Boolean).join(' · ') || '—';
     else val = set.weightKg ? `${set.weightKg} ${t('units.kg')} × ${set.reps ?? '—'}` : (set.reps ? `${set.reps} ${t('common.reps')}` : '—');
+    if (metric !== 'reps' && set.level != null && usesLevel(exerciseId)) val = `${t('common.level')} ${set.level} · ${val}`;
     const showX2 = perDb && metric === 'reps' && !!set.weightKg;
     const showBar = barAdd && metric === 'reps' && set.weightKg != null;
     return h('div', { class: 'set set--ro' + (set.done ? ' set--done' : '') }, [
@@ -475,6 +483,12 @@ export default function renderSession(root, params, ctx) {
       set.done ? h('span', { class: 'set__done-mark', style: 'color:var(--success)' }, [icon('check', { size: 16 })]) : null,
       set.timestamp ? h('span', { class: 'set__ts small muted', text: fmtTimeSec(set.timestamp, lang) + durationSuffix(set) }) : null
     ]);
+  }
+
+  /** "45 sec" under a minute, else "30:00" — cardio blocks run long. */
+  function fmtSeconds(sec) {
+    if (sec < 60) return `${sec} ${t('common.sec')}`;
+    return fmtDuration(sec * 1000);
   }
 
   function deleteSet(entry, si, { undoable = false } = {}) {
@@ -592,7 +606,9 @@ export default function renderSession(root, params, ctx) {
   function prevHint(exerciseId) {
     const last = lastSetFor(exerciseId, s.id);
     if (!last) return h('div', { class: 'list__sub muted', text: '' });
-    const best = last.sets.map((x) => x.weightKg ? `${x.weightKg}×${x.reps}` : (x.reps || x.seconds || x.distanceKm || '')).slice(0, 4).join(', ');
+    const best = last.sets.map((x) => x.weightKg ? `${x.weightKg}×${x.reps}`
+      : (x.level != null && usesLevel(exerciseId) ? 'L' + x.level + ' ' : '') + (x.reps || (x.seconds ? fmtSeconds(x.seconds) : '') || x.distanceKm || x.count || ''))
+      .slice(0, 4).join(', ');
     return h('div', { class: 'list__sub', text: t('session.previous') + ': ' + best });
   }
 
@@ -604,7 +620,7 @@ export default function renderSession(root, params, ctx) {
     // that wasn't 12s read as "missed target" and froze the suggestions.
     // The rest override carries over (same exercise, same pacing); the cue does
     // not — it was written for the set it sat on.
-    return { n: entry.sets.length + 1, reps: prev.reps ?? defReps, weightKg: prev.weightKg ?? null,
+    return { n: entry.sets.length + 1, reps: prev.reps ?? defReps, weightKg: prev.weightKg ?? null, level: prev.level ?? null,
       seconds: prev.seconds ?? null, count: prev.count ?? null, distanceKm: prev.distanceKm ?? null, minutes: prev.minutes ?? null,
       effort: null, targetReps: prev.targetReps ?? null, targetMinutes: prev.targetMinutes ?? null,
       barKg: prev.barKg ?? null, done: false, restSeconds: prev.restSeconds ?? null, note: '',
@@ -658,7 +674,7 @@ export default function renderSession(root, params, ctx) {
   function freshSet(metric) {
     const defReps = metric === 'reps' ? 12 : null;
     // See nextSet(): 12 reps stays a prefill, never an implicit target.
-    return { n: 1, reps: defReps, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null,
+    return { n: 1, reps: defReps, weightKg: null, level: null, seconds: null, count: null, distanceKm: null, minutes: null,
       effort: null, targetReps: null, targetMinutes: null, barKg: null, done: false, restSeconds: null, note: '',
       timestamp: null, startedAt: null, durationMs: null };
   }

@@ -51,7 +51,8 @@
     "next": "Next",
     "open": "Open",
     "undo": "Undo",
-    "unsavedConfirm": "Discard unsaved changes?"
+    "unsavedConfirm": "Discard unsaved changes?",
+    "level": "Level"
   },
   "units": {
     "kg": "kg",
@@ -120,7 +121,14 @@
     "softDeleteConfirm": "This exercise is used in your history. It will be removed from the list but kept for past workouts. Delete?",
     "hardDeleteConfirm": "Delete this custom exercise?",
     "weightStep": "Weight increment",
-    "weightStepHint": "Used by suggestions when increasing the load. Leave empty for the equipment default."
+    "weightStepHint": "Used by suggestions when increasing the load. Leave empty for the equipment default.",
+    "metric": "Logged as",
+    "metric_reps": "Reps & weight",
+    "metric_time": "Time",
+    "metric_distance": "Distance & time",
+    "metric_count": "Count",
+    "trackLevel": "Machine level",
+    "trackLevelHint": "Log the resistance/intensity level set on the machine with each set (e.g. elliptical, bike, rower)."
   },
   "groups": {
     "chest": "Chest",

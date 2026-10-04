@@ -62,6 +62,19 @@ export function setTargetKeys(metric) {
   return ['reps', 'weightKg'];
 }
 
+/** Optional per-set target fields that ride along with any non-reps metric when
+ *  the exercise uses them — currently the machine `level` (db.usesLevel). They
+ *  are copied whenever present rather than keyed off the exercise, so the model
+ *  helpers don't need to know which exercise a row belongs to. */
+const EXTRA_TARGET_KEYS = ['level'];
+
+/** Highest prescribed machine level of a detailed row (null when none). */
+function topLevel(targets) {
+  let top = null;
+  (targets || []).forEach((st) => { if (st && st.level != null && (top == null || st.level > top)) top = st.level; });
+  return top;
+}
+
 /** True when a row prescribes each set individually. */
 export function isDetailedTarget(pe) {
   return !!(pe && pe.detailed && Array.isArray(pe.setTargets) && pe.setTargets.length);
@@ -77,6 +90,7 @@ export function setTargetsOf(pe) {
 export function newSetTarget(metric, from) {
   const st = { restSeconds: (from && from.restSeconds) || null, note: '' };
   setTargetKeys(metric).forEach((k) => { st[k] = from ? (from[k] ?? null) : null; });
+  if ((metric || 'reps') !== 'reps') EXTRA_TARGET_KEYS.forEach((k) => { if (from && from[k] != null) st[k] = from[k]; });
   return st;
 }
 
@@ -102,6 +116,9 @@ export function syncTargetRow(pe, metric) {
   } else {
     pe.targetReps = null;
     pe.targetWeightKg = null;
+    // Mirror the hardest level so a collapse to simple mode keeps it.
+    const lv = topLevel(pe.setTargets);
+    if (lv != null) pe.targetLevel = lv; else delete pe.targetLevel;
   }
   return pe;
 }
@@ -111,7 +128,7 @@ export function toDetailedTarget(pe, metric) {
   const n = Math.max(1, Math.min(pe.targetSets || 3, MAX_SET_TARGETS));
   const seed = (metric || 'reps') === 'reps'
     ? { reps: pe.targetReps ?? DEFAULT_REPS, weightKg: pe.targetWeightKg || null }
-    : null;
+    : (pe.targetLevel != null ? { level: pe.targetLevel } : null);
   pe.detailed = true;
   pe.setTargets = Array.from({ length: n }, () => newSetTarget(metric, seed));
   return syncTargetRow(pe, metric);
@@ -157,6 +174,8 @@ function setFromTarget(st, i, pe) {
     n: i + 1,
     reps,
     weightKg,
+    // Machine level (cardio): per-set target, else the simple row's one level.
+    level: (st ? st.level : pe.targetLevel) ?? null,
     seconds: (st && st.seconds) ?? null,
     count: (st && st.count) ?? null,
     distanceKm: (st && st.distanceKm) ?? null,
@@ -182,12 +201,13 @@ function setFromTarget(st, i, pe) {
 function targetFromSet(set, metric) {
   const st = { restSeconds: set.restSeconds || null, note: set.note || '' };
   setTargetKeys(metric).forEach((k) => { st[k] = set[k] ?? null; });
+  if (metric !== 'reps') EXTRA_TARGET_KEYS.forEach((k) => { if (set[k] != null) st[k] = set[k]; });
   return st;
 }
 
 /** True when every set prescribes the same numbers (so one simple row says it all). */
 function uniformSets(sets, metric) {
-  const keys = setTargetKeys(metric).concat(['restSeconds', 'note']);
+  const keys = setTargetKeys(metric).concat(metric !== 'reps' ? EXTRA_TARGET_KEYS : [], ['restSeconds', 'note']);
   const sig = (s) => keys.map((k) => JSON.stringify(s[k] ?? null)).join('|');
   const first = sig(sets[0]);
   return sets.every((s) => sig(s) === first);
@@ -211,6 +231,9 @@ export function targetsFromSession(session) {
       sets.forEach((s) => { if (!top || (s.weightKg || 0) > (top.weightKg || 0)) top = s; });
       row.targetReps = (top && top.reps != null) ? top.reps : DEFAULT_REPS;
       row.targetWeightKg = (top && top.weightKg) || null;
+    } else {
+      const lv = topLevel(sets);
+      if (lv != null) row.targetLevel = lv;
     }
     if (sets.length > 1 && !uniformSets(sets, metric)) {
       row.detailed = true;

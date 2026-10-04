@@ -51,7 +51,8 @@
 <h3>Target row (plans and templates)</h3>
 <p>A planned exercise comes in two shapes. <b>Simple</b> prescribes one set of numbers for the whole exercise; <b>detailed</b> ("Per-set" in the editor) prescribes each set on its own, which is what a ramp-up, a drop set, a rep ladder, intervals of different lengths or a one-off rest change need.</p>
 <pre>// simple — every set alike
-{ exerciseId, targetSets, targetReps, targetWeightKg }
+{ exerciseId, targetSets, targetReps, targetWeightKg,
+  targetLevel }            // optional: machine level for every set (level exercises)
 
 // detailed — one entry per set
 {
@@ -63,6 +64,7 @@
     seconds,               // metric "time"
     distanceKm, minutes,   // metric "distance"
     count,                 // metric "count"
+    level,                 // optional, non-reps: machine level (db.usesLevel)
     restSeconds,           // rest AFTER this set; null = profile default
     note                   // short cue shown on that set ("drop set", "AMRAP")
   } ]
@@ -84,6 +86,7 @@
       reps, weightKg,      // strength
       seconds,             // time-based (plank, jump rope)
       count,               // counted tally (metric "count", e.g. stair-stepper stairs)
+      level,               // cardio machine resistance/intensity level (only when db.usesLevel)
       distanceKm, minutes, // cardio
       barKg,               // chosen bar weight (only when Profile → Barbell = "add bar")
       effort,              // 1=easy | 2=medium | 3=hard | null (RPE-style feedback)
@@ -109,6 +112,8 @@
   equipment,               // barbell|dumbbell|cable|machine|bodyweight|cardio|band
   metric: "reps"|"time"|"distance"|"count",
   countUnit,               // metric "count" only: locales key under units.* (e.g. "stairs")
+  level,                   // optional true (non-reps): sets also log a machine level;
+                           // overridable per exercise via exerciseMeta[id].level (boolean)
   primary:   [ muscleKey ],  // highlighted strongly in the SVG
   secondary: [ muscleKey ],  // highlighted lightly
   names: { en, de, fr, es, ru },

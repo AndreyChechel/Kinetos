@@ -10,7 +10,7 @@
 // drag-to-reorder of exercises and remove.
 import { h } from './ui.js';
 import { t } from './i18n.js';
-import { getExercise, exName, isPerDumbbell, countUnit } from './data/db.js';
+import { getExercise, exName, isPerDumbbell, countUnit, usesLevel } from './data/db.js';
 import { injectExerciseSVG } from './svg.js';
 import { stepper, repChooser, attachLongPress, promptDialog, PROMPT_DELETE } from './components.js';
 import { weightStepFor } from './suggest.js';
@@ -26,6 +26,7 @@ const MAX_SECONDS = 7200;
 const MAX_MINUTES = 1440;
 const MAX_COUNT = 99999;
 const MAX_REST = 3600;
+const MAX_LEVEL = 100;
 
 export function newTarget(ex) {
   return { exerciseId: ex.id, targetSets: 3, targetReps: ex.metric === 'reps' ? DEFAULT_REPS : null, targetWeightKg: null };
@@ -94,8 +95,14 @@ function simpleFields(pe, ex) {
   sets.input.addEventListener('change', () => { pe.targetSets = sets.get(); });
   if (ex.metric !== 'reps') {
     const setsField = labeled(t('plan.targetSets'), sets.el);
-    setsField.classList.add('target-fields__wide');
-    return h('div', { class: 'target-fields' }, [setsField]);
+    if (!usesLevel(ex)) {
+      setsField.classList.add('target-fields__wide');
+      return h('div', { class: 'target-fields' }, [setsField]);
+    }
+    // Cardio machine: one level for every set (per-set mode can vary it).
+    const level = stepper(pe.targetLevel ?? 0, { min: 0, max: MAX_LEVEL, step: 1 });
+    level.input.addEventListener('change', () => { const v = level.get(); if (v) pe.targetLevel = v; else delete pe.targetLevel; });
+    return h('div', { class: 'target-fields' }, [setsField, labeled(t('common.level'), level.el)]);
   }
   const reps = stepper(pe.targetReps ?? DEFAULT_REPS, { min: 0, max: 100 });
   const weight = weightStepper(pe.targetWeightKg, ex);
@@ -157,6 +164,7 @@ function setTargetRow(pe, ex, st, si, changed) {
   } else {
     bind(countUnit(ex), 'count', { min: 0, max: MAX_COUNT, step: 5 });
   }
+  if (usesLevel(ex)) bind(t('common.level'), 'level', { min: 0, max: MAX_LEVEL, step: 1 });
   // Rest AFTER this set; 0 falls back to the profile's rest timer.
   const restField = bind(t('plan.setRest') + ' (' + t('common.sec') + ')', 'restSeconds', { min: 0, max: MAX_REST, step: 5 });
   restField.input.title = t('plan.restDefault');

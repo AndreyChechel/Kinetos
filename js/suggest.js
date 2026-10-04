@@ -5,7 +5,7 @@
 //   - whether the logged reps hit the target (planned reps, or last time's reps).
 // Priority: a missed target backs you off even if effort wasn't marked; beating
 // the target pushes you up. No signals at all => steady progression.
-import { getExercise } from './data/db.js';
+import { getExercise, usesLevel } from './data/db.js';
 import { getExerciseMeta } from './store.js';
 import { historyFor } from './workout.js';
 import { t } from './i18n.js';
@@ -31,7 +31,7 @@ function heaviest(sets) { return [...sets].sort((a, b) => (b.weightKg || 0) - (a
 
 /**
  * @returns { values, trend, reason, avgEffort, from } | null
- *   values: subset of { weightKg, reps, seconds, distanceKm, minutes }
+ *   values: subset of { weightKg, reps, seconds, distanceKm, minutes, count, level }
  *   trend:  'up' | 'down' | 'steady'
  *   reason: 'Up' | 'Beat' | 'Steady' | 'Down' | 'Missed'  (=> session.reason<X> key)
  */
@@ -47,25 +47,32 @@ export function suggestNext(exerciseId, excludeSessionId) {
   const effortTrend = avgEffort == null ? 'steady' : (avgEffort < 1.7 ? 'up' : (avgEffort > 2.3 ? 'down' : 'steady'));
   const base = { avgEffort, from: hist[0].session };
 
+  // Cardio machines: keep last time's machine level (the clock/tally progresses).
+  const withLevel = (sug, ref) => {
+    if (usesLevel(ex) && ref && ref.level != null) sug.values.level = ref.level;
+    return sug;
+  };
   if (metric === 'time') {
-    const sec = (heaviestBy(sets, 'seconds').seconds) || 30;
+    const ref = heaviestBy(sets, 'seconds');
+    const sec = ref.seconds || 30;
     const [trend, reason] = pickTrend(effortTrend, false, false);
     const seconds = trend === 'up' ? sec + 15 : trend === 'down' ? Math.max(10, sec - 10) : sec + 5;
-    return { ...base, trend, reason, values: { seconds } };
+    return withLevel({ ...base, trend, reason, values: { seconds } }, ref);
   }
   if (metric === 'count') {
     // Counted work (e.g. stairs) has no load to add, so progress the tally itself.
-    const c = heaviestBy(sets, 'count').count || 0;
+    const ref = heaviestBy(sets, 'count');
+    const c = ref.count || 0;
     const [trend, reason] = pickTrend(effortTrend, false, false);
     const count = trend === 'up' ? Math.round(c * 1.1) + 1 : trend === 'down' ? Math.max(1, Math.round(c * 0.9)) : c + 1;
-    return { ...base, trend, reason, values: { count } };
+    return withLevel({ ...base, trend, reason, values: { count } }, ref);
   }
   if (metric === 'distance') {
     const ref = heaviestBy(sets, 'distanceKm');
     const km = ref.distanceKm || 0, min = ref.minutes || 0;
     const [trend, reason] = pickTrend(effortTrend, false, false);
     const distanceKm = trend === 'up' && km ? round1(km * 1.1) : km;
-    return { ...base, trend, reason, values: { distanceKm, minutes: min } };
+    return withLevel({ ...base, trend, reason, values: { distanceKm, minutes: min } }, ref);
   }
 
   // reps (weighted or bodyweight)
@@ -121,12 +128,13 @@ export function applyToSet(set, sug) {
  *  `unitLabel` names the tally for the 'count' metric (see db.countUnit). */
 export function formatSuggestion(sug, metric, unitLabel) {
   const v = sug.values;
-  if (metric === 'time') return `${v.seconds} ${t('common.sec')}`;
-  if (metric === 'count') return `${v.count} ${unitLabel || t('units.count')}`;
+  const lv = v.level != null ? `${t('common.level')} ${v.level} · ` : '';
+  if (metric === 'time') return lv + `${v.seconds} ${t('common.sec')}`;
+  if (metric === 'count') return lv + `${v.count} ${unitLabel || t('units.count')}`;
   if (metric === 'distance') {
     const d = v.distanceKm ? `${v.distanceKm} ${t('units.km')}` : '';
     const m = v.minutes ? `${v.minutes} ${t('common.min')}` : '';
-    return [d, m].filter(Boolean).join(' · ') || '—';
+    return lv + ([d, m].filter(Boolean).join(' · ') || '—');
   }
   if (v.weightKg) return `${v.weightKg} ${t('units.kg')} × ${v.reps}`;
   return `${v.reps} ${t('common.reps')}`;

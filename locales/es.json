@@ -51,7 +51,8 @@
     "next": "Siguiente",
     "open": "Abrir",
     "undo": "Deshacer",
-    "unsavedConfirm": "¿Descartar los cambios no guardados?"
+    "unsavedConfirm": "¿Descartar los cambios no guardados?",
+    "level": "Nivel"
   },
   "units": {
     "kg": "kg",
@@ -120,7 +121,14 @@
     "softDeleteConfirm": "Este ejercicio se usa en tu historial. Se quitará de la lista pero se conservará en entrenamientos pasados. ¿Eliminar?",
     "hardDeleteConfirm": "¿Eliminar este ejercicio personalizado?",
     "weightStep": "Incremento de peso",
-    "weightStepHint": "Lo usan las sugerencias al aumentar la carga. Déjalo vacío para el valor por defecto del equipamiento."
+    "weightStepHint": "Lo usan las sugerencias al aumentar la carga. Déjalo vacío para el valor por defecto del equipamiento.",
+    "metric": "Se registra como",
+    "metric_reps": "Reps y peso",
+    "metric_time": "Tiempo",
+    "metric_distance": "Distancia y tiempo",
+    "metric_count": "Conteo",
+    "trackLevel": "Nivel de la máquina",
+    "trackLevelHint": "Registra el nivel de resistencia/intensidad ajustado en la máquina en cada serie (p. ej. elíptica, bici, remo)."
   },
   "groups": {
     "chest": "Pecho",

@@ -2,7 +2,7 @@
 // exercises from the store, exposes query helpers. Extensible: add rows to
 // exercises.json (and an SVG) or let users add custom ones at runtime.
 
-import { getCustomExercises, isExerciseHidden, getSettings } from '../store.js';
+import { getCustomExercises, isExerciseHidden, getSettings, getExerciseMeta } from '../store.js';
 import { pick, t } from '../i18n.js';
 
 let builtin = [];
@@ -125,6 +125,22 @@ export function usesCount(exOrId) {
 export function countUnit(exOrId) {
   const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
   return t('units.' + ((ex && ex.countUnit) || 'count'));
+}
+
+// --- Machine level (cardio intensity) --------------------------------------
+// Cardio machines (elliptical/orbitrek, bike, rower, stepper…) are run at a
+// resistance/intensity level chosen on the machine. A non-reps exercise can
+// carry an extra per-set `level` field next to its time/distance/count value.
+// Custom exercises opt in at creation (`ex.level`); any non-reps exercise —
+// built-in too — can be switched on/off on its detail page
+// (`exerciseMeta[id].level`, which wins when set).
+
+/** True when sets of this exercise log a machine level. */
+export function usesLevel(exOrId) {
+  const ex = typeof exOrId === 'string' ? getExercise(exOrId) : exOrId;
+  if (!ex || ex.metric === 'reps') return false;
+  const meta = getExerciseMeta(ex.id);
+  return typeof meta.level === 'boolean' ? meta.level : !!ex.level;
 }
 
 export function groups() { return muscleMeta.groups; }

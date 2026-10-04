@@ -335,14 +335,14 @@ export default function renderProfile(root, params, ctx) {
   // Flat one-row-per-set CSV — what people actually want for spreadsheets.
   function doExportCSV() {
     const q = (v) => { v = v == null ? '' : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-    const rows = [['date', 'session', 'exercise', 'set', 'weightKg', 'barKg', 'reps', 'count', 'seconds', 'distanceKm', 'minutes', 'durationSec', 'effort', 'done']];
+    const rows = [['date', 'session', 'exercise', 'set', 'weightKg', 'barKg', 'reps', 'level', 'count', 'seconds', 'distanceKm', 'minutes', 'durationSec', 'effort', 'done']];
     completedSessions().slice().reverse().forEach((s) => {
       (s.entries || []).forEach((e) => {
         const ex = getExercise(e.exerciseId);
         (e.sets || []).forEach((set) => {
           rows.push([
             (s.startedAt || '').slice(0, 10), s.name || '', ex ? exName(ex) : e.exerciseId, set.n,
-            set.weightKg ?? '', set.barKg ?? '', set.reps ?? '', set.count ?? '', set.seconds ?? '', set.distanceKm ?? '', set.minutes ?? '',
+            set.weightKg ?? '', set.barKg ?? '', set.reps ?? '', set.level ?? '', set.count ?? '', set.seconds ?? '', set.distanceKm ?? '', set.minutes ?? '',
             set.durationMs > 0 ? Math.round(set.durationMs / 1000) : '', set.effort ?? '', set.done === false ? 0 : 1
           ]);
         });

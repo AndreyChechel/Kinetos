@@ -290,6 +290,8 @@ export function getExerciseMeta(id) { return state.exerciseMeta[id] || {}; }
 function ensureMeta(s, id) { return (s.exerciseMeta[id] = s.exerciseMeta[id] || {}); }
 export function isExerciseHidden(id) { return !!(state.exerciseMeta[id] && state.exerciseMeta[id].hidden); }
 export function setExerciseHidden(id, hidden) { update((s) => { ensureMeta(s, id).hidden = !!hidden; }); }
+/** Per-exercise machine-level switch (see db.usesLevel); null clears the override. */
+export function setExerciseLevel(id, on) { update((s) => { const m = ensureMeta(s, id); if (on == null) delete m.level; else m.level = !!on; }); }
 export function getExerciseNotes(id) { return (state.exerciseMeta[id] && state.exerciseMeta[id].notes) || []; }
 /** Per-exercise weight increment override (kg); null/0 clears it. */
 export function setExerciseWeightStep(id, step) {

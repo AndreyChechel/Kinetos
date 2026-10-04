@@ -23,7 +23,7 @@
 // English instructions/schemas most reliably, and the data in it (exercise ids)
 // must stay stable anyway.
 import { getProfile, getSettings, getPlans, getExerciseMeta, savePlan } from './store.js';
-import { browseExercises, getExercise, barbellAdded, barbellWeights, repPresets, effectiveWeight } from './data/db.js';
+import { browseExercises, getExercise, barbellAdded, barbellWeights, repPresets, effectiveWeight, usesLevel } from './data/db.js';
 import { completedSessions, performed, cloneTargetRow, syncTargetRow, MAX_SET_TARGETS } from './workout.js';
 import { weightStepFor } from './suggest.js';
 import { age, maxHR, bmi, bmr, tdee, oneRepMax } from './calc.js';
@@ -43,6 +43,7 @@ const MAX_DISTANCE_KM = 500;
 const MAX_MINUTES = 1440;
 const MAX_COUNT = 99999;
 const MAX_REST = 3600;
+const MAX_LEVEL = 100;
 const MAX_NOTE = 200;
 
 export const MODES = ['plan', 'describe'];
@@ -94,6 +95,10 @@ const enName = (ex) => (ex && ex.names && (ex.names.en || Object.values(ex.names
 const num = (n) => (Math.round(n * 100) / 100).toString();
 
 function metricNote(ex) {
+  const base = baseMetricNote(ex);
+  return usesLevel(ex) ? base + ' + machine level' : base;
+}
+function baseMetricNote(ex) {
   if (ex.metric === 'reps') {
     if (ex.equipment === 'bodyweight') return 'reps (bodyweight — omit weightKg unless extra load is added)';
     if (ex.equipment === 'band') return 'reps (band — omit weightKg)';
@@ -122,6 +127,7 @@ function setLine(set, ex) {
   } else {
     bits.push((set.count != null ? set.count : '?') + ' ' + (ex.countUnit || ''));
   }
+  if (ex.metric !== 'reps' && set.level != null && usesLevel(ex)) bits.push('@ level ' + num(set.level));
   if (set.effort) bits.push(EFFORT[set.effort] || '');
   if (set.durationMs > 0) bits.push('[' + Math.round(set.durationMs / 1000) + 's]');
   return bits.filter(Boolean).join(' ');
@@ -354,6 +360,9 @@ export function buildPrompt({ mode, userMessage, description, maxSessions } = {}
     '    metric time     -> "seconds" (integer)',
     '    metric distance -> "distanceKm" and optionally "minutes" (the intended pace/split)',
     '    metric count    -> "count" (integer tally)',
+    '- Exercises marked "+ machine level" in section 6 are cardio machines run at a resistance/intensity level:',
+    '  add "level" (number, as shown on the machine) to each "setTargets" object, or one "level" next to "sets" in',
+    '  form (a). Never send "level" for other exercises.',
     '- Any "setTargets" object may additionally carry:',
     '    "restSeconds" — rest AFTER that set, overriding the athlete\'s default rest. Omit to use the default.',
     '    "note" — one short cue shown on that set only, max ' + MAX_NOTE + ' chars (e.g. "drop set", "AMRAP", "3s eccentric").',
@@ -457,6 +466,13 @@ function setTargetFrom(rs, ex, at, warnings) {
     st.count = intIn(rs.count ?? rs.reps, 1, MAX_COUNT);
     if (st.count == null) warnings.push(at + ': no usable "count" — left blank.');
   }
+  if (ex.metric !== 'reps' && usesLevel(ex)) {
+    const raw = rs.level ?? rs.resistance ?? rs.intensity;
+    if (raw != null) {
+      const lv = floatIn(raw, 0, MAX_LEVEL);
+      if (lv) st.level = lv; else warnings.push(at + ': no usable "level" — left blank.');
+    }
+  }
   const rest = intIn(rs.restSeconds ?? rs.rest, 0, MAX_REST);
   if (rest) st.restSeconds = rest;
   // A cue must be text. Anything else would stringify into nonsense like
@@ -540,8 +556,15 @@ export function parseSessions(text) {
         row.targetWeightKg = floatIn(pe.weightKg ?? pe.targetWeightKg ?? pe.weight, 0, MAX_WEIGHT);
         if (row.targetReps == null) { row.targetReps = 12; warnings.push(where + ' (' + ex.id + '): no usable "reps" — using 12.'); }
         if (row.targetWeightKg === 0) row.targetWeightKg = null;
-      } else if (pe.reps != null || pe.weightKg != null) {
-        warnings.push(where + ' (' + ex.id + '): metric is ' + ex.metric + ' — reps/weight ignored.');
+      } else {
+        if (pe.reps != null || pe.weightKg != null) {
+          warnings.push(where + ' (' + ex.id + '): metric is ' + ex.metric + ' — reps/weight ignored.');
+        }
+        const rawLv = pe.level ?? pe.targetLevel;
+        if (rawLv != null && usesLevel(ex)) {
+          const lv = floatIn(rawLv, 0, MAX_LEVEL);
+          if (lv) row.targetLevel = lv; else warnings.push(where + ' (' + ex.id + '): no usable "level" — left blank.');
+        }
       }
       exercises.push(row);
     });

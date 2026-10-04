@@ -51,7 +51,8 @@
     "next": "Weiter",
     "open": "Öffnen",
     "undo": "Rückgängig",
-    "unsavedConfirm": "Ungespeicherte Änderungen verwerfen?"
+    "unsavedConfirm": "Ungespeicherte Änderungen verwerfen?",
+    "level": "Stufe"
   },
   "units": {
     "kg": "kg",
@@ -120,7 +121,14 @@
     "softDeleteConfirm": "Diese Übung wird in deinem Verlauf verwendet. Sie wird aus der Liste entfernt, bleibt aber für vergangene Trainings erhalten. Löschen?",
     "hardDeleteConfirm": "Diese eigene Übung löschen?",
     "weightStep": "Gewichtsschritt",
-    "weightStepHint": "Wird von Vorschlägen beim Steigern der Last verwendet. Leer lassen für den Gerätestandard."
+    "weightStepHint": "Wird von Vorschlägen beim Steigern der Last verwendet. Leer lassen für den Gerätestandard.",
+    "metric": "Erfasst als",
+    "metric_reps": "Wdh. & Gewicht",
+    "metric_time": "Zeit",
+    "metric_distance": "Strecke & Zeit",
+    "metric_count": "Anzahl",
+    "trackLevel": "Gerätestufe",
+    "trackLevelHint": "Die am Gerät eingestellte Widerstands-/Intensitätsstufe bei jedem Satz erfassen (z. B. Crosstrainer, Rad, Rudergerät)."
   },
   "groups": {
     "chest": "Brust",

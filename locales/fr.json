@@ -51,7 +51,8 @@
     "next": "Suivant",
     "open": "Ouvrir",
     "undo": "Annuler",
-    "unsavedConfirm": "Abandonner les modifications non enregistrées ?"
+    "unsavedConfirm": "Abandonner les modifications non enregistrées ?",
+    "level": "Niveau"
   },
   "units": {
     "kg": "kg",
@@ -120,7 +121,14 @@
     "softDeleteConfirm": "Cet exercice figure dans votre historique. Il sera retiré de la liste mais conservé pour les séances passées. Supprimer ?",
     "hardDeleteConfirm": "Supprimer cet exercice personnalisé ?",
     "weightStep": "Incrément de poids",
-    "weightStepHint": "Utilisé par les suggestions pour augmenter la charge. Laissez vide pour la valeur par défaut de l'équipement."
+    "weightStepHint": "Utilisé par les suggestions pour augmenter la charge. Laissez vide pour la valeur par défaut de l'équipement.",
+    "metric": "Mesuré en",
+    "metric_reps": "Rép. et poids",
+    "metric_time": "Durée",
+    "metric_distance": "Distance et durée",
+    "metric_count": "Comptage",
+    "trackLevel": "Niveau de la machine",
+    "trackLevelHint": "Enregistrer le niveau de résistance/intensité réglé sur la machine à chaque série (ex. elliptique, vélo, rameur)."
   },
   "groups": {
     "chest": "Pectoraux",

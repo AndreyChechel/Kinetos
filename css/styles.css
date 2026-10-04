@@ -498,6 +498,8 @@ canvas { max-width: 100%; }
 /* Set rows: allow vertical scroll but capture horizontal swipe-to-delete */
 .set { touch-action: pan-y; }
 .set__fields > .set__in { flex: 1; min-width: 0; }
+/* Machine level (cardio) sits before the main value, narrower. */
+.set__fields > .set__in--level { flex: 0 0 4.2em; }
 .set--ro { gap: 10px; }
 .set__ro-val { flex: 1; font-weight: 600; }
 .set__done-mark { color: var(--success); font-weight: 800; }

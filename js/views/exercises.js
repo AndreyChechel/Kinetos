@@ -2,7 +2,7 @@
 // notes, hide/unhide and (soft) deletion.
 import { h, uid, toast, fmtDate, todayISO } from '../ui.js';
 import { t, pick, getLang } from '../i18n.js';
-import { byGroup, groups, exName, getExercise, isCustom, countUnit } from '../data/db.js';
+import { byGroup, groups, exName, getExercise, isCustom, countUnit, usesLevel } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import { buildExerciseSVG, GROUP_VIEW, GROUP_MUSCLE } from '../exsvg.js';
 import { sheet, confirmDialog, promptDialog, popoverMenu, attachLongPress } from '../components.js';
@@ -10,7 +10,7 @@ import {
   addCustomExercise, updateCustomExercise, removeCustomExercise, softDeleteCustomExercise,
   getPlans, savePlan, saveSession, getSession,
   isExerciseHidden, setExerciseHidden, getExerciseNotes, addExerciseNote, updateExerciseNote, deleteExerciseNote,
-  getExerciseMeta, setExerciseWeightStep
+  getExerciseMeta, setExerciseWeightStep, setExerciseLevel
 } from '../store.js';
 import { activeSession, createEmptySession, recentExercises, lastPerformedMap, exerciseUsedInHistory } from '../workout.js';
 import { suggestNext, formatSuggestion, suggestionReason, weightStepFor } from '../suggest.js';
@@ -156,6 +156,7 @@ export function renderExerciseDetail(root, params, ctx) {
       ]) : null,
       notesHost,
       ex.metric === 'reps' && ex.equipment !== 'bodyweight' ? weightStepCard(ex) : null,
+      ex.metric !== 'reps' ? levelCard(ex) : null,
       suggestionCard(ex),
       h('div', { class: 'grid2' }, [
         h('button', { class: 'btn', onclick: () => addToPlan(ex, ctx) }, [t('exercises.addToPlan')]),
@@ -230,11 +231,13 @@ function logNow(ex, ctx) {
   s.entries = s.entries || [];
   if (!s.entries.some((e) => e.exerciseId === ex.id)) {
     // Same shape/defaults as every other set-creation path (12-rep prefill, no implicit target).
-    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, seconds: null, count: null, distanceKm: null, minutes: null, effort: null, targetReps: null, targetMinutes: null, barKg: null, done: false, restSeconds: null, note: '', timestamp: null, startedAt: null, durationMs: null }] });
+    s.entries.push({ id: uid('en'), exerciseId: ex.id, note: '', sets: [{ n: 1, reps: ex.metric === 'reps' ? 12 : null, weightKg: null, level: null, seconds: null, count: null, distanceKm: null, minutes: null, effort: null, targetReps: null, targetMinutes: null, barKg: null, done: false, restSeconds: null, note: '', timestamp: null, startedAt: null, durationMs: null }] });
   }
   saveSession(s);
   ctx.navigate('/session/' + s.id);
 }
+
+const METRICS = ['reps', 'time', 'distance', 'count'];
 
 function openCustomSheet(onDone) {
   const name = h('input', { class: 'input', placeholder: t('exercises.customName') });
@@ -242,14 +245,31 @@ function openCustomSheet(onDone) {
   const equipment = h('select', { class: 'select' },
     ['barbell', 'dumbbell', 'cable', 'machine', 'bodyweight', 'cardio', 'band'].map((eq) => h('option', { value: eq, text: t('equipment.' + eq) })));
   equipment.value = 'bodyweight';
+  // How sets are logged. Cardio defaults to time + machine level (e.g. an
+  // elliptical/orbitrek: "30 min at level 8"), everything else to reps.
+  const metric = h('select', { class: 'select' }, METRICS.map((m) => h('option', { value: m, text: t('exercises.metric_' + m) })));
+  metric.value = 'reps';
+  const level = h('select', { class: 'select' }, [
+    h('option', { value: '1', text: t('common.yes') }), h('option', { value: '0', text: t('common.no') })]);
+  level.value = '0';
+  const levelField = field(t('exercises.trackLevel'), level);
+  const levelHint = h('p', { class: 'small muted', style: 'margin:-6px 0 0', text: t('exercises.trackLevelHint') });
+  const syncLevel = () => { const on = metric.value !== 'reps'; levelField.hidden = !on; levelHint.hidden = !on; };
   const preview = h('div', { class: 'illus illus--sm' });
   const draw = () => { preview.innerHTML = buildExerciseSVG(buildEx()); };
   function buildEx() {
     const g = group.value;
-    return { id: 'preview', group: g, view: GROUP_VIEW[g] || 'front', equipment: equipment.value, metric: g === 'cardio' ? 'time' : 'reps',
+    return { id: 'preview', group: g, view: GROUP_VIEW[g] || 'front', equipment: equipment.value, metric: metric.value,
       primary: [GROUP_MUSCLE[g] || 'abs'], secondary: [], names: { en: name.value || t('exercises.customName') } };
   }
-  group.addEventListener('change', draw);
+  group.addEventListener('change', () => {
+    // Picking the cardio group presets the usual cardio-machine shape; the
+    // user can still change any of it before saving.
+    if (group.value === 'cardio') { metric.value = 'time'; equipment.value = 'cardio'; level.value = '1'; }
+    else if (metric.value !== 'reps' && equipment.value === 'cardio') { metric.value = 'reps'; equipment.value = 'bodyweight'; level.value = '0'; }
+    syncLevel(); draw();
+  });
+  metric.addEventListener('change', () => { syncLevel(); draw(); });
   equipment.addEventListener('change', draw);
   name.addEventListener('input', draw);
 
@@ -258,8 +278,12 @@ function openCustomSheet(onDone) {
     field(t('exercises.customName'), name),
     field(t('exercises.customGroup'), group),
     field(t('exercises.equipment'), equipment),
+    field(t('exercises.metric'), metric),
+    levelField,
+    levelHint,
     h('button', { class: 'btn btn--primary btn--block', onclick: save }, [t('common.save')])
   ]);
+  syncLevel();
   const { close } = sheet(t('exercises.addCustom'), content);
   draw();
   setTimeout(() => name.focus(), 250);
@@ -267,16 +291,30 @@ function openCustomSheet(onDone) {
   function save() {
     if (!name.value.trim()) { name.focus(); return; }
     const built = buildEx();
-    addCustomExercise({
+    const ex = {
       id: uid('ex'), group: built.group, view: built.view, category: 'isolation',
       equipment: built.equipment, metric: built.metric, custom: true,
       primary: built.primary, secondary: [],
       names: { en: name.value.trim() }, cues: { en: [] }
-    });
+    };
+    if (built.metric !== 'reps' && level.value === '1') ex.level = true;
+    addCustomExercise(ex);
     toast(t('exercises.customSaved'));
     close();
     onDone && onDone();
   }
+}
+
+/** On/off switch for logging a machine level with each set (non-reps only). */
+function levelCard(ex) {
+  const sel = h('select', { class: 'select' }, [
+    h('option', { value: '1', text: t('common.yes') }), h('option', { value: '0', text: t('common.no') })]);
+  sel.value = usesLevel(ex) ? '1' : '0';
+  sel.addEventListener('change', () => { setExerciseLevel(ex.id, sel.value === '1'); toast(t('toast.saved')); });
+  return h('div', { class: 'card' }, [
+    field(t('exercises.trackLevel'), sel),
+    h('p', { class: 'small muted', style: 'margin:6px 0 0', text: t('exercises.trackLevelHint') })
+  ]);
 }
 
 /** Per-exercise weight increment used by the suggestion engine. */
