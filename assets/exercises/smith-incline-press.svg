@@ -1,41 +1,64 @@
-<svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Smith Machine Incline Chest Press">
-  <title>Smith Machine Incline Chest Press</title>
-
-  <g fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-opacity="0.16">
-    <circle cx="100" cy="42" r="20"/>
-    <rect x="92" y="60" width="16" height="12" rx="4"/>
-    <path d="M66,76 Q64,72 74,72 L126,72 Q136,72 134,76 L128,120 Q124,150 120,152 L122,172 L78,172 L80,152 Q76,150 72,120 Z"/>
-  </g>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M72,80 L54,120 L48,162"/>
-    <path d="M128,80 L146,120 L152,162"/>
-  </g>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="21" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M90,168 L88,228 L90,286"/>
-    <path d="M110,168 L112,228 L110,286"/>
-  </g>
-
-  <g>
-    <ellipse cx="72" cy="80" rx="12" ry="10" class="muscle-fill"/>
-    <ellipse cx="128" cy="80" rx="12" ry="10" class="muscle-fill"/>
-    <path d="M86,86 Q100,82 100,86 L100,104 Q90,108 82,102 Q80,90 86,86 Z" class="muscle-fill"/>
-    <path d="M114,86 Q100,82 100,86 L100,104 Q110,108 118,102 Q120,90 114,86 Z" class="muscle-fill"/>
-    <ellipse cx="61" cy="99" rx="8" ry="15" transform="rotate(20 61 99)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="139" cy="99" rx="8" ry="15" transform="rotate(-20 139 99)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="51" cy="143" rx="7" ry="15" transform="rotate(12 51 143)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="149" cy="143" rx="7" ry="15" transform="rotate(-12 149 143)" fill="currentColor" fill-opacity="0.30"/>
-    <rect x="90" y="108" width="20" height="40" rx="6" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="82" cy="126" rx="6" ry="16" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="118" cy="126" rx="6" ry="16" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="89" cy="206" rx="11" ry="30" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="111" cy="206" rx="11" ry="30" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="89" cy="262" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="111" cy="262" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
-  </g>
-  <g transform="translate(150,8)">
-    <rect x="0" y="0" width="40" height="40" rx="11" fill="currentColor" fill-opacity="0.10"/>
-    <g transform="translate(0,0)" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="6" y1="20" x2="34" y2="20"/><rect x="4" y="13" width="6" height="14" rx="2"/><rect x="30" y="13" width="6" height="14" rx="2"/><rect x="10" y="16" width="4" height="8" rx="1"/><rect x="26" y="16" width="4" height="8" rx="1"/>
-    </g>
-  </g>
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Smith Machine Incline Chest Press"><title>Smith Machine Incline Chest Press</title>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+<path stroke-width="4" d="M104,14 L104,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M147,177.6 L178,177.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M170,181.6 L170,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M142.5,179.6 L68,136.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M104.4,157.6 L104.4,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M148,162 L195.7,173.1"/>
+<path stroke-width="14" d="M195.7,173.1 L192,220"/>
+<path stroke-width="7.5" d="M192,220 L208,220"/>
+<path stroke-width="13" d="M96,132 L107.2,98.8"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M96,132 L107.2,98.8;M96,132 L107.6,99;M96,132 L112.9,101.3;M96,132 L119.3,105.8;M96,132 L124.6,111.8;M96,132 L128.4,118.5;M96,132 L130.4,125.4;M96,132 L131,131.6;M96,132 L130.9,135.3;M96,132 L130.9,135.5;M96,132 L130.9,135.3;M96,132 L131,131.6;M96,132 L130.4,125.4;M96,132 L128.4,118.5;M96,132 L124.6,111.8;M96,132 L119.3,105.8;M96,132 L112.9,101.3;M96,132 L107.6,99;M96,132 L107.2,98.8"/></path>
+<path stroke-width="10" d="M107.2,98.8 L104,68"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M107.2,98.8 L104,68;M107.6,99 L104,68.2;M112.9,101.3 L104,71.6;M119.3,105.8 L104,78.8;M124.6,111.8 L104,88.6;M128.4,118.5 L104,99.4;M130.4,125.4 L104,109.2;M131,131.6 L104,116.4;M130.9,135.3 L104,119.8;M130.9,135.5 L104,120;M130.9,135.3 L104,119.8;M131,131.6 L104,116.4;M130.4,125.4 L104,109.2;M128.4,118.5 L104,99.4;M124.6,111.8 L104,88.6;M119.3,105.8 L104,78.8;M112.9,101.3 L104,71.6;M107.6,99 L104,68.2;M107.2,98.8 L104,68"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c" opacity="0.45">
+<path stroke-width="14" d="M96.3,131.3 L98.3,125.4"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M96.3,131.3 L98.3,125.4;M96.3,131.3 L98.4,125.4;M96.4,131.4 L99.4,125.9;M96.5,131.5 L100.7,126.8;M96.6,131.6 L101.8,128;M96.7,131.7 L102.5,129.3;M96.7,131.9 L102.9,130.7;M96.7,132 L103,131.9;M96.7,132.1 L103,132.7;M96.7,132.1 L103,132.7;M96.7,132.1 L103,132.7;M96.7,132 L103,131.9;M96.7,131.9 L102.9,130.7;M96.7,131.7 L102.5,129.3;M96.6,131.6 L101.8,128;M96.5,131.5 L100.7,126.8;M96.4,131.4 L99.4,125.9;M96.3,131.3 L98.4,125.4;M96.3,131.3 L98.3,125.4"/></path>
+<path stroke-width="7" d="M100.8,125.5 L107,106.9"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M100.8,125.5 L107,106.9;M100.8,125.5 L107.3,107;M101.8,126.4 L111.3,109.2;M102.9,127.8 L115.9,113.2;M103.7,129.5 L119.7,118.2;M104.1,131.3 L122.2,123.7;M104.1,132.9 L123.3,129.2;M103.8,134.3 L123.4,134.1;M103.5,135.1 L123,136.9;M103.5,135.2 L123,137.1;M103.5,135.1 L123,136.9;M103.8,134.3 L123.4,134.1;M104.1,132.9 L123.3,129.2;M104.1,131.3 L122.2,123.7;M103.7,129.5 L119.7,118.2;M102.9,127.8 L115.9,113.2;M101.8,126.4 L111.3,109.2;M100.8,125.5 L107.3,107;M100.8,125.5 L107,106.9"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M148,162 L195.7,173.1"/>
+<path stroke-width="14" d="M195.7,173.1 L192,220"/>
+<path stroke-width="7.5" d="M192,220 L208,220"/>
+<path stroke-width="9" d="M96,132 L90,128.5"/>
+</g>
+<g fill="currentColor">
+<path d="M136.4,174.9 C130.5,175.7 126,164.5 119.7,160.7 C113.4,156.8 103.4,156.3 98.4,151.9 C93.5,147.5 89.2,139 89.9,134.2 C90.6,129.4 97.8,124.4 102.6,123.1 C107.4,121.8 113.4,123.9 118.6,126.5 C123.8,129.2 127.6,133.9 133.7,138.7 C139.8,143.6 154.7,149.7 155.1,155.7 C155.5,161.7 142.3,174.1 136.4,174.9Z"/>
+<circle r="12" cx="78.3" cy="122.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c">
+<path stroke-width="9" d="M121.8,135.3 L108.3,127.5"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="16" cx="104" cy="68"><animate attributeName="cy" dur="2.6s" repeatCount="indefinite" values="68;68.2;71.6;78.8;88.6;99.4;109.2;116.4;119.8;120;119.8;116.4;109.2;99.4;88.6;78.8;71.6;68.2;68"/></circle>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<circle r="2.5" stroke-width="3" cx="104" cy="68"><animate attributeName="cy" dur="2.6s" repeatCount="indefinite" values="68;68.2;71.6;78.8;88.6;99.4;109.2;116.4;119.8;120;119.8;116.4;109.2;99.4;88.6;78.8;71.6;68.2;68"/></circle>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M96,132 L107.2,98.8"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M96,132 L107.2,98.8;M96,132 L107.6,99;M96,132 L112.9,101.3;M96,132 L119.3,105.8;M96,132 L124.6,111.8;M96,132 L128.4,118.5;M96,132 L130.4,125.4;M96,132 L131,131.6;M96,132 L130.9,135.3;M96,132 L130.9,135.5;M96,132 L130.9,135.3;M96,132 L131,131.6;M96,132 L130.4,125.4;M96,132 L128.4,118.5;M96,132 L124.6,111.8;M96,132 L119.3,105.8;M96,132 L112.9,101.3;M96,132 L107.6,99;M96,132 L107.2,98.8"/></path>
+<path stroke-width="13.5" d="M107.2,98.8 L104,68"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M107.2,98.8 L104,68;M107.6,99 L104,68.2;M112.9,101.3 L104,71.6;M119.3,105.8 L104,78.8;M124.6,111.8 L104,88.6;M128.4,118.5 L104,99.4;M130.4,125.4 L104,109.2;M131,131.6 L104,116.4;M130.9,135.3 L104,119.8;M130.9,135.5 L104,120;M130.9,135.3 L104,119.8;M131,131.6 L104,116.4;M130.4,125.4 L104,109.2;M128.4,118.5 L104,99.4;M124.6,111.8 L104,88.6;M119.3,105.8 L104,78.8;M112.9,101.3 L104,71.6;M107.6,99 L104,68.2;M107.2,98.8 L104,68"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M96,132 L107.2,98.8"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M96,132 L107.2,98.8;M96,132 L107.6,99;M96,132 L112.9,101.3;M96,132 L119.3,105.8;M96,132 L124.6,111.8;M96,132 L128.4,118.5;M96,132 L130.4,125.4;M96,132 L131,131.6;M96,132 L130.9,135.3;M96,132 L130.9,135.5;M96,132 L130.9,135.3;M96,132 L131,131.6;M96,132 L130.4,125.4;M96,132 L128.4,118.5;M96,132 L124.6,111.8;M96,132 L119.3,105.8;M96,132 L112.9,101.3;M96,132 L107.6,99;M96,132 L107.2,98.8"/></path>
+<path stroke-width="10" d="M107.2,98.8 L104,68"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M107.2,98.8 L104,68;M107.6,99 L104,68.2;M112.9,101.3 L104,71.6;M119.3,105.8 L104,78.8;M124.6,111.8 L104,88.6;M128.4,118.5 L104,99.4;M130.4,125.4 L104,109.2;M131,131.6 L104,116.4;M130.9,135.3 L104,119.8;M130.9,135.5 L104,120;M130.9,135.3 L104,119.8;M131,131.6 L104,116.4;M130.4,125.4 L104,109.2;M128.4,118.5 L104,99.4;M124.6,111.8 L104,88.6;M119.3,105.8 L104,78.8;M112.9,101.3 L104,71.6;M107.6,99 L104,68.2;M107.2,98.8 L104,68"/></path>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="104" cy="68"><animate attributeName="cy" dur="2.6s" repeatCount="indefinite" values="68;68.2;71.6;78.8;88.6;99.4;109.2;116.4;119.8;120;119.8;116.4;109.2;99.4;88.6;78.8;71.6;68.2;68"/></circle>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c" opacity="0.55">
+<path stroke-width="14" d="M96.3,131.3 L98.3,125.4"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M96.3,131.3 L98.3,125.4;M96.3,131.3 L98.4,125.4;M96.4,131.4 L99.4,125.9;M96.5,131.5 L100.7,126.8;M96.6,131.6 L101.8,128;M96.7,131.7 L102.5,129.3;M96.7,131.9 L102.9,130.7;M96.7,132 L103,131.9;M96.7,132.1 L103,132.7;M96.7,132.1 L103,132.7;M96.7,132.1 L103,132.7;M96.7,132 L103,131.9;M96.7,131.9 L102.9,130.7;M96.7,131.7 L102.5,129.3;M96.6,131.6 L101.8,128;M96.5,131.5 L100.7,126.8;M96.4,131.4 L99.4,125.9;M96.3,131.3 L98.4,125.4;M96.3,131.3 L98.3,125.4"/></path>
+<path stroke-width="7" d="M100.8,125.5 L107,106.9"><animate attributeName="d" dur="2.6s" repeatCount="indefinite" values="M100.8,125.5 L107,106.9;M100.8,125.5 L107.3,107;M101.8,126.4 L111.3,109.2;M102.9,127.8 L115.9,113.2;M103.7,129.5 L119.7,118.2;M104.1,131.3 L122.2,123.7;M104.1,132.9 L123.3,129.2;M103.8,134.3 L123.4,134.1;M103.5,135.1 L123,136.9;M103.5,135.2 L123,137.1;M103.5,135.1 L123,136.9;M103.8,134.3 L123.4,134.1;M104.1,132.9 L123.3,129.2;M104.1,131.3 L122.2,123.7;M103.7,129.5 L119.7,118.2;M102.9,127.8 L115.9,113.2;M101.8,126.4 L111.3,109.2;M100.8,125.5 L107.3,107;M100.8,125.5 L107,106.9"/></path>
+</g>
+<g class="ex-map" transform="translate(6,6) scale(0.2)"><g fill="currentColor" opacity="0.22"><circle cx="100" cy="42" r="20"/><rect x="92" y="60" width="16" height="12" rx="4"/><path d="M66,76 Q64,72 74,72 L126,72 Q136,72 134,76 L128,120 Q124,150 120,152 L122,172 L78,172 L80,152 Q76,150 72,120 Z"/></g><g fill="none" stroke="currentColor" opacity="0.22" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="17" d="M72,80 L54,120 L48,162 M128,80 L146,120 L152,162"/><path stroke-width="21" d="M90,168 L88,228 L90,286 M110,168 L112,228 L110,286"/></g><g class="muscle-fill" fill="#ff7a3c" opacity="0.5"><ellipse cx="72" cy="80" rx="12" ry="10"/><ellipse cx="128" cy="80" rx="12" ry="10"/></g><g class="muscle-fill" fill="#ff7a3c"><path d="M86,86 Q100,82 100,86 L100,104 Q90,108 82,102 Q80,90 86,86 Z"/><path d="M114,86 Q100,82 100,86 L100,104 Q110,108 118,102 Q120,90 114,86 Z"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="61" cy="99" rx="8" ry="15" transform="rotate(20 61 99)"/><ellipse cx="139" cy="99" rx="8" ry="15" transform="rotate(-20 139 99)"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="51" cy="143" rx="7" ry="15" transform="rotate(12 51 143)"/><ellipse cx="149" cy="143" rx="7" ry="15" transform="rotate(-12 149 143)"/></g><g fill="currentColor" opacity="0.3"><rect x="90" y="108" width="20" height="40" rx="6"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="82" cy="126" rx="6" ry="16"/><ellipse cx="118" cy="126" rx="6" ry="16"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="89" cy="206" rx="11" ry="30"/><ellipse cx="111" cy="206" rx="11" ry="30"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="89" cy="262" rx="8" ry="20"/><ellipse cx="111" cy="262" rx="8" ry="20"/></g></g>
 </svg>

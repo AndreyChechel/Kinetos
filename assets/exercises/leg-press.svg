@@ -1,41 +1,53 @@
-<svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leg Press">
-  <title>Leg Press</title>
-
-  <g fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-opacity="0.16">
-    <circle cx="100" cy="42" r="20"/>
-    <rect x="92" y="60" width="16" height="12" rx="4"/>
-    <path d="M66,76 Q64,72 74,72 L126,72 Q136,72 134,76 L128,120 Q124,150 120,152 L122,172 L78,172 L80,152 Q76,150 72,120 Z"/>
-  </g>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M72,80 L54,120 L48,162"/>
-    <path d="M128,80 L146,120 L152,162"/>
-  </g>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.16" stroke-width="21" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M90,168 L88,228 L90,286"/>
-    <path d="M110,168 L112,228 L110,286"/>
-  </g>
-
-  <g>
-    <ellipse cx="72" cy="80" rx="12" ry="10" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="128" cy="80" rx="12" ry="10" fill="currentColor" fill-opacity="0.30"/>
-    <path d="M86,86 Q100,82 100,86 L100,104 Q90,108 82,102 Q80,90 86,86 Z" fill="currentColor" fill-opacity="0.30"/>
-    <path d="M114,86 Q100,82 100,86 L100,104 Q110,108 118,102 Q120,90 114,86 Z" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="61" cy="99" rx="8" ry="15" transform="rotate(20 61 99)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="139" cy="99" rx="8" ry="15" transform="rotate(-20 139 99)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="51" cy="143" rx="7" ry="15" transform="rotate(12 51 143)" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="149" cy="143" rx="7" ry="15" transform="rotate(-12 149 143)" fill="currentColor" fill-opacity="0.30"/>
-    <rect x="90" y="108" width="20" height="40" rx="6" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="82" cy="126" rx="6" ry="16" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="118" cy="126" rx="6" ry="16" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="89" cy="206" rx="11" ry="30" class="muscle-fill"/>
-    <ellipse cx="111" cy="206" rx="11" ry="30" class="muscle-fill"/>
-    <ellipse cx="89" cy="262" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
-    <ellipse cx="111" cy="262" rx="8" ry="20" fill="currentColor" fill-opacity="0.30"/>
-  </g>
-  <g transform="translate(150,8)">
-    <rect x="0" y="0" width="40" height="40" rx="11" fill="currentColor" fill-opacity="0.10"/>
-    <g transform="translate(0,0)" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="7" y="7" width="26" height="26" rx="3"/><line x1="14" y1="7" x2="14" y2="33"/><circle cx="24" cy="16" r="3"/>
-    </g>
-  </g>
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leg Press"><title>Leg Press</title>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M86.3,191.8 L29.8,135.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="6" d="M58,196 L130,196"/>
+<path stroke-width="4" d="M112,196 L226,82"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M92,172 L79.6,124.6"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M92,172 L79.6,124.6;M92,172 L79.7,124.6;M92,172 L81.2,124.2;M92,172 L84.7,123.5;M92,172 L89.9,123;M92,172 L96.4,123.2;M92,172 L103.3,124.3;M92,172 L109.6,126.3;M92,172 L113.2,127.8;M92,172 L113.4,127.9;M92,172 L113.2,127.8;M92,172 L109.6,126.3;M92,172 L103.3,124.3;M92,172 L96.4,123.2;M92,172 L89.9,123;M92,172 L84.7,123.5;M92,172 L81.2,124.2;M92,172 L79.7,124.6;M92,172 L79.6,124.6"/></path>
+<path stroke-width="14" d="M79.6,124.6 L124,140"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M79.6,124.6 L124,140;M79.7,124.6 L124.1,139.9;M81.2,124.2 L126.2,137.8;M84.7,123.5 L130.7,133.3;M89.9,123 L136.7,127.3;M96.4,123.2 L143.3,120.7;M103.3,124.3 L149.3,114.7;M109.6,126.3 L153.8,110.2;M113.2,127.8 L155.9,108.1;M113.4,127.9 L156,108;M113.2,127.8 L155.9,108.1;M109.6,126.3 L153.8,110.2;M103.3,124.3 L149.3,114.7;M96.4,123.2 L143.3,120.7;M89.9,123 L136.7,127.3;M84.7,123.5 L130.7,133.3;M81.2,124.2 L126.2,137.8;M79.7,124.6 L124.1,139.9;M79.6,124.6 L124,140"/></path>
+<path stroke-width="7.5" d="M124,140 L112.7,128.7"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M124,140 L112.7,128.7;M124.1,139.9 L112.8,128.6;M126.2,137.8 L114.9,126.5;M130.7,133.3 L119.3,122;M136.7,127.3 L125.4,116;M143.3,120.7 L132,109.4;M149.3,114.7 L138,103.3;M153.8,110.2 L142.5,98.9;M155.9,108.1 L144.6,96.8;M156,108 L144.7,96.7;M155.9,108.1 L144.6,96.8;M153.8,110.2 L142.5,98.9;M149.3,114.7 L138,103.3;M143.3,120.7 L132,109.4;M136.7,127.3 L125.4,116;M130.7,133.3 L119.3,122;M126.2,137.8 L114.9,126.5;M124.1,139.9 L112.8,128.6;M124,140 L112.7,128.7"/></path>
+<path stroke-width="13" d="M49.6,129.6 L61.5,162.5"/>
+<path stroke-width="10" d="M61.5,162.5 L92.1,167.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c" opacity="0.45">
+<path stroke-width="11" d="M87,165.7 L78.7,133.9"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M87,165.7 L78.7,133.9;M87.1,165.7 L78.8,133.9;M87.3,165.5 L80,133.5;M87.7,165.2 L82.8,132.7;M88.5,164.8 L87.1,132;M89.5,164.4 L92.4,131.7;M90.6,164.1 L98.2,132.2;M91.7,164 L103.5,133.4;M92.3,164 L106.5,134.4;M92.3,164 L106.7,134.5;M92.3,164 L106.5,134.4;M91.7,164 L103.5,133.4;M90.6,164.1 L98.2,132.2;M89.5,164.4 L92.4,131.7;M88.5,164.8 L87.1,132;M87.7,165.2 L82.8,132.7;M87.3,165.5 L80,133.5;M87.1,165.7 L78.8,133.9;M87,165.7 L78.7,133.9"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M92,172 L79.6,124.6"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M92,172 L79.6,124.6;M92,172 L79.7,124.6;M92,172 L81.2,124.2;M92,172 L84.7,123.5;M92,172 L89.9,123;M92,172 L96.4,123.2;M92,172 L103.3,124.3;M92,172 L109.6,126.3;M92,172 L113.2,127.8;M92,172 L113.4,127.9;M92,172 L113.2,127.8;M92,172 L109.6,126.3;M92,172 L103.3,124.3;M92,172 L96.4,123.2;M92,172 L89.9,123;M92,172 L84.7,123.5;M92,172 L81.2,124.2;M92,172 L79.7,124.6;M92,172 L79.6,124.6"/></path>
+<path stroke-width="14" d="M79.6,124.6 L124,140"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M79.6,124.6 L124,140;M79.7,124.6 L124.1,139.9;M81.2,124.2 L126.2,137.8;M84.7,123.5 L130.7,133.3;M89.9,123 L136.7,127.3;M96.4,123.2 L143.3,120.7;M103.3,124.3 L149.3,114.7;M109.6,126.3 L153.8,110.2;M113.2,127.8 L155.9,108.1;M113.4,127.9 L156,108;M113.2,127.8 L155.9,108.1;M109.6,126.3 L153.8,110.2;M103.3,124.3 L149.3,114.7;M96.4,123.2 L143.3,120.7;M89.9,123 L136.7,127.3;M84.7,123.5 L130.7,133.3;M81.2,124.2 L126.2,137.8;M79.7,124.6 L124.1,139.9;M79.6,124.6 L124,140"/></path>
+<path stroke-width="7.5" d="M124,140 L112.7,128.7"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M124,140 L112.7,128.7;M124.1,139.9 L112.8,128.6;M126.2,137.8 L114.9,126.5;M130.7,133.3 L119.3,122;M136.7,127.3 L125.4,116;M143.3,120.7 L132,109.4;M149.3,114.7 L138,103.3;M153.8,110.2 L142.5,98.9;M155.9,108.1 L144.6,96.8;M156,108 L144.7,96.7;M155.9,108.1 L144.6,96.8;M153.8,110.2 L142.5,98.9;M149.3,114.7 L138,103.3;M143.3,120.7 L132,109.4;M136.7,127.3 L125.4,116;M130.7,133.3 L119.3,122;M126.2,137.8 L114.9,126.5;M124.1,139.9 L112.8,128.6;M124,140 L112.7,128.7"/></path>
+<path stroke-width="9" d="M49.6,129.6 L44.6,124.6"/>
+</g>
+<g fill="currentColor">
+<path d="M77.4,181.5 C71.5,180.7 70.1,168.7 65,163.4 C59.9,158 50.4,154.9 46.7,149.4 C43.1,143.8 41.2,134.6 43.1,130.1 C45,125.7 53.3,122.6 58.2,122.6 C63.2,122.6 68.4,126.3 72.8,130.1 C77.1,134 79.6,139.6 84.2,145.8 C88.8,152.1 101.6,161.8 100.5,167.8 C99.4,173.7 83.3,182.2 77.4,181.5Z"/>
+<circle r="12" cx="36.8" cy="114.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c" opacity="0.55">
+<path stroke-width="13" d="M85.9,181.5 L79.1,174.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" class="muscle-stroke" stroke="#ff7a3c">
+<path stroke-width="11" d="M87,165.7 L78.7,133.9"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M87,165.7 L78.7,133.9;M87.1,165.7 L78.8,133.9;M87.3,165.5 L80,133.5;M87.7,165.2 L82.8,132.7;M88.5,164.8 L87.1,132;M89.5,164.4 L92.4,131.7;M90.6,164.1 L98.2,132.2;M91.7,164 L103.5,133.4;M92.3,164 L106.5,134.4;M92.3,164 L106.7,134.5;M92.3,164 L106.5,134.4;M91.7,164 L103.5,133.4;M90.6,164.1 L98.2,132.2;M89.5,164.4 L92.4,131.7;M88.5,164.8 L87.1,132;M87.7,165.2 L82.8,132.7;M87.3,165.5 L80,133.5;M87.1,165.7 L78.8,133.9;M87,165.7 L78.7,133.9"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M112.7,120.2 L138.1,145.7"><animate attributeName="d" dur="2.8s" repeatCount="indefinite" values="M112.7,120.2 L138.1,145.7;M112.8,120.1 L138.2,145.5;M114.9,118 L140.4,143.4;M119.3,113.5 L144.8,139;M125.4,107.5 L150.8,133;M132,100.9 L157.4,126.4;M138,94.9 L163.5,120.3;M142.5,90.4 L167.9,115.9;M144.6,88.3 L170,113.8;M144.7,88.2 L170.1,113.7;M144.6,88.3 L170,113.8;M142.5,90.4 L167.9,115.9;M138,94.9 L163.5,120.3;M132,100.9 L157.4,126.4;M125.4,107.5 L150.8,133;M119.3,113.5 L144.8,139;M114.9,118 L140.4,143.4;M112.8,120.1 L138.2,145.5;M112.7,120.2 L138.1,145.7"/></path>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M49.6,129.6 L61.5,162.5"/>
+<path stroke-width="13.5" d="M61.5,162.5 L92.1,167.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M49.6,129.6 L61.5,162.5"/>
+<path stroke-width="10" d="M61.5,162.5 L92.1,167.8"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="92.1" cy="167.8"/>
+</g>
+<g class="ex-map" transform="translate(6,6) scale(0.2)"><g fill="currentColor" opacity="0.22"><circle cx="100" cy="42" r="20"/><rect x="92" y="60" width="16" height="12" rx="4"/><path d="M66,76 Q64,72 74,72 L126,72 Q136,72 134,76 L128,120 Q124,150 120,152 L122,172 L78,172 L80,152 Q76,150 72,120 Z"/></g><g fill="none" stroke="currentColor" opacity="0.22" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="17" d="M72,80 L54,120 L48,162 M128,80 L146,120 L152,162"/><path stroke-width="21" d="M90,168 L88,228 L90,286 M110,168 L112,228 L110,286"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="72" cy="80" rx="12" ry="10"/><ellipse cx="128" cy="80" rx="12" ry="10"/></g><g fill="currentColor" opacity="0.3"><path d="M86,86 Q100,82 100,86 L100,104 Q90,108 82,102 Q80,90 86,86 Z"/><path d="M114,86 Q100,82 100,86 L100,104 Q110,108 118,102 Q120,90 114,86 Z"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="61" cy="99" rx="8" ry="15" transform="rotate(20 61 99)"/><ellipse cx="139" cy="99" rx="8" ry="15" transform="rotate(-20 139 99)"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="51" cy="143" rx="7" ry="15" transform="rotate(12 51 143)"/><ellipse cx="149" cy="143" rx="7" ry="15" transform="rotate(-12 149 143)"/></g><g fill="currentColor" opacity="0.3"><rect x="90" y="108" width="20" height="40" rx="6"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="82" cy="126" rx="6" ry="16"/><ellipse cx="118" cy="126" rx="6" ry="16"/></g><g class="muscle-fill" fill="#ff7a3c"><ellipse cx="89" cy="206" rx="11" ry="30"/><ellipse cx="111" cy="206" rx="11" ry="30"/></g><g fill="currentColor" opacity="0.3"><ellipse cx="89" cy="262" rx="8" ry="20"/><ellipse cx="111" cy="262" rx="8" ry="20"/></g></g>
 </svg>

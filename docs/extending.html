@@ -30,7 +30,14 @@
 </ol>
 
 <h2>The SVG generator</h2>
-<p><code>tools/generate_svgs.py</code> (stdlib only) draws a solid body silhouette (front or back per the exercise's <code>view</code>) and overlays the targeted muscles. Body uses <code>currentColor</code>; targeted muscles get <code>class="muscle-fill"</code>. To change the art style, edit <code>front_overlays()</code>/<code>back_overlays()</code>, the <code>BODY</code> markup, or <code>equipment_badge()</code>, then re-run it.</p>
+<p><code>tools/generate_svgs.py</code> (stdlib only) writes an <b>animated</b> SVG per exercise: a side-view (or front/back-view) figure performing the movement in a loop, with the equipment drawn in and the worked muscles highlighted on the body (<code>class="muscle-stroke"</code>, secondary muscles at half strength), plus a small front/back muscle-map inset (<code>class="ex-map"</code>, hidden in thumbnails). Animation is plain SMIL <code>&lt;animate&gt;</code> on path/circle attributes (one value per sampled frame), so it needs no JS or CSS; frame&nbsp;0 is also the static state. Body and props use <code>currentColor</code>, so the art follows the theme.</p>
+<ul>
+  <li><code>tools/poses.py</code> — one entry per exercise: start pose <code>a</code> and end pose <code>b</code> (played a→b→a), or <code>cycle(t)</code> for running/cycling/rowing, or only <code>a</code> for a still hold; plus <code>props</code>, <code>dur</code>, optional <code>zoom</code>. A pose is segment angles in degrees (0&nbsp;=&nbsp;right, 90&nbsp;=&nbsp;down; the figure faces right) or IK targets for hands/feet, pinned by <code>at=(joint, (x,y))</code>. An exercise with no entry falls back to a standing figure.</li>
+  <li><code>tools/figure.py</code> — the rig (FK/IK, foreshortening, views), muscle placement tables and SVG assembly.</li>
+  <li><code>tools/props.py</code> — equipment primitives (bench, plate, dumbbell, cable, stack, pads…).</li>
+  <li>Preview: <code>python tools/generate_svgs.py --only bench-press --frames /tmp/fr</code> dumps still frames to inspect.</li>
+</ul>
+<p>In the app (<code>js/svg.js</code>) only the full-size detail illustration plays; thumbnails and users with <code>prefers-reduced-motion</code> get frame&nbsp;0 via <code>pauseAnimations()</code>. Custom exercises still use the runtime muscle map from <code>js/exsvg.js</code>.</p>
 
 <h2>Calculations (<code>js/calc.js</code>)</h2>
 <table>
