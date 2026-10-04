@@ -322,6 +322,10 @@ p { line-height: 1.5; }
 .timer { font-variant-numeric: tabular-nums; font-weight: 800; }
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); font-size: .78rem; font-weight: 700; }
 .badge--live { background: color-mix(in srgb, var(--success) 20%, transparent); color: var(--success); }
+/* Tappable badge (session date/time editor) */
+.badge--btn { border: 1px dashed var(--border); color: inherit; font-family: inherit; cursor: pointer; min-height: 32px; }
+.badge--btn:hover, .badge--btn:focus-visible { border-color: var(--primary, currentColor); }
+.badge--btn .badge__edit { opacity: .7; }
 
 /* Divider */
 .divider { height: 1px; background: var(--border); margin: 12px 0; border: 0; }

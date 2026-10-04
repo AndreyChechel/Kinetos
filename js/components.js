@@ -114,6 +114,65 @@ export function promptDialog(message, { password = false, placeholder = '', valu
   });
 }
 
+/** Start/end editor for a session (back-dating a forgotten workout, fixing a
+ *  finished one). Values are `datetime-local` strings (local time). Resolves to
+ *  `{ start, end }` (end is '' when `showEnd` is false) or null on cancel.
+ *  Changing the start drags the end along by the same amount (keeps the
+ *  duration) until the user edits the end themselves. */
+export function sessionTimeDialog(title, { start = '', end = '', showEnd = true, labels = {} } = {}) {
+  return new Promise((resolve) => {
+    const lbl = (text, node) => h('label', { class: 'field', style: 'display:block;margin-bottom:12px' }, [
+      h('span', { text, style: 'display:block;font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:5px' }), node
+    ]);
+    const startIn = h('input', { class: 'input', type: 'datetime-local', value: start });
+    const endIn = h('input', { class: 'input', type: 'datetime-local', value: end });
+    const err = h('p', { class: 'small', hidden: true, style: 'color:var(--danger);margin:0 0 12px', text: labels.endBeforeStart || '' });
+    let endTouched = false;
+    let prevStart = startIn.value;
+    endIn.addEventListener('input', () => { endTouched = true; err.hidden = true; });
+    startIn.addEventListener('change', () => {
+      const a = new Date(prevStart), b = new Date(startIn.value), e = new Date(endIn.value);
+      if (showEnd && !endTouched && !isNaN(a) && !isNaN(b) && !isNaN(e)) endIn.value = toLocalInput(new Date(e.getTime() + (b - a)));
+      prevStart = startIn.value; err.hidden = true;
+    });
+    const okBtn = h('button', { class: 'btn btn--primary', onclick: submit }, [t('common.ok')]);
+    const panel = h('div', { class: 'dialog__panel' }, [
+      h('p', { class: 'dialog__msg', text: title }),
+      lbl(labels.start || '', startIn),
+      showEnd ? lbl(labels.end || '', endIn) : null,
+      err,
+      h('div', { class: 'dialog__actions' }, [
+        h('button', { class: 'btn btn--ghost', onclick: () => done(null) }, [t('common.cancel')]),
+        okBtn
+      ])
+    ]);
+    const overlay = h('div', { class: 'dialog' }, [panel]);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) done(null); });
+    panel.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); submit(); } });
+    document.body.appendChild(overlay);
+    const unmodal = modalize(overlay, panel, () => done(null), startIn);
+    requestAnimationFrame(() => overlay.classList.add('is-open'));
+    function submit() {
+      const s = new Date(startIn.value), e = new Date(endIn.value);
+      if (isNaN(s)) { startIn.focus(); return; }
+      if (showEnd && (isNaN(e) || e <= s)) { err.hidden = false; endIn.focus(); return; }
+      done({ start: startIn.value, end: showEnd ? endIn.value : '' });
+    }
+    let settled = false;
+    function done(v) {
+      if (settled) return; settled = true;
+      unmodal();
+      overlay.classList.remove('is-open');
+      setTimeout(() => overlay.remove(), 180);
+      resolve(v);
+    }
+  });
+}
+function toLocalInput(d) {
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
 /** Exercise picker sheet. Calls onPick(exercise) when one is chosen. */
 export function exercisePicker(onPick) {
   const search = h('input', { class: 'input', type: 'search', placeholder: t('exercises.searchPlaceholder') });

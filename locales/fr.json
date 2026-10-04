@@ -262,7 +262,12 @@
     "finishWithEffort": "Terminez en indiquant la difficulté",
     "cancelSetConfirm": "Abandonner le chronométrage de cette série ?",
     "repsHint": "Toucher pour choisir · maintenir pour saisir",
-    "weightHint": "Toucher pour choisir · maintenir pour saisir"
+    "weightHint": "Toucher pour choisir · maintenir pour saisir",
+    "sessionTime": "Date et heure de la séance",
+    "startTime": "Début",
+    "endTime": "Fin",
+    "endBeforeStart": "La fin doit être après le début",
+    "whenEnded": "Quand cette séance a-t-elle eu lieu ?"
   },
   "progress": {
     "title": "Progrès",

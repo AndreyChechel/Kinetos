@@ -22,6 +22,7 @@ Offline-first PWA to plan & track gym workouts. **Vanilla JS (ES modules), no bu
   - **Per-set cue**: a set's `note` (authored in the plan's per-set mode) renders as a small tappable line under its row in both editable and read-only sessions; tap it — or long-press the done control → "Set note" — to edit/delete. `nextSet` carries `restSeconds` over to a manually added set but never the cue.
   - **Per-entry notes** live on a note icon button in the card header, left of the remove button; the dialog carries the Delete action (`promptDialog`'s `deleteText` → resolves the exported `PROMPT_DELETE` sentinel), so nothing but the note text takes space in the set list. A card whose every set is done gets a `.card--complete` tint.
   - Done-taps repaint only their row (not the whole list).
+  - **Session date/time**: the header date badge is a button in a live session and in a finished session's Edit mode → `components.sessionTimeDialog` (start, + end when finished). Moving the start shifts every set's `timestamp`/`startedAt` by the same delta (`shiftSetTimes`); unchanged inputs are ignored (minute precision). Editing a live session's start sets `s.timeEdited`; **Finish** on such a session (or a stale >12 h one) asks for the end time (pre-filled by `suggestedEnd()`: last set within 6 h, else start+1 h) instead of stamping "now", then deletes the flag.
 - **Finished sessions** are **read-only** (explicit Edit mode to correct; notes stay editable); extended stats with charts (volume by exercise, sets by muscle doughnut, effort breakdown, best sets / est-1RM).
 - **Suggestions** (`suggest.js`): next-set target from last session, modulated by effort AND whether target reps were hit (miss → back off; beat → push). Only **performed** sets count as history (`workout.js performed()`: `done !== false` + has data — plan-prefilled untouched sets are excluded). Weight step is per-equipment (`weightStepFor`: barbell/machine/cable 2.5, dumbbell 2) with a per-exercise override (`exerciseMeta[id].weightStep`, editable on exercise detail). Surfaced as a chip (Use fills the first pending set, never appends a duplicate) + prefill; also on exercise detail.
 - **PRs & streak**: finishing a session detects new est-1RM personal records (toast + `PR` badge in finished stats via `workout.bestE1RMBefore`); Home shows a consecutive-training-weeks streak (`workout.weekStreak`) and per-set CSV export lives in Profile.
@@ -50,7 +51,7 @@ js/config.js                   sync config (Client ID + scope, NO secret); sync 
 js/sync/{manager,providers,gis}.js   optional cloud sync (Google Drive only)
 js/data/{db.js, exercises.json, muscles.json}   exercises.json = single source of truth
 js/views/{home,exercises,plan,templates,session,progress,profile}.js   plan.js = Calendar + scheduled-session editor
-locales/{en,de,fr,es,ru}.json  en.json is the key reference; keep all 5 in sync (430 keys)
+locales/{en,de,fr,es,ru}.json  en.json is the key reference; keep all 5 in sync (437 keys)
 assets/exercises/<id>.svg      generated animated illustrations (SMIL; js/svg.js pauses them on frame 0 except in the detail .illus, and for prefers-reduced-motion)
 tools/{generate_svgs.py, figure.py, props.py, poses.py, download-vendor.bat, publish.bat}   art: rig=figure.py, equipment=props.py, per-exercise motion=poses.py
 vendor/chart.umd.js            Chart.js (download-vendor.bat; app has a fallback)
@@ -80,7 +81,7 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 - New exercise → add to `exercises.json`, add its motion to `tools/poses.py` (else it gets a standing figure), then `python tools/generate_svgs.py` (`--only id --frames DIR` dumps stills to check). (SW auto-precaches every id.)
 - New locale key → add to **all** `locales/*.json` (parity is verified; en is the reference).
 - New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** or clients won't update.
-- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.15.0`). The version shows in Profile → About so you can confirm the loaded build. The SW no longer auto-`skipWaiting()`: clients see an "Update available → Reload" toast (pwa.js posts `SKIP_WAITING`, reloads on controllerchange). `vendor/chart.umd.js` is precached in `CORE`; install requests use `{cache:'reload'}`.
+- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.15.1`). The version shows in Profile → About so you can confirm the loaded build. The SW no longer auto-`skipWaiting()`: clients see an "Update available → Reload" toast (pwa.js posts `SKIP_WAITING`, reloads on controllerchange). `vendor/chart.umd.js` is precached in `CORE`; install requests use `{cache:'reload'}`.
 
 ## Verify (no browser here; do this)
 ```

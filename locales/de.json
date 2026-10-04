@@ -262,7 +262,12 @@
     "finishWithEffort": "Zum Beenden die Anstrengung wählen",
     "cancelSetConfirm": "Zeitmessung dieses Satzes verwerfen?",
     "repsHint": "Tippen zum Auswählen · halten zum Eingeben",
-    "weightHint": "Tippen zum Auswählen · halten zum Eingeben"
+    "weightHint": "Tippen zum Auswählen · halten zum Eingeben",
+    "sessionTime": "Datum & Uhrzeit des Trainings",
+    "startTime": "Beginn",
+    "endTime": "Ende",
+    "endBeforeStart": "Das Ende muss nach dem Beginn liegen",
+    "whenEnded": "Wann hat dieses Training stattgefunden?"
   },
   "progress": {
     "title": "Fortschritt",

@@ -262,7 +262,12 @@
     "finishWithEffort": "Termina indicando el esfuerzo",
     "cancelSetConfirm": "¿Descartar el cronometraje de esta serie?",
     "repsHint": "Toca para elegir · mantén para escribir",
-    "weightHint": "Toca para elegir · mantén para escribir"
+    "weightHint": "Toca para elegir · mantén para escribir",
+    "sessionTime": "Fecha y hora de la sesión",
+    "startTime": "Inicio",
+    "endTime": "Fin",
+    "endBeforeStart": "El fin debe ser posterior al inicio",
+    "whenEnded": "¿Cuándo hiciste este entrenamiento?"
   },
   "progress": {
     "title": "Progreso",

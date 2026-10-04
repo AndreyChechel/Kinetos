@@ -4,17 +4,17 @@
 // tap-for-chooser / hold-to-type number fields.
 // Finished: read-only by default with an explicit Edit mode; notes stay editable;
 // extended stats with charts.
-import { h, uid, toast, fmtDuration, fmtTimeSec, fmtDate, clickable } from '../ui.js';
+import { h, uid, toast, fmtDuration, fmtTime, fmtTimeSec, fmtDate, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate, getSettings } from '../store.js';
 import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
   exercisePicker, confirmDialog, promptDialog, PROMPT_DELETE, popoverMenu, repChooser, barChooser,
-  weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete
+  weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete, sessionTimeDialog
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
-import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore } from '../workout.js';
+import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore, isStaleSession } from '../workout.js';
 import { sessionVolume, oneRepMax, platesPerSide } from '../calc.js';
 import { suggestNext, formatSuggestion, suggestionReason, applyToSet, weightStepFor } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
@@ -105,12 +105,22 @@ export default function renderSession(root, params, ctx) {
   const nameInput = h('input', { class: 'input', value: s.name, placeholder: t('common.name') });
   nameInput.addEventListener('change', () => { s.name = nameInput.value.trim(); persist(); ctx.setTitle(s.name || (finished ? t('session.summary') : t('session.active'))); });
   const elapsed = h('span', { class: 'timer', text: fmtDuration(sessionDurationMs(s)) });
+  // Date + time span. Editable (tap) in a live session and in Edit mode, so a
+  // forgotten workout can be logged after the fact and history can be corrected.
+  const timeText = fmtDate(s.startedAt, lang) + ' · ' + fmtTime(s.startedAt, lang)
+    + (finished && s.endedAt ? '–' + fmtTime(s.endedAt, lang) : '');
+  const timeBadge = editable
+    ? h('button', { class: 'badge badge--btn', type: 'button', title: t('session.sessionTime'), 'aria-label': t('session.sessionTime') + ': ' + timeText, onclick: editSessionTime },
+        [icon(finished ? 'check' : 'calendar', { size: 14 }), ' ' + timeText, h('span', { class: 'badge__edit' }, [icon('pencil', { size: 12 })])])
+    : h('span', { class: 'badge' }, [icon('check', { size: 14 }), ' ' + timeText]);
   wrap.appendChild(h('div', { class: 'card' }, [
     editable ? nameInput : null,
-    h('div', { class: 'row row--between', style: editable ? 'margin-top:10px' : '' }, [
-      h('span', { class: 'badge ' + (finished ? '' : 'badge--live') },
-        finished ? [icon('check', { size: 14 }), ' ' + fmtDate(s.startedAt, lang)]
-                 : [icon('dot', { size: 12 }), ' ' + t('session.active')]),
+    h('div', { class: 'row row--between', style: (editable ? 'margin-top:10px;' : '') + 'gap:8px;flex-wrap:wrap' }, [
+      finished ? timeBadge
+        : h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap' }, [
+            h('span', { class: 'badge badge--live' }, [icon('dot', { size: 12 }), ' ' + t('session.active')]),
+            timeBadge
+          ]),
       finished
         ? h('button', { class: 'btn btn--sm ' + (editMode ? 'btn--primary' : ''), onclick: toggleEdit }, [editMode ? t('session.doneEditing') : t('common.edit')])
         : h('span', {}, [h('span', { class: 'muted small', text: t('session.elapsed') + ': ' }), elapsed])
@@ -636,10 +646,98 @@ export default function renderSession(root, params, ctx) {
     });
     return names;
   }
+  // ---- Session date/time (back-dating a forgotten workout, fixing history) ----
+  function timeDialogLabels() {
+    return { start: t('session.startTime'), end: t('session.endTime'), endBeforeStart: t('session.endBeforeStart') };
+  }
+  /** Move every logged set's clock by `delta` ms, so sets stay inside the session
+   *  when its start is moved (e.g. sets logged tonight for a workout done this morning). */
+  function shiftSetTimes(delta) {
+    if (!delta) return;
+    const mv = (iso) => {
+      const d = iso ? new Date(iso) : null;
+      return d && !isNaN(d) ? new Date(d.getTime() + delta).toISOString() : iso;
+    };
+    s.entries.forEach((e) => (e.sets || []).forEach((st) => {
+      if (st.timestamp) st.timestamp = mv(st.timestamp);
+      if (st.startedAt) st.startedAt = mv(st.startedAt);
+    }));
+  }
+  /** Apply a new start (datetime-local string) only if the user actually changed
+   *  it — the input has minute precision, so re-saving it unchanged must not drop seconds. */
+  function applyStart(localValue, originalLocal) {
+    if (localValue === originalLocal) return;
+    const iso = localInputToISO(localValue);
+    if (!iso) return;
+    shiftSetTimes(new Date(iso) - new Date(s.startedAt));
+    s.startedAt = iso;
+  }
+  /** Best guess for when a back-dated workout ended: the last logged set if it
+   *  falls within 6 h of the start, else start + 1 h (but not past now). */
+  function suggestedEnd() {
+    const st = new Date(s.startedAt).getTime();
+    let last = 0;
+    s.entries.forEach((e) => (e.sets || []).forEach((x) => {
+      const ms = x.timestamp ? new Date(x.timestamp).getTime() : NaN;
+      if (Number.isFinite(ms) && ms > last) last = ms;
+    }));
+    if (last > st && last - st <= 6 * 3600000) return new Date(last).toISOString();
+    const now = Date.now();
+    const end = (now > st && now - st < 3600000) ? now : st + 3600000;
+    return new Date(end).toISOString();
+  }
+  async function editSessionTime() {
+    const origStart = tsToLocalInput(s.startedAt);
+    const origEnd = finished ? tsToLocalInput(s.endedAt) : '';
+    const res = await sessionTimeDialog(t('session.sessionTime'), {
+      start: origStart, end: origEnd, showEnd: finished, labels: timeDialogLabels()
+    });
+    if (!res) return;
+    if (res.start === origStart && res.end === origEnd) return;
+    applyStart(res.start, origStart);
+    if (finished) {
+      if (res.end !== origEnd) { const iso = localInputToISO(res.end); if (iso) s.endedAt = iso; }
+    } else {
+      // A live session whose start was moved is being logged after the fact:
+      // Finish will ask when it ended instead of stamping "now".
+      s.timeEdited = true;
+    }
+    persist();
+    if (finished) {
+      // Duration tile + header change; no live timers to preserve here.
+      root.innerHTML = '';
+      renderSession(root, params, ctx);
+    } else {
+      // Repaint the badge in place so a running rest countdown survives.
+      const txt = fmtDate(s.startedAt, lang) + ' · ' + fmtTime(s.startedAt, lang);
+      timeBadge.replaceChildren(icon('calendar', { size: 14 }), ' ' + txt, h('span', { class: 'badge__edit' }, [icon('pencil', { size: 12 })]));
+      timeBadge.setAttribute('aria-label', t('session.sessionTime') + ': ' + txt);
+      elapsed.textContent = fmtDuration(sessionDurationMs(s));
+      renderExercises();
+    }
+  }
+
   async function finish() {
-    if (await confirmDialog(t('session.finishConfirm'), { okText: t('session.finish') })) {
+    // Back-dated (start edited) or left open for >12 h: "now" is the wrong end
+    // time, so ask for it (pre-filled with a sensible guess) instead of confirming.
+    const backdated = !!s.timeEdited || isStaleSession(s);
+    let endISO = null;
+    if (backdated) {
+      const origStart = tsToLocalInput(s.startedAt);
+      const res = await sessionTimeDialog(t('session.whenEnded'), {
+        start: origStart, end: tsToLocalInput(suggestedEnd()), showEnd: true, labels: timeDialogLabels()
+      });
+      if (!res) return;
+      applyStart(res.start, origStart);
+      endISO = localInputToISO(res.end);
+      if (!endISO) return;
+    } else if (!(await confirmDialog(t('session.finishConfirm'), { okText: t('session.finish') }))) {
+      return;
+    }
+    {
       const prs = detectPRs(); // before endedAt flips this session into history
-      s.endedAt = new Date().toISOString();
+      s.endedAt = endISO || new Date().toISOString();
+      delete s.timeEdited;
       if (timer) { clearInterval(timer); timer = null; }
       stopRest();
       persist();
