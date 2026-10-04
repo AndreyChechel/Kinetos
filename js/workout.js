@@ -273,6 +273,17 @@ export function planStarted(planId) {
   return !!planId && getSessions().some((s) => s.planId === planId);
 }
 
+/** True once a session started from this plan has been finished — the calendar
+ *  then shows only that session (the plan lives on inside it as "Planned"). */
+export function planFinished(planId) {
+  return !!planId && getSessions().some((s) => s.planId === planId && s.endedAt);
+}
+
+/** The unfinished session started from this plan, if any. */
+export function planActiveSession(planId) {
+  return (planId && getSessions().find((s) => s.planId === planId && !s.endedAt)) || null;
+}
+
 /** Best estimated 1RM ever logged for an exercise before/outside one session. */
 export function bestE1RMBefore(exerciseId, excludeSessionId) {
   let best = 0;

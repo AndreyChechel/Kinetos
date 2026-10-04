@@ -6,7 +6,7 @@
 // extended stats with charts.
 import { h, uid, toast, fmtDuration, fmtTime, fmtTimeSec, fmtDate, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
-import { getSession, saveSession, deleteSession, saveTemplate, getSettings } from '../store.js';
+import { getSession, saveSession, deleteSession, saveTemplate, getSettings, getPlan } from '../store.js';
 import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit, usesLevel } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
@@ -14,7 +14,7 @@ import {
   weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete, sessionTimeDialog
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
-import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore, isStaleSession, loadRest, saveRest, clearRest, REST_OVERTIME_MAX_MS } from '../workout.js';
+import { lastSetFor, sessionDurationMs, targetsFromSession, setTargetsOf, bestE1RMBefore, isStaleSession, loadRest, saveRest, clearRest, REST_OVERTIME_MAX_MS } from '../workout.js';
 import { sessionVolume, oneRepMax, platesPerSide } from '../calc.js';
 import { suggestNext, formatSuggestion, suggestionReason, applyToSet, weightStepFor } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
@@ -170,6 +170,10 @@ export default function renderSession(root, params, ctx) {
     const statsHost = h('div', { class: 'stack' });
     wrap.appendChild(statsHost);
     renderFinishedStats(statsHost, s, lang);
+    // The plan this session was started from — the calendar hides it once the
+    // session is finished, so its targets are shown here instead.
+    const planCard = plannedCard(s);
+    if (planCard) wrap.appendChild(planCard);
   }
 
   // ---- Session notes (editable even in read-only) ----
@@ -887,6 +891,50 @@ async function renderFinishedStats(host, s, lang) {
     ]));
     host.appendChild(card(t('session.bestSets'), h('div', {}, rows)));
   }
+}
+
+// ---- "Planned" card: the source plan's targets next to what was actually done ----
+function plannedCard(s) {
+  const plan = s.planId ? getPlan(s.planId) : null;
+  if (!plan || !(plan.exercises || []).length) return null;
+  const used = new Set(); // entries already matched to an earlier plan row
+  const rows = plan.exercises.map((pe) => {
+    const ex = getExercise(pe.exerciseId);
+    const metric = ex ? ex.metric : 'reps';
+    const targets = setTargetsOf(pe);
+    const planned = targets.length || pe.targetSets || 0;
+    const entry = (s.entries || []).find((e) => e.exerciseId === pe.exerciseId && !used.has(e.id));
+    if (entry) used.add(entry.id);
+    const doneSets = entry ? (entry.sets || []).filter((st) => st.done !== false && (st.reps || st.seconds || st.count || st.distanceKm)).length : 0;
+    return h('div', { class: 'row row--between', style: 'padding:6px 0;border-bottom:1px solid var(--border);gap:8px' + (doneSets ? '' : ';opacity:.6') }, [
+      h('div', { style: 'min-width:0' }, [
+        h('div', { text: ex ? exName(ex) : pe.exerciseId }),
+        h('div', { class: 'muted small', text: plannedText(pe, targets, metric, ex) })
+      ]),
+      h('span', { class: 'small' + (doneSets >= planned ? '' : ' muted'), style: 'white-space:nowrap',
+        text: `${doneSets}/${planned} ${t('common.sets')}` })
+    ]);
+  });
+  return h('div', { class: 'card' }, [
+    h('div', { class: 'card__title' }, [icon('calendar', { size: 16 }), ' ' + t('plan.planned') + (plan.name ? ' · ' + plan.name : '')]),
+    h('div', {}, rows)
+  ]);
+}
+
+/** Compact human text for one plan target row (simple or per-set). */
+function plannedText(pe, targets, metric, ex) {
+  const kg = t('units.kg');
+  const one = (st) => {
+    const lv = st.level != null ? t('common.level') + ' ' + st.level + ' · ' : '';
+    if (metric === 'time') return lv + (st.seconds ? fmtDuration(st.seconds * 1000) : '–');
+    if (metric === 'distance') return lv + (st.distanceKm ? st.distanceKm + ' ' + t('units.km') : '–') + (st.minutes ? ' / ' + st.minutes + ' ' + t('common.min') : '');
+    if (metric === 'count') return lv + (st.count ?? '–') + (ex ? ' ' + t('units.' + countUnit(ex)) : '');
+    return (st.reps ?? '–') + (st.weightKg ? ' × ' + st.weightKg + ' ' + kg : '');
+  };
+  if (targets.length) return targets.map(one).join(' · ');
+  const n = pe.targetSets || 0;
+  if (metric === 'reps') return `${n} × ${pe.targetReps ?? '–'}` + (pe.targetWeightKg ? ' @ ' + pe.targetWeightKg + ' ' + kg : '');
+  return `${n} ${t('common.sets')}` + (pe.targetLevel != null ? ' · ' + t('common.level') + ' ' + pe.targetLevel : '');
 }
 
 /** ISO timestamp -> value for a <input type="datetime-local"> (local, minute precision). */

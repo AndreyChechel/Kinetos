@@ -5,7 +5,7 @@
 import { h, uid, fmtDate, toast, todayISO, localISO, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getPlans, getPlan, savePlan, deletePlan, getTemplates, saveTemplate } from '../store.js';
-import { completedSessions, createSessionFromPlan, planFromTemplate, activeSession, planStarted } from '../workout.js';
+import { completedSessions, createSessionFromPlan, planFromTemplate, activeSession, planStarted, planFinished, planActiveSession } from '../workout.js';
 import { exercisePicker, confirmDialog, sheet } from '../components.js';
 import { renderExerciseTargets, newTarget, labeled } from '../planedit.js';
 import { setNavGuard, clearNavGuard } from '../router.js';
@@ -59,7 +59,8 @@ export function renderCalendar(root, params, ctx) {
 
   function renderCal() {
     cal.innerHTML = '';
-    const plans = getPlans();
+    // A plan whose session is finished is represented by that session alone.
+    const plans = getPlans().filter((p) => !planFinished(p.id));
     const done = completedSessions();
     const planByDay = {}, doneByDay = {};
     plans.forEach((p) => { const k = (p.date || '').slice(0, 10); if (k) (planByDay[k] = planByDay[k] || []).push(p); });
@@ -108,7 +109,8 @@ export function renderCalendar(root, params, ctx) {
   function renderDay() {
     dayPanel.innerHTML = '';
     const k = calState.sel;
-    const plans = getPlans().filter((p) => (p.date || '').slice(0, 10) === k);
+    // Hide plans already carried out — the finished session shows them as "Planned".
+    const plans = getPlans().filter((p) => (p.date || '').slice(0, 10) === k && !planFinished(p.id));
     const done = completedSessions().filter((s) => s.startedAt && localISO(new Date(s.startedAt)) === k);
     dayPanel.appendChild(h('div', { class: 'section-title', text: k === todayISO() ? t('plan.today') : fmtDate(k, lang, { weekday: 'long', day: 'numeric', month: 'long' }) }));
 
@@ -118,9 +120,12 @@ export function renderCalendar(root, params, ctx) {
       const ul = h('ul', { class: 'list card card--pad-0' });
       plans.forEach((p) => {
         const started = planStarted(p.id); // a started plan isn't "planned" anymore
+        // A started (still running) plan opens its live session, not the plan editor.
+        const live = started ? planActiveSession(p.id) : null;
+        const open = () => ctx.navigate(live ? '/session/' + live.id : '/plan/' + p.id);
         ul.appendChild(h('li', { class: 'list__item' }, [
-          clickable(h('div', { class: 'list__thumb', onclick: () => ctx.navigate('/plan/' + p.id) }, [icon('calendar', { size: 24 })])),
-          h('div', { class: 'list__body', onclick: () => ctx.navigate('/plan/' + p.id) }, [
+          clickable(h('div', { class: 'list__thumb', onclick: open }, [icon('calendar', { size: 24 })])),
+          h('div', { class: 'list__body', onclick: open }, [
             h('div', { class: 'list__title', text: p.name || t('plan.new') }),
             h('div', { class: 'list__sub', text: (started ? t('plan.started') : t('plan.planned')) + ' · ' + t('exercises.count', { n: (p.exercises || []).length }) })
           ]),
