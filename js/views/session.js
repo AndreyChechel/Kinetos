@@ -14,7 +14,7 @@ import {
   weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete, sessionTimeDialog
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
-import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore, isStaleSession } from '../workout.js';
+import { lastSetFor, sessionDurationMs, targetsFromSession, bestE1RMBefore, isStaleSession, loadRest, saveRest, clearRest, REST_OVERTIME_MAX_MS } from '../workout.js';
 import { sessionVolume, oneRepMax, platesPerSide } from '../calc.js';
 import { suggestNext, formatSuggestion, suggestionReason, applyToSet, weightStepFor } from '../suggest.js';
 import { ensureChart, chartOrFallback } from '../charts.js';
@@ -22,6 +22,7 @@ import { icon } from '../icons.js';
 
 let timer = null;
 let restInt = null;             // rest-countdown interval (active sessions)
+let restTick = null;            // current view's tick fn, re-run when the page becomes visible
 let collapsed = new Set();      // entry ids currently collapsed (UI-only)
 let collapsedFor = null;        // session id the collapsed set belongs to
 let editMode = false;           // finished session: has the user opted into editing?
@@ -29,9 +30,16 @@ let editModeFor = null;
 window.addEventListener('route:change', () => {
   if (timer) { clearInterval(timer); timer = null; }
   if (restInt) { clearInterval(restInt); restInt = null; }
+  restTick = null; // the rest itself stays persisted (loadRest) for when we come back
   // Never carry Edit mode across navigations — returning to a finished session
   // must always land read-only (accidental edits to history are too easy).
   editMode = false; editModeFor = null;
+});
+// A locked phone throttles/freezes timers, so the countdown can run out unseen.
+// Re-tick the moment the page is visible again so the "rest over" state (and
+// its vibrate/toast) shows up immediately on unlock.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && restTick) restTick();
 });
 
 const EFFORT = { 1: { label: 'effortEasy' }, 2: { label: 'effortMedium' }, 3: { label: 'effortHard' } };
@@ -71,7 +79,12 @@ export default function renderSession(root, params, ctx) {
     restLabel,
     h('button', { class: 'restbar__skip', type: 'button', 'aria-label': t('common.close'), onclick: () => stopRest() }, [icon('x', { size: 16 })])
   ]);
-  let restEndsAt = 0;
+  // The countdown lives in localStorage (loadRest/saveRest), not in this closure,
+  // so it survives a re-render, a locked phone and the app being killed. When it
+  // runs out the bar does NOT disappear: it turns into a "Rest over — next set!"
+  // pill counting the overtime, until the next set starts or the user closes it.
+  // Otherwise a rest that ended while the screen was off left no trace at all.
+  let rest = null; // { sessionId, endsAt, notified }
   /** `set` may carry a planned per-set rest override; otherwise the profile default.
    *  A profile timer of 0 means "no rest timer, ever" — a plan must not override
    *  a switch the user deliberately turned off. */
@@ -80,25 +93,49 @@ export default function renderSession(root, params, ctx) {
     const override = Number(set && set.restSeconds);
     const secs = (dflt && override > 0) ? override : dflt;
     if (!secs || finished) return;
-    restEndsAt = Date.now() + secs * 1000;
+    rest = { sessionId: s.id, endsAt: Date.now() + secs * 1000, notified: false };
+    saveRest(rest);
+    runRest();
+  }
+  function runRest() {
     restBar.hidden = false;
     if (restInt) clearInterval(restInt);
     restInt = setInterval(tickRest, 250);
+    restTick = tickRest;
     tickRest();
   }
   function tickRest() {
-    const left = restEndsAt - Date.now();
-    if (left <= 0) {
-      stopRest();
-      if (navigator.vibrate) { try { navigator.vibrate([150, 90, 150]); } catch (_) { /* ignore */ } }
-      toast(t('session.restDone'));
+    if (!rest) return;
+    const left = rest.endsAt - Date.now();
+    const over = left <= 0;
+    restBar.classList.toggle('restbar--over', over);
+    if (!over) {
+      restLabel.textContent = t('session.rest') + ' · ' + fmtDuration(left);
       return;
     }
-    restLabel.textContent = t('session.rest') + ' · ' + fmtDuration(left);
+    if (-left > REST_OVERTIME_MAX_MS) { stopRest(); return; }
+    restLabel.textContent = t('session.restDone') + ' · +' + fmtDuration(-left);
+    // Alert once, and only where it can be noticed: a hidden page defers it to
+    // the visibilitychange re-tick so the toast doesn't expire behind the lock screen.
+    if (!rest.notified && document.visibilityState !== 'hidden') {
+      rest.notified = true;
+      saveRest(rest);
+      if (navigator.vibrate) { try { navigator.vibrate([150, 90, 150]); } catch (_) { /* ignore */ } }
+      toast(t('session.restDone'));
+    }
   }
   function stopRest() {
     if (restInt) { clearInterval(restInt); restInt = null; }
+    restTick = null;
+    rest = null;
+    clearRest();
     restBar.hidden = true;
+    restBar.classList.remove('restbar--over');
+  }
+  // Resume a rest that was running when this view was last left / the app closed.
+  if (!finished) {
+    const saved = loadRest();
+    if (saved && saved.sessionId === s.id) { rest = saved; runRest(); }
   }
 
   // ---- Header ----
@@ -749,6 +786,7 @@ export default function renderSession(root, params, ctx) {
   async function discard() {
     if (await confirmDialog(t('session.discardConfirm'), { danger: true, okText: t('session.discard') })) {
       if (timer) { clearInterval(timer); timer = null; }
+      stopRest();
       deleteSession(s.id); ctx.navigate('/');
     }
   }

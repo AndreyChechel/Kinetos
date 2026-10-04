@@ -13,6 +13,29 @@ export function performed(st) {
 
 const DEFAULT_REPS = 12; // app-wide default target reps (feature: default to 12)
 
+// ------------------------------------------------------------- rest timer ---
+// The running rest countdown is device-local UI state (never synced), kept in
+// its own localStorage key so it survives a re-render, a locked phone and the
+// OS killing the app: on return the session view (and Home) can still show
+// that the rest ran out. `notified` = the vibrate/toast already happened.
+const REST_KEY = 'kinetos.rest';
+/** Overtime after which a finished rest is forgotten rather than shown. */
+export const REST_OVERTIME_MAX_MS = 30 * 60 * 1000;
+export function loadRest() {
+  try {
+    const r = JSON.parse(localStorage.getItem(REST_KEY) || 'null');
+    if (!r || !r.sessionId || !Number.isFinite(r.endsAt)) return null;
+    if (Date.now() - r.endsAt > REST_OVERTIME_MAX_MS) { clearRest(); return null; }
+    return r;
+  } catch (_) { return null; }
+}
+export function saveRest(r) {
+  try { localStorage.setItem(REST_KEY, JSON.stringify(r)); } catch (_) { /* best-effort */ }
+}
+export function clearRest() {
+  try { localStorage.removeItem(REST_KEY); } catch (_) { /* best-effort */ }
+}
+
 // ------------------------------------------------- plan/template row model ---
 //
 // A planned exercise ("target row") comes in two shapes:

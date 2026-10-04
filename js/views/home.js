@@ -4,7 +4,7 @@ import { t } from '../i18n.js';
 import { getProfile, getPlans } from '../store.js';
 import {
   activeSession, createEmptySession, createSessionFromPlan, completedSessions,
-  weekStats, sessionDurationMs, isStaleSession, autoFinishSession, weekStreak, planStarted
+  weekStats, sessionDurationMs, isStaleSession, autoFinishSession, weekStreak, planStarted, loadRest
 } from '../workout.js';
 import { deleteSession } from '../store.js';
 import { confirmDialog } from '../components.js';
@@ -35,11 +35,23 @@ export default function renderHome(root, params, ctx) {
   const active = activeSession();
   if (active) {
     const stale = isStaleSession(active);
+    // A rest that was running when the app was closed/left: tell the user it ran
+    // out (they may have reopened straight onto Home, not the session).
+    const rest = !stale && loadRest();
+    let restLine = null;
+    if (rest && rest.sessionId === active.id) {
+      restLine = h('div', { class: 'small', style: 'margin-top:4px;font-weight:700;color:var(--success)' });
+      const paint = () => { restLine.textContent = Date.now() >= rest.endsAt ? t('session.restDone') : t('session.rest') + ' …'; };
+      paint();
+      const left = rest.endsAt - Date.now();
+      if (left > 0) setTimeout(paint, left + 50); // harmless if Home has been left
+    }
     wrap.appendChild(h('div', { class: 'card', style: 'border-color:' + (stale ? 'var(--danger)' : 'var(--success)') }, [
       h('div', { class: 'row row--between' }, [
         h('div', {}, [
           h('span', { class: 'badge badge--live' }, [icon('dot', { size: 12 }), ' ' + t('home.activeSession')]),
-          h('div', { class: 'small muted', style: 'margin-top:6px', text: active.name || fmtDate(active.startedAt, lang) })
+          h('div', { class: 'small muted', style: 'margin-top:6px', text: active.name || fmtDate(active.startedAt, lang) }),
+          restLine
         ]),
         h('button', { class: 'btn btn--primary', onclick: () => ctx.navigate('/session/' + active.id) }, [t('home.continueSession')])
       ]),

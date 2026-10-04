@@ -355,7 +355,7 @@ export function importJSON(text, { merge = false } = {}) {
 export function resetAll() {
   state = defaultState();
   try {
-    ['kinetos.tokens', 'kinetos.gdrive.fileId', 'kinetos.sync.meta'].forEach((k) => localStorage.removeItem(k));
+    ['kinetos.tokens', 'kinetos.gdrive.fileId', 'kinetos.sync.meta', 'kinetos.rest'].forEach((k) => localStorage.removeItem(k));
     // legacy: decrypted client secrets cached by pre-1.14 builds, which used the
     // authorization-code flow (kinetos.secret.<provider>). Nothing writes these
     // any more; the sweep stays so an upgraded device doesn't keep one forever.

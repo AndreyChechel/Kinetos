@@ -576,6 +576,13 @@ canvas { max-width: 100%; }
   box-shadow: 0 6px 18px rgba(47,109,246,.45); z-index: 30;
   font-variant-numeric: tabular-nums;
 }
+/* Rest ran out: stays up (counting overtime) until the next set or dismiss. */
+.restbar--over {
+  background: var(--success); box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  animation: restbar-pulse 1.6s ease-in-out infinite;
+}
+@keyframes restbar-pulse { 50% { transform: translateX(-50%) scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .restbar--over { animation: none; } }
 /* (the global [hidden] rule near the top covers this — kept for clarity) */
 .restbar[hidden] { display: none; }
 .restbar__skip {
