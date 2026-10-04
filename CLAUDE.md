@@ -81,7 +81,7 @@ docs/*.html                    index, architecture, data-model, extending, deplo
 - New exercise → add to `exercises.json`, add its motion to `tools/poses.py` (else it gets a standing figure), then `python tools/generate_svgs.py` (`--only id --frames DIR` dumps stills to check). (SW auto-precaches every id.)
 - New locale key → add to **all** `locales/*.json` (parity is verified; en is the reference).
 - New view/screen/JS file/asset → add to `CORE` in `sw.js` **and bump `CACHE`** or clients won't update.
-- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.15.2`). The version shows in Profile → About so you can confirm the loaded build. The SW no longer auto-`skipWaiting()`: clients see an "Update available → Reload" toast (pwa.js posts `SKIP_WAITING`, reloads on controllerchange). `vendor/chart.umd.js` is precached in `CORE`; install requests use `{cache:'reload'}`.
+- On every deploy: bump `APP_VERSION` in `js/version.js` **and** set `sw.js` `CACHE` to `kinetos-<APP_VERSION>` (currently `1.15.3`). The version shows in Profile → About so you can confirm the loaded build. The SW no longer auto-`skipWaiting()`: clients see an "Update available → Reload" toast (pwa.js posts `SKIP_WAITING`, reloads on controllerchange). `vendor/chart.umd.js` is precached in `CORE`; install requests use `{cache:'reload'}`.
 
 ## Verify (no browser here; do this)
 ```

@@ -401,7 +401,7 @@ canvas { max-width: 100%; }
   /* Top bar + content span the area beside the rail */
   .topbar { height: calc(var(--topbar-h) + 6px); padding: 0 28px; }
   .topbar__title { font-size: 1.3rem; }
-  .topbar__back { display: none; }   /* sidebar + browser back cover navigation */
+  .topbar__back { margin-left: -10px; }   /* keep it: an installed PWA has no browser back button */
 
   .view { max-width: 920px; padding: 24px 28px 72px; }
 

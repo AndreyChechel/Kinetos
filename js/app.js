@@ -19,6 +19,9 @@ const viewEl = qs('#view');
 const titleEl = qs('#topbarTitle');
 const backBtn = qs('#backBtn');
 const actionsEl = qs('#topbarActions');
+// Where the back button goes when there is no in-app history (deep link, PWA launch).
+const TAB_ROOTS = { home: '/', exercises: '/exercises', plan: '/plan', progress: '/progress', profile: '/profile' };
+let backFallback = '/';
 
 // ---- Theme ----
 const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
@@ -51,6 +54,7 @@ function show(renderFn, meta, params) {
   viewEl.className = 'view view--' + (meta.tab || 'home');
   actionsEl.innerHTML = '';
   backBtn.hidden = !meta.back;
+  backFallback = TAB_ROOTS[meta.tab] || '/';
   qsa('.tabbar__item').forEach((a) => {
     const active = a.dataset.tab === meta.tab;
     a.classList.toggle('is-active', active);
@@ -96,7 +100,7 @@ export async function changeLanguage(code) {
 
 async function boot() {
   applyTheme();
-  backBtn.addEventListener('click', () => back());
+  backBtn.addEventListener('click', () => back(backFallback));
   // Intercept internal nav links (data-route) for SPA navigation without reload.
   // Real hrefs are kept so open-in-new-tab / right-click still work.
   document.addEventListener('click', (e) => {

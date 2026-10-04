@@ -40,16 +40,23 @@ export function href(path) {
   return BASE + String(path).replace(/^\//, '');
 }
 
+// How many in-app entries sit below the current one in this tab's history.
+// Stored in history.state so it survives reloads and popstate. 0 = this entry
+// was opened directly (deep link, new tab, installed PWA launch).
+function depth() { return (history.state && history.state.kDepth) || 0; }
+
 export function navigate(path) {
   const clean = String(path).split('?')[0];
   if (currentPath().split('?')[0] === clean) { handle(); return; }
-  history.pushState({}, '', href(path));
+  history.pushState({ kDepth: depth() + 1 }, '', href(path));
   handle();
 }
 
-export function back() {
-  if (history.length > 1) history.back();
-  else navigate('/');
+/** Go to the previous in-app screen. If there is none (deep link / fresh PWA
+ *  launch), go to `fallback` instead of leaving the app via history.back(). */
+export function back(fallback = '/') {
+  if (depth() > 0) history.back();
+  else navigate(fallback);
 }
 
 // Re-run the current route (used after a language switch re-renders the view).
@@ -65,7 +72,7 @@ function handle() {
   if (navGuard && lastPath && path.split('?')[0] !== lastPath.split('?')[0]) {
     if (!navGuard()) {
       // Rejected: restore the previous URL (covers both pushState and popstate).
-      history.replaceState({}, '', href(lastPath));
+      history.replaceState(history.state, '', href(lastPath));
       return;
     }
     navGuard = null;
