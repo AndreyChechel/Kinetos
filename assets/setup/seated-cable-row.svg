@@ -1,0 +1,50 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seated Cable Row setup"><title>Seated Cable Row setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M70,178 L115.6,160"/>
+<path stroke-width="14" d="M115.6,160 L156,184"/>
+<path stroke-width="7.5" d="M156,184 L158.8,168.2"/>
+<path stroke-width="13" d="M88.5,120.9 L117.8,140.2"/>
+<path stroke-width="10" d="M117.8,140.2 L144.2,156.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M70,178 L115.6,160"/>
+<path stroke-width="14" d="M115.6,160 L156,184"/>
+<path stroke-width="7.5" d="M156,184 L158.8,168.2"/>
+<path stroke-width="9" d="M88.5,120.9 L90.7,114.3"/>
+</g>
+<g fill="currentColor">
+<path d="M54.9,169.3 C52.9,163.7 63,157 65.4,150 C67.9,143 66.3,133.2 69.6,127.4 C72.9,121.6 80.2,115.7 85.1,115.4 C89.9,115.1 96.4,121.1 98.6,125.5 C100.9,129.9 100,136.2 98.6,141.9 C97.1,147.5 93.3,152.2 89.8,159.2 C86.3,166.2 83.4,181.9 77.6,183.6 C71.8,185.3 57,174.9 54.9,169.3Z"/>
+<circle r="12" cx="94.7" cy="101.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M88.5,120.9 L117.8,140.2"/>
+<path stroke-width="13.5" d="M117.8,140.2 L144.2,156.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M88.5,120.9 L117.8,140.2"/>
+<path stroke-width="10" d="M117.8,140.2 L144.2,156.4"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="144.2" cy="156.4"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M36,196 L110,196"/>
+<path stroke-width="6" d="M166,160 L166,206"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M214,70 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<circle r="4" stroke-width="2.5" cx="208" cy="182"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M208,182 L144.2,156.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M144.2,151.4 L144.2,161.4"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="208" cy="182" r="7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M200,150 L208,182"/><circle class="muscle-fill" fill="#ff7a3c" cx="208" cy="182" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="200" cy="150" r="8.5"/><text x="200" y="150" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><g transform="translate(30,40)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-18" r="3" stroke-width="2"/><path d="M0,-15 L0,-6 M0,-6 L-12,8 M0,-6 L12,8" stroke-width="3"/><path d="M-15,6 L-9,12 M15,6 L9,12" stroke-width="5"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="47.3" cy="57.3" r="8.5"/><text x="47.3" y="57.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M150,214 L164,196"/><circle class="muscle-fill" fill="#ff7a3c" cx="164" cy="196" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="150" cy="214" r="8.5"/><text x="150" y="214" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

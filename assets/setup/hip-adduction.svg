@@ -1,0 +1,47 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Seated Hip Adduction setup"><title>Seated Hip Adduction setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M111.5,154 L80.7,169"/>
+<path stroke-width="14" d="M80.7,169 L88.6,201"/>
+<path stroke-width="7.5" d="M88.6,201 L80.6,201"/>
+<path stroke-width="20" d="M128.5,154 L159.3,169"/>
+<path stroke-width="14" d="M159.3,169 L151.4,201"/>
+<path stroke-width="7.5" d="M151.4,201 L159.4,201"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="11" d="M120,94 L120,87"/>
+</g>
+<g fill="currentColor">
+<path d="M104,158.8 C99.1,154 107,139 106.5,130 C106,121 101.9,111 101,104.8 C100.1,98.6 94.7,94.8 101,92.8 C107.3,90.8 132.7,90.8 139,92.8 C145.3,94.8 139.9,98.6 139,104.8 C138.1,111 134,121 133.5,130 C133,139 140.9,154 136,158.8 C131.1,163.6 108.9,163.6 104,158.8Z"/>
+<circle r="12" cx="120" cy="74"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M137,94 L143.1,128.5"/>
+<path stroke-width="13.5" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="16.5" d="M103,94 L96.9,128.5"/>
+<path stroke-width="13.5" d="M96.9,128.5 L100.2,159.3"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M137,94 L143.1,128.5"/>
+<path stroke-width="10" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="13" d="M103,94 L96.9,128.5"/>
+<path stroke-width="10" d="M96.9,128.5 L100.2,159.3"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="139.8" cy="159.3"/>
+<circle r="5" cx="100.2" cy="159.3"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="10" d="M92,170 L148,170"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="5" d="M120,170 L120,224"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="6" cx="150.3" cy="169"/>
+<circle r="6" cx="89.7" cy="169"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M190,120 L150.3,169"/><circle class="muscle-fill" fill="#ff7a3c" cx="150.3" cy="169" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="190" cy="120" r="8.5"/><text x="190" y="120" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M196,210 L148,170"/><circle class="muscle-fill" fill="#ff7a3c" cx="148" cy="170" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="196" cy="210" r="8.5"/><text x="196" y="210" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

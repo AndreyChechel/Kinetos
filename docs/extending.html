@@ -27,6 +27,7 @@
   <li>Add <code>{ code, label }</code> to <code>SUPPORTED</code> in <code>js/i18n.js</code>.</li>
   <li>Add the file to <code>CORE</code> in <code>sw.js</code> and bump <code>CACHE</code>.</li>
   <li>Optionally add localized <code>names</code>/<code>cues</code> entries in <code>exercises.json</code>; missing languages fall back to English via <code>pick()</code>.</li>
+  <li>If the exercise needs equipment configured (pulley height, bench angle, machine pads, rack hooks), add a <code>setup</code> list (numbered steps, all 5 languages) and a matching <code>SETUP[id]</code> diagram in <code>tools/setups.py</code> whose badges 1…n match the steps; <code>generate_svgs.py</code> writes <code>assets/setup/&lt;id&gt;.svg</code> and reports any mismatch.</li>
 </ol>
 
 <h2>The SVG generator</h2>

@@ -1,0 +1,43 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leg Curl setup"><title>Leg Curl setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M118,150 L69,150"/>
+<path stroke-width="14" d="M69,150 L22,150"/>
+<path stroke-width="7.5" d="M22,150 L22,166"/>
+<path stroke-width="13" d="M178,150 L174.3,184.8"/>
+<path stroke-width="10" d="M174.3,184.8 L205.3,183.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M118,150 L69,150"/>
+<path stroke-width="14" d="M69,150 L22,150"/>
+<path stroke-width="7.5" d="M22,150 L22,166"/>
+<path stroke-width="9" d="M178,150 L185,150"/>
+</g>
+<g fill="currentColor">
+<path d="M121.6,133 C126.3,129.3 135.8,136.8 143.2,137 C150.6,137.2 159.5,132.7 166,134 C172.5,135.3 180.4,140.5 182.2,145 C184,149.5 180.3,157.5 176.8,161 C173.3,164.5 167,165.7 161.2,166 C155.4,166.3 149.7,164.2 142,163 C134.3,161.8 118.4,164 115,159 C111.6,154 116.9,136.7 121.6,133Z"/>
+<circle r="12" cx="197.6" cy="146.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M178,150 L174.3,184.8"/>
+<path stroke-width="13.5" d="M174.3,184.8 L205.3,183.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M178,150 L174.3,184.8"/>
+<path stroke-width="10" d="M174.3,184.8 L205.3,183.7"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="205.3" cy="183.7"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M24,172 L214,172"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="5" d="M120,176 L120,224"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="7" cx="22" cy="160"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="69" cy="150" r="10"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M79,182 L69,160"/><circle class="muscle-fill" fill="#ff7a3c" cx="69" cy="160" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="79" cy="182" r="8.5"/><text x="79" y="182" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M22,120 L22,160"/><circle class="muscle-fill" fill="#ff7a3c" cx="22" cy="160" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="22" cy="120" r="8.5"/><text x="22" y="120" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

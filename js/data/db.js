@@ -169,3 +169,12 @@ export function byGroup(filterGroup = 'all', query = '', { includeHidden = false
 export function svgPath(ex) {
   return `assets/exercises/${ex.id}.svg`;
 }
+
+/** Built-in exercises with configurable equipment carry `setup` (localized
+ *  numbered steps) and an annotated diagram whose numbered badges match them. */
+export function hasSetup(ex) {
+  return !!(ex && !isCustom(ex) && ex.setup && Object.keys(ex.setup).length);
+}
+export function setupPath(ex) {
+  return `assets/setup/${ex.id}.svg`;
+}

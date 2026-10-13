@@ -1,0 +1,52 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rowing Machine setup"><title>Rowing Machine setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M112,180 L149.6,148.6"/>
+<path stroke-width="14" d="M149.6,148.6 L178,186"/>
+<path stroke-width="7.5" d="M178,186 L182.9,170.8"/>
+<path stroke-width="13" d="M143.8,129.1 L147.3,163.9"/>
+<path stroke-width="10" d="M147.3,163.9 L178,160"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M112,180 L149.6,148.6"/>
+<path stroke-width="14" d="M149.6,148.6 L178,186"/>
+<path stroke-width="7.5" d="M178,186 L182.9,170.8"/>
+<path stroke-width="9" d="M143.8,129.1 L147.5,123.2"/>
+</g>
+<g fill="currentColor">
+<path d="M99.5,167.9 C98.9,162 110.3,157.9 114.3,151.7 C118.4,145.6 119.3,135.6 123.9,130.8 C128.4,126 137,122 141.8,122.9 C146.6,123.8 151.4,131.1 152.5,136 C153.6,140.8 151.3,146.7 148.5,151.8 C145.7,156.9 140.8,160.6 135.7,166.5 C130.7,172.4 124.1,187.1 118,187.3 C112,187.5 100.1,173.9 99.5,167.9Z"/>
+<circle r="12" cx="153.6" cy="111.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M143.8,129.1 L147.3,163.9"/>
+<path stroke-width="13.5" d="M147.3,163.9 L178,160"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M143.8,129.1 L147.3,163.9"/>
+<path stroke-width="10" d="M147.3,163.9 L178,160"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="178" cy="160"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="5" d="M26,202 L196,202"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<circle r="18" cx="206" cy="176"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M180,162 L180,206"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="7" d="M98,197 L126,197"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M196,172 L178,160"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M178,155 L178,165"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="206" cy="176" r="20"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M206,136 L206,158"/><circle class="muscle-fill" fill="#ff7a3c" cx="206" cy="158" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="206" cy="136" r="8.5"/><text x="206" y="136" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M196.9,192.8 L182,188"/><circle class="muscle-fill" fill="#ff7a3c" cx="182" cy="188" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="196.9" cy="192.8" r="8.5"/><text x="196.9" y="192.8" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

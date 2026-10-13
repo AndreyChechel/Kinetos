@@ -1,0 +1,47 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leg Press setup"><title>Leg Press setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M92,172 L79.6,124.6"/>
+<path stroke-width="14" d="M79.6,124.6 L124,140"/>
+<path stroke-width="7.5" d="M124,140 L112.7,128.7"/>
+<path stroke-width="13" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="10" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M92,172 L79.6,124.6"/>
+<path stroke-width="14" d="M79.6,124.6 L124,140"/>
+<path stroke-width="7.5" d="M124,140 L112.7,128.7"/>
+<path stroke-width="9" d="M49.6,129.6 L44.6,124.6"/>
+</g>
+<g fill="currentColor">
+<path d="M77.4,181.5 C71.5,180.7 70.1,168.7 65,163.4 C59.9,158 50.4,154.9 46.7,149.4 C43.1,143.8 41.2,134.6 43.1,130.1 C45,125.7 53.3,122.6 58.2,122.6 C63.2,122.6 68.4,126.3 72.8,130.1 C77.1,134 79.6,139.6 84.2,145.8 C88.8,152.1 101.6,161.8 100.5,167.8 C99.4,173.7 83.3,182.2 77.4,181.5Z"/>
+<circle r="12" cx="36.8" cy="114.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="13.5" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="10" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="83.9" cy="185.9"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M86.3,191.8 L29.8,135.2"/>
+<path stroke-width="8" d="M83.5,189 L113.5,189"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="6" d="M50,218 L196,218"/>
+<path stroke-width="5" d="M97.5,189 L97.5,218"/>
+<path stroke-width="4" d="M115.5,171.1 L204.6,82"/>
+<path stroke-width="4" d="M115.5,171.1 L115.5,218"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M112.7,120.2 L138.1,145.7"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.8" fill="none" d="M52.3,191.8 A34,34 0 0 1 62.3,167.8"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.2" fill="none" stroke-dasharray="2 2" d="M86.3,191.8 L46.3,191.8"/><text class="muscle-fill" fill="#ff7a3c" x="40.1" y="172.7" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">45°</text><circle class="muscle-fill" fill="#ff7a3c" cx="16.1" cy="172.7" r="8.5"/><text x="16.1" y="172.7" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M136.7,110.7 L130,134"/><circle class="muscle-fill" fill="#ff7a3c" cx="130" cy="134" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="136.7" cy="110.7" r="8.5"/><text x="136.7" y="110.7" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="3.5" stroke-linecap="round" fill="none" d="M141,157 L129.7,145.7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M169.3,175.3 L135.3,151.3"/><circle class="muscle-fill" fill="#ff7a3c" cx="135.3" cy="151.3" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="169.3" cy="175.3" r="8.5"/><text x="169.3" y="175.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

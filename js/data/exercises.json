@@ -10,6 +10,13 @@
       "fr": ["Allongé à plat, prise un peu plus large que les épaules.", "Descendre la barre au milieu de la poitrine, pousser bras tendus."],
       "es": ["Túmbate plano, agarre algo más ancho que los hombros.", "Baja la barra al centro del pecho y empuja hasta estirar los brazos."],
       "ru": ["Лягте ровно, хват чуть шире плеч.", "Опустите штангу к середине груди, выжмите до полного выпрямления рук."]
+    },
+    "setup": {
+      "en": ["Flat bench (0°), eyes right under the bar.", "J-hooks a few cm below arm's length, so you unrack with nearly straight arms.", "Safety arms just below your chest height when lying."],
+      "de": ["Flachbank (0°), Augen direkt unter der Stange.", "Ablagen ein paar cm unter Armlänge, damit du mit fast gestreckten Armen aushebst.", "Sicherheitsablagen knapp unter Brusthöhe im Liegen."],
+      "fr": ["Banc plat (0°), les yeux juste sous la barre.", "Crochets quelques cm sous la longueur des bras, pour décrocher bras presque tendus.", "Barres de sécurité juste sous la hauteur de la poitrine, allongé."],
+      "es": ["Banco plano (0°), los ojos justo debajo de la barra.", "Soportes unos cm por debajo del largo de los brazos, para desenganchar con los brazos casi rectos.", "Barras de seguridad justo por debajo de la altura del pecho tumbado."],
+      "ru": ["Горизонтальная скамья (0°), глаза прямо под грифом.", "Крюки на несколько см ниже длины рук — снимать штангу почти прямыми руками.", "Страховочные упоры чуть ниже уровня груди в положении лёжа."]
     }
   },
   {
@@ -23,6 +30,13 @@
       "fr": ["Banc à ~30°, haltères au niveau de la poitrine.", "Pousser vers le haut en rapprochant légèrement, descente contrôlée."],
       "es": ["Banco a ~30°, mancuernas a la altura del pecho.", "Empuja arriba juntándolas un poco, baja de forma controlada."],
       "ru": ["Скамья под ~30°, гантели у груди.", "Выжмите вверх, слегка сводя, опускайте под контролем."]
+    },
+    "setup": {
+      "en": ["Backrest at 30° (anywhere 15–45° works).", "Seat one notch up so you don't slide down.", "Start with the dumbbells on your thighs, kick them up over your upper chest."],
+      "de": ["Rückenlehne auf 30° (15–45° geht auch).", "Sitz eine Raste höher, damit du nicht rutschst.", "Hanteln auf den Oberschenkeln starten, über die obere Brust hochbringen."],
+      "fr": ["Dossier à 30° (entre 15 et 45° convient).", "Assise un cran plus haut pour ne pas glisser.", "Haltères sur les cuisses, les monter au-dessus du haut de la poitrine."],
+      "es": ["Respaldo a 30° (entre 15 y 45° sirve).", "Asiento una muesca más arriba para no resbalar.", "Empieza con las mancuernas en los muslos y súbelas sobre la parte alta del pecho."],
+      "ru": ["Спинка под 30° (подойдёт 15–45°).", "Сиденье на одну отметку выше, чтобы не сползать.", "Гантели на бёдрах, подайте их вверх над верхом груди."]
     }
   },
   {
@@ -62,6 +76,13 @@
       "fr": ["Poulies hautes, un pas en avant, léger buste penché.", "Amener les mains vers le bas et l'avant des hanches."],
       "es": ["Poleas altas, un paso al frente, ligera inclinación.", "Lleva las manos abajo y juntas frente a las caderas."],
       "ru": ["Верхние блоки, шаг вперёд, лёгкий наклон.", "Сведите руки вниз перед бёдрами."]
+    },
+    "setup": {
+      "en": ["Both pulleys at the top, same notch and same weight on each side.", "A single D-handle on each cable.", "Stand centred between the columns, one step forward, staggered stance."],
+      "de": ["Beide Rollen ganz oben, gleiche Raste und gleiches Gewicht auf beiden Seiten.", "Je ein Einzelgriff (D-Griff) an jedem Kabel.", "Mittig zwischen den Säulen stehen, einen Schritt nach vorn, Schrittstellung."],
+      "fr": ["Les deux poulies en haut, même cran et même charge de chaque côté.", "Une poignée simple (en D) sur chaque câble.", "Au centre entre les colonnes, un pas en avant, pieds décalés."],
+      "es": ["Ambas poleas arriba, misma muesca y mismo peso en cada lado.", "Un agarre simple (en D) en cada cable.", "Colócate en el centro entre las columnas, un paso adelante, pies escalonados."],
+      "ru": ["Оба блока в верхнем положении, одинаковая отметка и одинаковый вес с каждой стороны.", "На каждый трос — одиночная D-рукоять.", "Встаньте по центру между стойками, шаг вперёд, ноги в разножке."]
     }
   },
   {
@@ -75,6 +96,13 @@
       "fr": ["Banc plat, haltères au niveau de la poitrine, poignets au-dessus des coudes.", "Pousser vers le haut en rapprochant un peu, descendre jusqu'à l'étirement."],
       "es": ["Banco plano, mancuernas a la altura del pecho, muñecas sobre los codos.", "Empuja arriba juntándolas un poco, baja hasta notar el estiramiento."],
       "ru": ["Горизонтальная скамья, гантели у груди, кисти над локтями.", "Выжмите вверх, слегка сводя, опускайте до растяжения груди."]
+    },
+    "setup": {
+      "en": ["Flat bench (0°).", "Start with the dumbbells on your thighs and kick them up as you lie back."],
+      "de": ["Flachbank (0°).", "Hanteln auf den Oberschenkeln starten und beim Zurücklegen mit Schwung hochbringen."],
+      "fr": ["Banc plat (0°).", "Haltères posés sur les cuisses, les remonter d'un coup de genou en s'allongeant."],
+      "es": ["Banco plano (0°).", "Empieza con las mancuernas sobre los muslos y súbelas con las rodillas al tumbarte."],
+      "ru": ["Горизонтальная скамья (0°).", "Гантели на бёдрах; при укладывании на скамью подайте их вверх коленями."]
     }
   },
   {
@@ -88,6 +116,13 @@
       "fr": ["Banc à ~30° sous la barre guidée, barre au-dessus du haut de la poitrine.", "Descendre à la poitrine, pousser le long des rails ; la barre compte dans la charge."],
       "es": ["Banco a ~30° bajo la barra guiada, barra sobre el pecho superior.", "Baja al pecho y empuja por los rieles; la barra cuenta en la carga."],
       "ru": ["Скамья под ~30° под грифом Смита, гриф идёт над верхом груди.", "Опустите к груди, выжмите вверх по направляющим; вес грифа тоже считается."]
+    },
+    "setup": {
+      "en": ["Backrest at 30°, bench placed so the bar lowers to your upper chest.", "Safety stops just above your chest at the bottom.", "Bar hooks at a height you reach with nearly straight arms."],
+      "de": ["Rückenlehne auf 30°, Bank so stellen, dass die Stange zur oberen Brust sinkt.", "Sicherheitsstopps knapp über der Brust in der unteren Position.", "Ablagehaken auf einer Höhe, die du mit fast gestreckten Armen erreichst."],
+      "fr": ["Dossier à 30°, banc placé pour que la barre descende sur le haut de la poitrine.", "Butées de sécurité juste au-dessus de la poitrine en bas.", "Crochets à une hauteur atteinte bras presque tendus."],
+      "es": ["Respaldo a 30°, banco colocado para que la barra baje a la parte alta del pecho.", "Topes de seguridad justo por encima del pecho abajo.", "Ganchos a una altura que alcances con los brazos casi rectos."],
+      "ru": ["Спинка под 30°, скамья стоит так, чтобы гриф опускался к верху груди.", "Страховочные упоры чуть выше груди в нижней точке.", "Крюки на высоте, до которой достаёте почти прямыми руками."]
     }
   },
   {
@@ -101,6 +136,13 @@
       "fr": ["Barre à hauteur de hanche, mains un peu plus larges que les épaules, corps aligné.", "Descendre la poitrine vers la barre et pousser ; barre plus basse = plus dur."],
       "es": ["Barra a la altura de la cadera, manos algo más anchas que los hombros, cuerpo alineado.", "Baja el pecho a la barra y empuja; cuanto más baja la barra, más cuesta."],
       "ru": ["Гриф на высоте бёдер, руки чуть шире плеч, тело одной линией.", "Опустите грудь к грифу и оттолкнитесь; ниже гриф — тяжелее."]
+    },
+    "setup": {
+      "en": ["Bar or bench height: higher is easier, lower is harder.", "Walk your feet back until your body forms a straight line."],
+      "de": ["Höhe von Stange oder Bank: höher = leichter, tiefer = schwerer.", "Füße zurücksetzen, bis der Körper eine gerade Linie bildet."],
+      "fr": ["Hauteur de la barre ou du banc : plus haut = plus facile, plus bas = plus dur.", "Reculer les pieds jusqu'à ce que le corps forme une ligne droite."],
+      "es": ["Altura de la barra o banco: más alto = más fácil, más bajo = más difícil.", "Lleva los pies atrás hasta que el cuerpo forme una línea recta."],
+      "ru": ["Высота перекладины или скамьи: выше — легче, ниже — тяжелее.", "Отшагните ногами назад, пока тело не выстроится в прямую линию."]
     }
   },
   {
@@ -127,6 +169,13 @@
       "fr": ["Prise large, poitrine haute.", "Tirer la barre vers le haut de la poitrine, serrer le dos."],
       "es": ["Agarre ancho, pecho arriba.", "Lleva la barra al pecho alto y aprieta la espalda."],
       "ru": ["Широкий хват, грудь вперёд.", "Тяните к верху груди, сводя лопатки."]
+    },
+    "setup": {
+      "en": ["Thigh pad snug on top of your thighs, just behind the knees.", "Seat height so your feet are flat and knees at about 90°.", "Long lat bar on the high pulley."],
+      "de": ["Oberschenkelpolster fest auf den Oberschenkeln, knapp hinter den Knien.", "Sitzhöhe so, dass die Füße flach stehen und die Knie etwa 90° haben.", "Lange Latzugstange am oberen Zug."],
+      "fr": ["Boudins bien appuyés sur le haut des cuisses, juste derrière les genoux.", "Hauteur du siège : pieds à plat, genoux à environ 90°.", "Barre longue de tirage sur la poulie haute."],
+      "es": ["Rodillos de muslos ajustados sobre los muslos, justo detrás de las rodillas.", "Altura del asiento con los pies planos y las rodillas a unos 90°.", "Barra larga de jalón en la polea alta."],
+      "ru": ["Валики плотно прижимают бёдра сверху, чуть позади коленей.", "Высота сиденья: стопы стоят полностью, колени около 90°.", "Длинная рукоять для тяги на верхнем блоке."]
     }
   },
   {
@@ -153,6 +202,13 @@
       "fr": ["Assis droit, genoux légèrement fléchis.", "Tirer la poignée au ventre, serrer les omoplates."],
       "es": ["Siéntate erguido, rodillas algo flexionadas.", "Lleva el agarre al abdomen, junta las escápulas."],
       "ru": ["Сядьте прямо, колени слегка согнуты.", "Тяните рукоять к животу, сводя лопатки."]
+    },
+    "setup": {
+      "en": ["Pulley at the lowest position.", "Close-grip V-handle.", "Feet on the foot plate, knees slightly bent; sit where your arms are straight and the weight is off the stack."],
+      "de": ["Rolle in der tiefsten Position.", "Enger V-Griff.", "Füße auf die Fußplatte, Knie leicht gebeugt; so sitzen, dass die Arme gestreckt sind und das Gewicht vom Stapel abhebt."],
+      "fr": ["Poulie en position la plus basse.", "Poignée en V (prise serrée).", "Pieds sur la plateforme, genoux légèrement fléchis ; s'asseoir bras tendus, charge décollée de la pile."],
+      "es": ["Polea en la posición más baja.", "Agarre en V (cerrado).", "Pies en la plataforma, rodillas algo flexionadas; siéntate donde los brazos queden rectos y el peso fuera de la pila."],
+      "ru": ["Блок в самом нижнем положении.", "V-рукоять (узкий хват).", "Стопы на упоре, колени слегка согнуты; сядьте так, чтобы руки были прямыми, а груз оторван от стопки."]
     }
   },
   {
@@ -179,6 +235,13 @@
       "fr": ["Main et genou appuyés sur le banc, dos plat, haltère pendante.", "Tirer l'haltère vers la taille, coude au-delà des côtes, redescendre en contrôle."],
       "es": ["Apoya mano y rodilla en el banco, espalda plana, mancuerna colgando.", "Lleva la mancuerna a la cintura, codo pasando las costillas, baja controlado."],
       "ru": ["Упор рукой и коленом в скамью, спина ровная, гантель висит.", "Тяните гантель к поясу, локоть уходит за рёбра, опускайте под контролем."]
+    },
+    "setup": {
+      "en": ["Knee on a flat bench.", "Same-side hand on the bench, under your shoulder.", "Other foot on the floor out to the side; back flat."],
+      "de": ["Knie auf eine Flachbank.", "Hand derselben Seite auf die Bank, unter der Schulter.", "Anderer Fuß seitlich auf dem Boden; Rücken gerade."],
+      "fr": ["Genou sur un banc plat.", "Main du même côté sur le banc, sous l'épaule.", "Autre pied au sol, écarté ; dos plat."],
+      "es": ["Rodilla sobre un banco plano.", "Mano del mismo lado en el banco, bajo el hombro.", "El otro pie en el suelo, hacia fuera; espalda plana."],
+      "ru": ["Колено на горизонтальной скамье.", "Рука той же стороны на скамье под плечом.", "Другая стопа на полу в стороне; спина ровная."]
     }
   },
   {
@@ -192,6 +255,13 @@
       "fr": ["Allongé ventre contre un banc à ~30°, bras pendants.", "Tirer les deux haltères vers la taille, serrer les omoplates, redescendre lentement."],
       "es": ["Tumbado boca abajo en banco a ~30°, brazos colgando.", "Rema ambas mancuernas a la cintura, junta las escápulas y baja despacio."],
       "ru": ["Лягте грудью на скамью под ~30°, руки свободно вниз.", "Тяните обе гантели к поясу, сводя лопатки, медленно опускайте."]
+    },
+    "setup": {
+      "en": ["Backrest at 30–45°.", "Chest on the pad, chin just over the top.", "Feet planted behind you."],
+      "de": ["Rückenlehne auf 30–45°.", "Brust auf dem Polster, Kinn knapp über der Oberkante.", "Füße hinter dir fest am Boden."],
+      "fr": ["Dossier à 30–45°.", "Poitrine sur le dossier, menton juste au-dessus du bord.", "Pieds bien ancrés derrière vous."],
+      "es": ["Respaldo a 30–45°.", "Pecho sobre el respaldo, barbilla justo por encima del borde.", "Pies bien apoyados detrás."],
+      "ru": ["Спинка под 30–45°.", "Грудь на спинке, подбородок чуть выше её края.", "Стопы упираются в пол позади."]
     }
   },
   {
@@ -205,6 +275,13 @@
       "fr": ["Poulie haute, bras presque tendus, léger buste en avant.", "Amener la poignée vers les cuisses avec les dorsaux, revenir sans plier les coudes."],
       "es": ["Polea alta, brazos casi rectos, inclínate un poco al frente.", "Lleva el agarre a los muslos con los dorsales y vuelve sin doblar los codos."],
       "ru": ["Верхний блок, руки почти прямые, небольшой наклон вперёд.", "Ведите рукоятку к бёдрам широчайшими, возвращайте не сгибая локти."]
+    },
+    "setup": {
+      "en": ["Pulley at the highest position.", "Straight bar (or a rope).", "Step back about 1 m and hinge forward about 30°, arms straight."],
+      "de": ["Rolle in der höchsten Position.", "Gerade Stange (oder Seil).", "Etwa 1 m zurücktreten, Oberkörper ca. 30° vorbeugen, Arme gestreckt."],
+      "fr": ["Poulie en position la plus haute.", "Barre droite (ou corde).", "Reculer d'environ 1 m, buste penché d'environ 30°, bras tendus."],
+      "es": ["Polea en la posición más alta.", "Barra recta (o cuerda).", "Retrocede aprox. 1 m e inclínate unos 30°, brazos rectos."],
+      "ru": ["Блок в самом верхнем положении.", "Прямая рукоять (или канат).", "Отойдите примерно на 1 м, наклон корпуса около 30°, руки прямые."]
     }
   },
   {
@@ -218,6 +295,13 @@
       "fr": ["Suspendu sous une barre basse, corps aligné des talons à la tête.", "Tirer la poitrine vers la barre, coudes en arrière ; pieds plus hauts = plus dur."],
       "es": ["Cuelga bajo una barra baja, cuerpo recto de talones a cabeza.", "Lleva el pecho a la barra, codos atrás; con los pies más altos cuesta más."],
       "ru": ["Повисните под низкой перекладиной, тело прямое от пяток до головы.", "Тяните грудь к перекладине, локти назад; выше ноги — тяжелее."]
+    },
+    "setup": {
+      "en": ["Bar (Smith machine or rack) at about waist height; higher is easier.", "Heels on the floor, body straight from head to heels."],
+      "de": ["Stange (Multipresse oder Rack) etwa auf Hüfthöhe; höher = leichter.", "Fersen am Boden, Körper von Kopf bis Ferse gerade."],
+      "fr": ["Barre (Smith ou rack) à peu près à hauteur de taille ; plus haut = plus facile.", "Talons au sol, corps droit de la tête aux talons."],
+      "es": ["Barra (Smith o rack) más o menos a la altura de la cintura; más alta = más fácil.", "Talones en el suelo, cuerpo recto de la cabeza a los talones."],
+      "ru": ["Гриф (Смит или рама) примерно на уровне пояса; выше — легче.", "Пятки на полу, тело прямое от головы до пяток."]
     }
   },
   {
@@ -231,6 +315,13 @@
       "fr": ["Barre sur le haut du dos, gainer.", "Descendre en profondeur, remonter en poussant."],
       "es": ["Barra en la espalda alta, aprieta el core.", "Baja en profundidad y empuja hacia arriba."],
       "ru": ["Гриф на верх спины, напрягите кор.", "Сядьте вниз до глубины, мощно встаньте."]
+    },
+    "setup": {
+      "en": ["J-hooks at mid-chest height, so you unrack with a slight knee bend.", "Safety arms just below the bar at the bottom of your squat."],
+      "de": ["Ablagen auf mittlerer Brusthöhe, damit du mit leicht gebeugten Knien aushebst.", "Sicherheitsablagen knapp unter der Stange am tiefsten Punkt der Kniebeuge."],
+      "fr": ["Crochets à mi-hauteur de poitrine, pour décrocher genoux légèrement fléchis.", "Barres de sécurité juste sous la barre au bas du squat."],
+      "es": ["Soportes a media altura del pecho, para desenganchar con las rodillas algo flexionadas.", "Barras de seguridad justo por debajo de la barra en el fondo de la sentadilla."],
+      "ru": ["Крюки на уровне середины груди — снимать штангу со слегка согнутыми коленями.", "Страховочные упоры чуть ниже грифа в нижней точке приседа."]
     }
   },
   {
@@ -244,6 +335,13 @@
       "fr": ["Pieds largeur d'épaules sur la plateforme.", "Descendre à ~90° aux genoux, pousser sans tout verrouiller."],
       "es": ["Pies a la anchura de hombros en la plataforma.", "Baja a ~90° de rodilla y empuja sin bloquear fuerte."],
       "ru": ["Стопы на ширине плеч на платформе.", "Опустите до ~90° в коленях, выжмите без жёсткой блокировки."]
+    },
+    "setup": {
+      "en": ["Backrest at about 45° — whatever keeps your lower back flat on the pad.", "Feet shoulder-width in the middle of the platform.", "Safety stops just below your deepest point; release the locks only once you're in position."],
+      "de": ["Rückenlehne etwa 45° — so, dass der untere Rücken flach am Polster bleibt.", "Füße schulterbreit in der Mitte der Plattform.", "Sicherheitsstopps knapp unter dem tiefsten Punkt; Verriegelung erst in Position lösen."],
+      "fr": ["Dossier à environ 45° — de quoi garder le bas du dos à plat sur le coussin.", "Pieds largeur d'épaules au milieu de la plateforme.", "Butées juste sous le point le plus bas ; ne débloquer qu'une fois en place."],
+      "es": ["Respaldo a unos 45°, lo que mantenga la zona lumbar pegada al respaldo.", "Pies a la anchura de los hombros en el centro de la plataforma.", "Topes de seguridad justo por debajo del punto más bajo; quita los seguros solo ya colocado."],
+      "ru": ["Спинка около 45° — так, чтобы поясница лежала плотно.", "Стопы на ширине плеч в центре платформы.", "Страховочные упоры чуть ниже самой глубокой точки; снимайте фиксаторы только заняв позицию."]
     }
   },
   {
@@ -270,6 +368,13 @@
       "fr": ["Coussin sur le bas des tibias, calé au dossier.", "Étendre les genoux à fond, redescendre lentement."],
       "es": ["Rodillo en las espinillas, apóyate atrás.", "Extiende las rodillas del todo y baja despacio."],
       "ru": ["Валик на голенях, откиньтесь назад.", "Полностью разогните колени, опускайте медленно."]
+    },
+    "setup": {
+      "en": ["Line your knee joint up with the machine's pivot.", "Backrest moved so your back is supported with the knees at the pivot.", "Shin pad on the lower shin, just above the ankles."],
+      "de": ["Kniegelenk auf die Drehachse der Maschine ausrichten.", "Rückenlehne so verstellen, dass der Rücken anliegt und die Knie an der Achse sind.", "Schienbeinpolster unten am Schienbein, knapp über den Knöcheln."],
+      "fr": ["Aligner l'articulation du genou sur l'axe de la machine.", "Régler le dossier pour être calé, genoux sur l'axe.", "Boudin sur le bas du tibia, juste au-dessus des chevilles."],
+      "es": ["Alinea la articulación de la rodilla con el eje de la máquina.", "Ajusta el respaldo para apoyar la espalda con las rodillas en el eje.", "Rodillo en la parte baja de la espinilla, justo encima de los tobillos."],
+      "ru": ["Совместите коленный сустав с осью вращения тренажёра.", "Сдвиньте спинку так, чтобы спина опиралась, а колени были на оси.", "Валик на нижней части голени, чуть выше лодыжек."]
     }
   },
   {
@@ -283,6 +388,13 @@
       "fr": ["Coussin au-dessus des talons, hanches à plat.", "Ramener les talons vers les fessiers, retour contrôlé."],
       "es": ["Rodillo sobre los talones, cadera abajo.", "Lleva los talones a los glúteos y controla la vuelta."],
       "ru": ["Валик над пятками, таз прижат.", "Подтяните пятки к ягодицам, вернитесь под контролем."]
+    },
+    "setup": {
+      "en": ["Knees just past the edge of the pad, in line with the pivot.", "Ankle pad on the back of the lower legs, just above the heels."],
+      "de": ["Knie knapp über der Polsterkante, auf Höhe der Drehachse.", "Fußpolster hinten an den Unterschenkeln, knapp über den Fersen."],
+      "fr": ["Genoux juste au-delà du bord du coussin, alignés sur l'axe.", "Boudin à l'arrière des jambes, juste au-dessus des talons."],
+      "es": ["Rodillas justo fuera del borde del banco, alineadas con el eje.", "Rodillo en la parte trasera de las piernas, justo encima de los talones."],
+      "ru": ["Колени чуть за краем подушки, на одной линии с осью.", "Валик на задней стороне голеней, чуть выше пяток."]
     }
   },
   {
@@ -309,6 +421,13 @@
       "fr": ["Pointes des pieds sur le bord.", "Monter à fond sur les orteils, descendre pour étirer."],
       "es": ["Puntas de los pies en el borde.", "Sube del todo de puntillas y baja estirando."],
       "ru": ["Носки на краю платформы.", "Поднимитесь на носки полностью, опуститесь до растяжения."]
+    },
+    "setup": {
+      "en": ["Shoulder pads at a height where you stand under them with knees almost straight.", "Balls of the feet on the edge of the step, heels free."],
+      "de": ["Schulterpolster so hoch, dass du mit fast gestreckten Knien darunter stehst.", "Fußballen auf die Stufenkante, Fersen frei."],
+      "fr": ["Épaulières réglées pour se tenir dessous genoux presque tendus.", "Avant des pieds sur le bord de la marche, talons libres."],
+      "es": ["Hombreras a la altura en la que estás debajo con las rodillas casi rectas.", "Metatarsos en el borde del escalón, talones libres."],
+      "ru": ["Плечевые упоры на высоте, при которой вы стоите под ними почти с прямыми коленями.", "Подушечки стоп на краю ступени, пятки свободны."]
     }
   },
   {
@@ -322,6 +441,13 @@
       "fr": ["Barre sur le haut du dos, pieds légèrement devant l'axe de la barre.", "S'asseoir au moins jusqu'à la parallèle, remonter en poussant sur les talons."],
       "es": ["Barra en la espalda alta, pies algo delante de la línea de la barra.", "Baja al menos hasta la paralela y sube empujando con los talones."],
       "ru": ["Гриф на верхней части спины, стопы чуть впереди линии грифа.", "Садитесь между направляющими минимум до параллели, вставайте через пятки."]
+    },
+    "setup": {
+      "en": ["Bar hooks at shoulder height.", "Safety stops just below your lowest bar position.", "Feet slightly in front of the bar."],
+      "de": ["Ablagehaken auf Schulterhöhe.", "Sicherheitsstopps knapp unter der tiefsten Stangenposition.", "Füße etwas vor der Stange."],
+      "fr": ["Crochets de la barre à hauteur d'épaules.", "Butées juste sous la position la plus basse de la barre.", "Pieds légèrement devant la barre."],
+      "es": ["Ganchos de la barra a la altura de los hombros.", "Topes de seguridad justo por debajo de la posición más baja de la barra.", "Pies algo por delante de la barra."],
+      "ru": ["Крюки грифа на уровне плеч.", "Страховочные упоры чуть ниже самой нижней точки грифа.", "Стопы немного впереди грифа."]
     }
   },
   {
@@ -335,6 +461,13 @@
       "fr": ["Barre sur le haut du dos, un pied devant sous la barre, pied arrière sur la pointe.", "Descendre le genou arrière vers le sol, remonter avec la jambe avant ; changer de côté."],
       "es": ["Barra en la espalda alta, un pie delante bajo la barra, el otro de puntillas.", "Baja la rodilla trasera al suelo y sube con la pierna delantera; cambia de lado."],
       "ru": ["Гриф на верхней части спины, одна стопа впереди под грифом, задняя на носке.", "Опустите заднее колено к полу, поднимитесь передней ногой; смените сторону."]
+    },
+    "setup": {
+      "en": ["Bar hooks at shoulder height.", "Safety stops just below your lowest bar position.", "Long split stance with the bar over the middle."],
+      "de": ["Ablagehaken auf Schulterhöhe.", "Sicherheitsstopps knapp unter der tiefsten Stangenposition.", "Lange Schrittstellung, die Stange über der Mitte."],
+      "fr": ["Crochets de la barre à hauteur d'épaules.", "Butées juste sous la position la plus basse de la barre.", "Grande fente, la barre au milieu."],
+      "es": ["Ganchos de la barra a la altura de los hombros.", "Topes de seguridad justo por debajo de la posición más baja de la barra.", "Zancada larga con la barra en el centro."],
+      "ru": ["Крюки грифа на уровне плеч.", "Страховочные упоры чуть ниже самой нижней точки грифа.", "Длинный выпад, гриф над серединой стойки."]
     }
   },
   {
@@ -348,6 +481,13 @@
       "fr": ["Pied arrière sur un banc, pied avant deux pas devant, haltères le long du corps.", "Descendre à la verticale jusqu'à la cuisse parallèle, pousser sur le pied avant."],
       "es": ["Pie trasero en el banco, pie delantero dos pasos adelante, mancuernas a los lados.", "Baja en vertical hasta el muslo paralelo y empuja con el pie delantero."],
       "ru": ["Задняя стопа на скамье, передняя в двух шагах впереди, гантели по бокам.", "Опускайтесь строго вниз до параллели переднего бедра, вставайте через переднюю стопу."]
+    },
+    "setup": {
+      "en": ["Bench at about knee height (45–50 cm).", "Rear foot laces-down on the bench.", "Front foot 60–90 cm ahead of the bench, so the knee stays over the ankle at the bottom."],
+      "de": ["Bank etwa auf Kniehöhe (45–50 cm).", "Hinteren Fuß mit dem Spann auf die Bank legen.", "Vorderer Fuß 60–90 cm vor der Bank, damit das Knie unten über dem Knöchel bleibt."],
+      "fr": ["Banc à peu près à hauteur du genou (45–50 cm).", "Pied arrière posé sur le banc, lacets vers le bas.", "Pied avant 60–90 cm devant le banc, genou au-dessus de la cheville en bas."],
+      "es": ["Banco a la altura de la rodilla aprox. (45–50 cm).", "Pie trasero apoyado sobre el empeine en el banco.", "Pie delantero a 60–90 cm del banco, para que la rodilla quede sobre el tobillo abajo."],
+      "ru": ["Скамья примерно на высоте колена (45–50 см).", "Задняя стопа подъёмом на скамье.", "Передняя стопа в 60–90 см от скамьи, чтобы внизу колено было над лодыжкой."]
     }
   },
   {
@@ -361,6 +501,13 @@
       "fr": ["Haltère(s) en main, tout le pied sur la plateforme, genou au-dessus des orteils.", "Monter uniquement avec la jambe du haut, sans pousser du sol, puis redescendre lentement."],
       "es": ["Mancuerna(s) en mano, todo el pie en la plataforma, rodilla sobre los dedos.", "Sube solo con la pierna de arriba, sin impulso del suelo, y baja despacio."],
       "ru": ["Гантель(и) в руках, стопа полностью на платформе, колено над носком.", "Поднимайтесь только верхней ногой, без толчка снизу, и медленно опускайтесь."]
+    },
+    "setup": {
+      "en": ["Box or bench at knee height or lower (30–50 cm).", "Whole front foot on the box."],
+      "de": ["Box oder Bank auf Kniehöhe oder tiefer (30–50 cm).", "Ganzen vorderen Fuß auf die Box stellen."],
+      "fr": ["Box ou banc à hauteur du genou ou plus bas (30–50 cm).", "Tout le pied avant sur le box."],
+      "es": ["Cajón o banco a la altura de la rodilla o más bajo (30–50 cm).", "Todo el pie delantero sobre el cajón."],
+      "ru": ["Тумба или скамья на высоте колена или ниже (30–50 см).", "Передняя стопа полностью на тумбе."]
     }
   },
   {
@@ -400,6 +547,13 @@
       "fr": ["Assis droit, coussins à l'extérieur des genoux, pieds à plat.", "Écarter les genoux avec les fessiers, marquer un temps, revenir lentement."],
       "es": ["Siéntate erguido, almohadillas en la parte externa de las rodillas, pies apoyados.", "Separa las rodillas con los glúteos, pausa al final y vuelve despacio."],
       "ru": ["Сядьте прямо, валики снаружи колен, стопы на полу.", "Разводите колени ягодицами, задержка в конце, медленно возвращайте."]
+    },
+    "setup": {
+      "en": ["Pads on the outside of the knees; set the start lever so your legs start together.", "Sit all the way back and hold the handles."],
+      "de": ["Polster außen an den Knien; Startposition so, dass die Beine geschlossen beginnen.", "Ganz nach hinten setzen und die Griffe halten."],
+      "fr": ["Coussins à l'extérieur des genoux ; régler le départ jambes serrées.", "S'asseoir bien au fond et tenir les poignées."],
+      "es": ["Almohadillas en la parte externa de las rodillas; ajusta el inicio con las piernas juntas.", "Siéntate al fondo y sujeta las asas."],
+      "ru": ["Подушки с внешней стороны коленей; стартовый рычаг — ноги вместе.", "Сядьте глубоко назад и держитесь за рукояти."]
     }
   },
   {
@@ -413,6 +567,13 @@
       "fr": ["Assis droit, coussins à l'intérieur des genoux, jambes écartées.", "Serrer les genoux avec les adducteurs, ouvrir lentement en contrôle."],
       "es": ["Siéntate erguido con las almohadillas por dentro de las rodillas, piernas abiertas.", "Junta las rodillas con los aductores y abre despacio, controlando."],
       "ru": ["Сядьте прямо, валики с внутренней стороны колен, ноги разведены.", "Сводите колени внутренней поверхностью бёдер, разводите медленно под контролем."]
+    },
+    "setup": {
+      "en": ["Pads on the inside of the knees; set the start width to a comfortable stretch.", "Sit all the way back and hold the handles."],
+      "de": ["Polster innen an den Knien; Startbreite auf eine angenehme Dehnung stellen.", "Ganz nach hinten setzen und die Griffe halten."],
+      "fr": ["Coussins à l'intérieur des genoux ; écartement de départ en étirement confortable.", "S'asseoir bien au fond et tenir les poignées."],
+      "es": ["Almohadillas en la parte interna de las rodillas; abre el inicio hasta un estiramiento cómodo.", "Siéntate al fondo y sujeta las asas."],
+      "ru": ["Подушки с внутренней стороны коленей; стартовая ширина — комфортное растяжение.", "Сядьте глубоко назад и держитесь за рукояти."]
     }
   },
   {
@@ -426,6 +587,13 @@
       "fr": ["Seule la plante avant du pied sur la plateforme, jambes presque tendues, sécurités en place.", "Pousser la plateforme avec les orteils en pleine extension, puis descendre les talons."],
       "es": ["Solo la punta de los pies en la plataforma, piernas casi rectas, seguros puestos.", "Empuja con los dedos hasta la extensión completa y baja los talones a fondo."],
       "ru": ["На платформе только носки, ноги почти прямые, страховка выставлена.", "Выталкивайте платформу носками до полного разгибания, затем глубоко опускайте пятки."]
+    },
+    "setup": {
+      "en": ["Balls of the feet on the bottom edge of the platform, heels free.", "Knees straight but not locked; keep the safety locks engaged."],
+      "de": ["Fußballen auf die Unterkante der Plattform, Fersen frei.", "Knie gestreckt, aber nicht durchgedrückt; Sicherheitsverriegelung bleibt eingerastet."],
+      "fr": ["Avant des pieds sur le bord bas de la plateforme, talons libres.", "Genoux tendus sans verrouiller ; laisser les sécurités enclenchées."],
+      "es": ["Metatarsos en el borde inferior de la plataforma, talones libres.", "Rodillas rectas sin bloquear; deja los seguros puestos."],
+      "ru": ["Подушечки стоп на нижнем краю платформы, пятки свободны.", "Колени прямые, но не заблокированы; фиксаторы остаются включены."]
     }
   },
   {
@@ -439,6 +607,13 @@
       "fr": ["Barre sur le haut du dos, avant-pieds sur un step ou un disque, talons libres.", "Monter le plus haut possible sur les pointes, tenir un instant, descendre les talons."],
       "es": ["Barra en la espalda alta, puntas de los pies en un step o disco, talones libres.", "Sube lo más alto posible de puntillas, aguanta un instante y baja los talones."],
       "ru": ["Гриф на верхней части спины, носки на степе или блине, пятки свободны.", "Поднимитесь на носки максимально высоко, задержка, опустите пятки до растяжения."]
+    },
+    "setup": {
+      "en": ["Bar hooks at shoulder height.", "A step or plate under the bar; balls of the feet on its edge, heels free."],
+      "de": ["Ablagehaken auf Schulterhöhe.", "Stufe oder Hantelscheibe unter die Stange; Fußballen auf die Kante, Fersen frei."],
+      "fr": ["Crochets de la barre à hauteur d'épaules.", "Une marche ou un disque sous la barre ; avant des pieds sur le bord, talons libres."],
+      "es": ["Ganchos de la barra a la altura de los hombros.", "Un escalón o disco bajo la barra; metatarsos en el borde, talones libres."],
+      "ru": ["Крюки грифа на уровне плеч.", "Под грифом ступень или блин; подушечки стоп на краю, пятки свободны."]
     }
   },
   {
@@ -452,6 +627,13 @@
       "fr": ["Barre à la clavicule, gainer.", "Pousser au-dessus de la tête, verrouiller, redescendre."],
       "es": ["Barra en la clavícula, aprieta.", "Empuja sobre la cabeza, bloquea y baja al inicio."],
       "ru": ["Гриф у ключиц, напрягитесь.", "Выжмите над головой, зафиксируйте, опустите назад."]
+    },
+    "setup": {
+      "en": ["J-hooks at collarbone height.", "Unrack and take one step back, feet hip-width."],
+      "de": ["Ablagen auf Höhe der Schlüsselbeine.", "Ausheben, einen Schritt zurück, Füße hüftbreit."],
+      "fr": ["Crochets à hauteur des clavicules.", "Décrocher et reculer d'un pas, pieds largeur de hanches."],
+      "es": ["Soportes a la altura de las clavículas.", "Desengancha y da un paso atrás, pies a la anchura de la cadera."],
+      "ru": ["Крюки на уровне ключиц.", "Снимите штангу и сделайте шаг назад, стопы на ширине таза."]
     }
   },
   {
@@ -504,6 +686,13 @@
       "fr": ["Corde à hauteur des yeux.", "Tirer vers le visage, coudes hauts et écartés."],
       "es": ["Cuerda a la altura de los ojos.", "Tira hacia la cara, codos altos y abiertos."],
       "ru": ["Канат на уровне глаз.", "Тяните к лицу, локти высоко и в стороны."]
+    },
+    "setup": {
+      "en": ["Pulley at about forehead height.", "Rope attachment; hold the ends with thumbs pointing back.", "Step back until your arms are straight and the weight lifts off the stack."],
+      "de": ["Rolle etwa auf Stirnhöhe.", "Seilgriff; Enden greifen, Daumen zeigen nach hinten.", "Zurücktreten, bis die Arme gestreckt sind und das Gewicht vom Stapel abhebt."],
+      "fr": ["Poulie à peu près à hauteur du front.", "Corde ; tenir les extrémités pouces vers l'arrière.", "Reculer jusqu'à bras tendus et charge décollée de la pile."],
+      "es": ["Polea más o menos a la altura de la frente.", "Cuerda; sujeta los extremos con los pulgares hacia atrás.", "Retrocede hasta tener los brazos estirados y el peso separado de la pila."],
+      "ru": ["Блок примерно на уровне лба.", "Канатная рукоять; держите концы, большие пальцы назад.", "Отойдите назад, пока руки не выпрямятся и груз не оторвётся от стопки."]
     }
   },
   {
@@ -517,6 +706,13 @@
       "fr": ["Assis bien droit contre le dossier, haltères aux oreilles, coudes légèrement devant.", "Pousser au-dessus de la tête sans cambrer, redescendre aux oreilles en contrôle."],
       "es": ["Siéntate erguido contra el respaldo, mancuernas a la altura de las orejas.", "Empuja sobre la cabeza sin arquear la lumbar y baja controlado a las orejas."],
       "ru": ["Сядьте прямо, спина к спинке, гантели на уровне ушей, локти чуть вперёд.", "Выжмите над головой без прогиба в пояснице, опускайте к ушам под контролем."]
+    },
+    "setup": {
+      "en": ["Backrest upright (80–90°), seat flat.", "Start with the dumbbells at shoulder height."],
+      "de": ["Rückenlehne aufrecht (80–90°), Sitz flach.", "Hanteln auf Schulterhöhe starten."],
+      "fr": ["Dossier droit (80–90°), assise à plat.", "Départ haltères à hauteur des épaules."],
+      "es": ["Respaldo vertical (80–90°), asiento plano.", "Empieza con las mancuernas a la altura de los hombros."],
+      "ru": ["Спинка вертикально (80–90°), сиденье горизонтально.", "Старт: гантели на уровне плеч."]
     }
   },
   {
@@ -582,6 +778,13 @@
       "fr": ["Coudes serrés au corps.", "Pousser jusqu'à l'extension complète, retour contrôlé."],
       "es": ["Codos pegados al cuerpo.", "Empuja hasta la extensión total, controla la vuelta."],
       "ru": ["Локти прижаты к бокам.", "Разгибайте до конца, возврат под контролем."]
+    },
+    "setup": {
+      "en": ["Pulley at the highest position.", "Straight bar (or a rope / V-bar).", "Stand close, feet hip-width, elbows pinned to your sides."],
+      "de": ["Rolle in der höchsten Position.", "Gerade Stange (oder Seil / V-Griff).", "Nah am Gerät stehen, Füße hüftbreit, Ellbogen fest an den Seiten."],
+      "fr": ["Poulie en position la plus haute.", "Barre droite (ou corde / barre en V).", "Se tenir proche, pieds largeur de hanches, coudes collés au corps."],
+      "es": ["Polea en la posición más alta.", "Barra recta (o cuerda / barra en V).", "De pie cerca, pies a la anchura de la cadera, codos pegados al cuerpo."],
+      "ru": ["Блок в самом верхнем положении.", "Прямая рукоять (или канат / V-рукоять).", "Встаньте близко, стопы на ширине таза, локти прижаты к корпусу."]
     }
   },
   {
@@ -608,6 +811,13 @@
       "fr": ["En appui sur les barres, léger buste en avant.", "Descendre à ~90° aux coudes, remonter."],
       "es": ["Apóyate en las barras, ligera inclinación.", "Baja a ~90° de codo y empuja hacia arriba."],
       "ru": ["Упор на брусьях, лёгкий наклон вперёд.", "Опуститесь до ~90° в локтях, отожмитесь."]
+    },
+    "setup": {
+      "en": ["Bars about shoulder-width apart (pick the width on adjustable or V-shaped bars).", "Start at the top: arms locked, shoulders over the hands — use a step to get up."],
+      "de": ["Holme etwa schulterbreit (bei verstellbaren oder V-förmigen Holmen die Breite wählen).", "Oben starten: Arme gestreckt, Schultern über den Händen — mit einer Stufe hochsteigen."],
+      "fr": ["Barres écartées d'environ la largeur des épaules (choisir sur barres réglables ou en V).", "Départ en haut : bras tendus, épaules au-dessus des mains — monter avec une marche."],
+      "es": ["Barras a la anchura de los hombros (elige el ancho en barras regulables o en V).", "Empieza arriba: brazos bloqueados, hombros sobre las manos; usa un escalón para subir."],
+      "ru": ["Брусья примерно на ширине плеч (на регулируемых или V-брусьях выберите ширину).", "Старт сверху: руки выпрямлены, плечи над кистями — забирайтесь с подставки."]
     }
   },
   {
@@ -621,6 +831,13 @@
       "fr": ["Prise plus serrée que les épaules.", "Descendre au bas de la poitrine, coudes serrés, pousser."],
       "es": ["Agarre más estrecho que los hombros.", "Baja al pecho bajo, codos pegados, empuja."],
       "ru": ["Хват уже ширины плеч.", "Опустите к низу груди, локти прижаты, выжмите."]
+    },
+    "setup": {
+      "en": ["Flat bench (0°), eyes right under the bar.", "J-hooks a few cm below arm's length, so you unrack with nearly straight arms.", "Safety arms just below your chest height when lying."],
+      "de": ["Flachbank (0°), Augen direkt unter der Stange.", "Ablagen ein paar cm unter Armlänge, damit du mit fast gestreckten Armen aushebst.", "Sicherheitsablagen knapp unter Brusthöhe im Liegen."],
+      "fr": ["Banc plat (0°), les yeux juste sous la barre.", "Crochets quelques cm sous la longueur des bras, pour décrocher bras presque tendus.", "Barres de sécurité juste sous la hauteur de la poitrine, allongé."],
+      "es": ["Banco plano (0°), los ojos justo debajo de la barra.", "Soportes unos cm por debajo del largo de los brazos, para desenganchar con los brazos casi rectos.", "Barras de seguridad justo por debajo de la altura del pecho tumbado."],
+      "ru": ["Горизонтальная скамья (0°), глаза прямо под грифом.", "Крюки на несколько см ниже длины рук — снимать штангу почти прямыми руками.", "Страховочные упоры чуть ниже уровня груди в положении лёжа."]
     }
   },
   {
@@ -634,6 +851,13 @@
       "fr": ["Mains sur le bord du banc derrière toi, hanches près du banc, jambes devant.", "Plier les coudes vers l'arrière à ~90°, pousser ; jambes plus tendues = plus dur."],
       "es": ["Manos en el borde del banco detrás, caderas cerca del banco, piernas al frente.", "Flexiona los codos hacia atrás a ~90° y empuja; piernas más rectas, más difícil."],
       "ru": ["Руки на край скамьи за спиной, таз близко к скамье, ноги впереди.", "Сгибайте локти строго назад до ~90°, выжимайте вверх; прямее ноги — тяжелее."]
+    },
+    "setup": {
+      "en": ["Hands shoulder-width on the bench edge, fingers forward.", "Feet out in front, heels on the floor (straighter legs = harder)."],
+      "de": ["Hände schulterbreit auf der Bankkante, Finger nach vorn.", "Füße nach vorn, Fersen am Boden (gestrecktere Beine = schwerer)."],
+      "fr": ["Mains largeur d'épaules sur le bord du banc, doigts vers l'avant.", "Pieds devant, talons au sol (jambes plus tendues = plus dur)."],
+      "es": ["Manos a la anchura de los hombros en el borde del banco, dedos hacia delante.", "Pies delante, talones en el suelo (piernas más rectas = más difícil)."],
+      "ru": ["Руки на краю скамьи на ширине плеч, пальцы вперёд.", "Ноги вперёд, пятки на полу (чем прямее ноги, тем тяжелее)."]
     }
   },
   {
@@ -647,6 +871,13 @@
       "fr": ["Allongé à plat, barre EZ au-dessus du front, bras verticaux.", "Plier seulement les coudes derrière la tête, tendre sans bouger les épaules."],
       "es": ["Tumbado plano, barra Z sobre la frente, brazos verticales.", "Flexiona solo los codos hacia atrás y extiende sin mover los hombros."],
       "ru": ["Лягте на скамью, W-гриф над лбом, плечи вертикально.", "Сгибайте только локти, опуская за голову, разгибайте не двигая плечами."]
+    },
+    "setup": {
+      "en": ["Flat bench (0°).", "EZ bar (or a straight bar)."],
+      "de": ["Flachbank (0°).", "SZ-Stange (oder gerade Stange)."],
+      "fr": ["Banc plat (0°).", "Barre EZ (ou barre droite)."],
+      "es": ["Banco plano (0°).", "Barra Z (o barra recta)."],
+      "ru": ["Горизонтальная скамья (0°).", "EZ-гриф (или прямой гриф)."]
     }
   },
   {
@@ -712,6 +943,13 @@
       "fr": ["Saisir la poulie haute, bras tendus.", "Pivoter et tirer en diagonale vers le bas."],
       "es": ["Agarra la polea alta, brazos extendidos.", "Gira y tira en diagonal hacia abajo cruzando el cuerpo."],
       "ru": ["Возьмите верхний блок, руки прямые.", "Поворачивайтесь и тяните по диагонали вниз через корпус."]
+    },
+    "setup": {
+      "en": ["Pulley at the highest position.", "Single D-handle (or a rope), held with both hands.", "Stand side-on to the column, about an arm's length away, feet shoulder-width."],
+      "de": ["Rolle in der höchsten Position.", "Einzelgriff (D-Griff) oder Seil, mit beiden Händen greifen.", "Seitlich zur Säule stehen, etwa eine Armlänge entfernt, Füße schulterbreit."],
+      "fr": ["Poulie en position la plus haute.", "Poignée simple (en D) ou corde, tenue à deux mains.", "De profil par rapport à la colonne, à environ une longueur de bras, pieds largeur d'épaules."],
+      "es": ["Polea en la posición más alta.", "Agarre simple (en D) o cuerda, con ambas manos.", "De lado a la columna, a un brazo de distancia, pies a la anchura de los hombros."],
+      "ru": ["Блок в самом верхнем положении.", "Одиночная D-рукоять (или канат), держите двумя руками.", "Встаньте боком к стойке на расстоянии вытянутой руки, стопы на ширине плеч."]
     }
   },
   {
@@ -725,6 +963,13 @@
       "fr": ["Jambes bloquées sur un banc décliné, mains sur la poitrine (ajouter un disque).", "Enrouler les côtes vers le bassin, souffler en haut, redescendre sans se laisser tomber."],
       "es": ["Engancha las piernas en el banco declinado, manos en el pecho (añade un disco).", "Acerca las costillas a la pelvis, exhala arriba y baja sin dejarte caer."],
       "ru": ["Зафиксируйте ноги на наклонной скамье, руки у груди (блин — для утяжеления).", "Скручивайте рёбра к тазу, выдох в верхней точке, опускайтесь без падения."]
+    },
+    "setup": {
+      "en": ["Decline about 20° (15–30°; start shallow).", "Hook your feet under the rollers, knees bent over the top."],
+      "de": ["Negativneigung ca. 20° (15–30°; flach anfangen).", "Füße unter die Rollen haken, Knie über der Oberkante gebeugt."],
+      "fr": ["Déclinaison d'environ 20° (15–30° ; commencer faible).", "Pieds calés sous les boudins, genoux pliés au-dessus du bord."],
+      "es": ["Declinación de unos 20° (15–30°; empieza suave).", "Engancha los pies bajo los rodillos, rodillas flexionadas sobre el borde."],
+      "ru": ["Наклон вниз около 20° (15–30°; начните с малого).", "Зацепите стопы под валики, колени согнуты над краем."]
     }
   },
   {
@@ -751,6 +996,13 @@
       "fr": ["Régler la selle pour une légère flexion du genou.", "Garder une cadence régulière, ajuster la résistance."],
       "es": ["Ajusta el sillín a una ligera flexión de rodilla.", "Mantén una cadencia constante, ajusta la resistencia."],
       "ru": ["Настройте седло на лёгкий сгиб колена.", "Держите ровный каденс, регулируйте сопротивление."]
+    },
+    "setup": {
+      "en": ["Saddle height: level with your hip bone when standing; leg almost straight at the bottom of the stroke.", "Saddle fore/aft: knee over the pedal axle with the cranks level.", "Handlebar at about saddle height (higher = more upright)."],
+      "de": ["Sattelhöhe: im Stand auf Höhe des Hüftknochens; Bein unten fast gestreckt.", "Sattel vor/zurück: Knie über der Pedalachse bei waagerechten Kurbeln.", "Lenker etwa auf Sattelhöhe (höher = aufrechter)."],
+      "fr": ["Hauteur de selle : au niveau de l'os de la hanche debout ; jambe presque tendue en bas.", "Selle avant/arrière : genou au-dessus de l'axe de pédale, manivelles à l'horizontale.", "Guidon à peu près à hauteur de selle (plus haut = plus droit)."],
+      "es": ["Altura del sillín: a la altura del hueso de la cadera de pie; pierna casi recta abajo.", "Sillín adelante/atrás: rodilla sobre el eje del pedal con las bielas horizontales.", "Manillar más o menos a la altura del sillín (más alto = más erguido)."],
+      "ru": ["Высота седла: стоя — на уровне тазовой кости; внизу нога почти прямая.", "Седло вперёд/назад: колено над осью педали при горизонтальных шатунах.", "Руль примерно на высоте седла (выше — посадка прямее)."]
     }
   },
   {
@@ -764,6 +1016,13 @@
       "fr": ["Pousser jambes, puis buste, puis tirer.", "Revenir bras, buste, jambes — rythme fluide."],
       "es": ["Empuja con piernas, luego inclínate, luego tira.", "Vuelve brazos, cuerpo, piernas — ritmo fluido."],
       "ru": ["Толчок ногами, затем наклон, затем тяга.", "Возврат: руки, корпус, ноги — плавный ритм."]
+    },
+    "setup": {
+      "en": ["Damper at 3–5 (higher feels heavier, not better).", "Foot straps across the widest part of your feet; set the footplate height to match."],
+      "de": ["Dämpfer auf 3–5 (höher fühlt sich schwerer an, nicht besser).", "Fußriemen über die breiteste Stelle des Fußes; Höhe der Fußplatte anpassen."],
+      "fr": ["Volet d'air sur 3–5 (plus haut = plus lourd, pas meilleur).", "Sangles sur la partie la plus large du pied ; régler la hauteur des cale-pieds."],
+      "es": ["Regulador de aire en 3–5 (más alto se siente más pesado, no mejor).", "Correas sobre la parte más ancha del pie; ajusta la altura del reposapiés."],
+      "ru": ["Заслонка на 3–5 (выше — тяжелее, но не лучше).", "Ремни через самую широкую часть стопы; подгоните высоту упоров."]
     }
   },
   {
@@ -790,6 +1049,13 @@
       "fr": ["Hanches sur le coussin, pieds bloqués.", "Descendre le buste, puis remonter jusqu'à l'alignement."],
       "es": ["Cadera sobre el soporte, pies fijos.", "Baja el torso y sube hasta alinear el cuerpo."],
       "ru": ["Бёдра на подушке, стопы зафиксированы.", "Опустите корпус, затем поднимите до прямой линии."]
+    },
+    "setup": {
+      "en": ["Hip pad: top edge just below your hip bones, so you can bend at the hips.", "Ankles locked under the rollers."],
+      "de": ["Hüftpolster: Oberkante knapp unter den Hüftknochen, damit du in der Hüfte beugen kannst.", "Knöchel unter den Rollen fixiert."],
+      "fr": ["Coussin : bord haut juste sous les os du bassin, pour plier aux hanches.", "Chevilles bloquées sous les boudins."],
+      "es": ["Almohadilla de cadera: borde superior justo bajo los huesos de la cadera, para flexionar en la cadera.", "Tobillos sujetos bajo los rodillos."],
+      "ru": ["Подушка для таза: верхний край чуть ниже тазовых костей, чтобы сгибаться в тазобедренном суставе.", "Лодыжки зафиксированы под валиками."]
     }
   },
   {
@@ -803,6 +1069,13 @@
       "fr": ["Corps à l'horizontale, charnière aux hanches.", "Lever le buste à l'horizontale, contracter, redescendre lentement."],
       "es": ["Cuerpo horizontal, bisagra en la cadera.", "Sube el torso hasta la horizontal, aprieta y baja despacio."],
       "ru": ["Тело горизонтально, движение в тазобедренном суставе.", "Поднимите корпус до горизонтали, сожмите, медленно опустите."]
+    },
+    "setup": {
+      "en": ["Hip pad: top edge just below your hip bones, so you can bend at the hips.", "Ankles locked under the rollers."],
+      "de": ["Hüftpolster: Oberkante knapp unter den Hüftknochen, damit du in der Hüfte beugen kannst.", "Knöchel unter den Rollen fixiert."],
+      "fr": ["Coussin : bord haut juste sous les os du bassin, pour plier aux hanches.", "Chevilles bloquées sous les boudins."],
+      "es": ["Almohadilla de cadera: borde superior justo bajo los huesos de la cadera, para flexionar en la cadera.", "Tobillos sujetos bajo los rodillos."],
+      "ru": ["Подушка для таза: верхний край чуть ниже тазовых костей, чтобы сгибаться в тазобедренном суставе.", "Лодыжки зафиксированы под валиками."]
     }
   },
   {

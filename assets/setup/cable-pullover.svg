@@ -1,0 +1,46 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cable Pullover (Straight-Arm Pulldown) setup"><title>Cable Pullover (Straight-Arm Pulldown) setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M95.8,124.5 L100.9,173.3"/>
+<path stroke-width="14" d="M100.9,173.3 L96,220"/>
+<path stroke-width="7.5" d="M96,220 L112,220"/>
+<path stroke-width="13" d="M110.3,66.3 L137.1,43.8"/>
+<path stroke-width="10" d="M137.1,43.8 L164,28.3"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M95.8,124.5 L100.9,173.3"/>
+<path stroke-width="14" d="M100.9,173.3 L96,220"/>
+<path stroke-width="7.5" d="M96,220 L112,220"/>
+<path stroke-width="9" d="M110.3,66.3 L112,59.5"/>
+</g>
+<g fill="currentColor">
+<path d="M80.2,116.9 C77.7,111.5 87.3,104.1 89.3,96.9 C91.2,89.8 89,80.1 91.9,74.1 C94.7,68.1 101.7,61.7 106.5,61 C111.3,60.4 118.1,65.9 120.7,70.1 C123.2,74.4 122.8,80.8 121.8,86.5 C120.7,92.2 117.2,97.2 114.2,104.4 C111.2,111.6 109.5,127.5 103.8,129.6 C98.1,131.7 82.6,122.4 80.2,116.9Z"/>
+<circle r="12" cx="115.1" cy="46.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M110.3,66.3 L137.1,43.8"/>
+<path stroke-width="13.5" d="M137.1,43.8 L164,28.3"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M110.3,66.3 L137.1,43.8"/>
+<path stroke-width="10" d="M137.1,43.8 L164,28.3"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="164" cy="28.3"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M216,14 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<circle r="4" stroke-width="2.5" cx="214" cy="22"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M214,22 L164,28.3"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M159,28.3 L169,28.3"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="214" cy="22" r="7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M194,16 L214,22"/><circle class="muscle-fill" fill="#ff7a3c" cx="214" cy="22" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="194" cy="16" r="8.5"/><text x="194" y="16" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><g transform="translate(30,96)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-12" r="3" stroke-width="2"/><path d="M0,-9 L0,-2" stroke-width="2"/><path d="M-19,0 L19,0" stroke-width="4.5"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="47.3" cy="113.3" r="8.5"/><text x="47.3" y="113.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M40,216 L112,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="112" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="40" cy="216" r="8.5"/><text x="40" y="216" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

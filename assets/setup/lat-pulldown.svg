@@ -1,0 +1,57 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lat Pulldown setup"><title>Lat Pulldown setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M100,160 L148.9,156.6"/>
+<path stroke-width="14" d="M148.9,156.6 L145.6,203.5"/>
+<path stroke-width="7.5" d="M145.6,203.5 L161.6,203.5"/>
+<path stroke-width="13" d="M102.1,100 L114.8,67.4"/>
+<path stroke-width="10" d="M114.8,67.4 L125.1,38.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M100,160 L148.9,156.6"/>
+<path stroke-width="14" d="M148.9,156.6 L145.6,203.5"/>
+<path stroke-width="7.5" d="M145.6,203.5 L161.6,203.5"/>
+<path stroke-width="9" d="M102.1,100 L102.3,93"/>
+</g>
+<g fill="currentColor">
+<path d="M83.1,155.8 C79.6,151 87.5,141.8 87.9,134.4 C88.3,127 84.1,117.9 85.7,111.5 C87.2,105 92.7,97.3 97.2,95.7 C101.8,94 109.7,98 113,101.6 C116.4,105.2 117.4,111.6 117.5,117.4 C117.6,123.2 115.3,128.8 113.8,136.5 C112.4,144.1 114,160.1 108.9,163.3 C103.8,166.5 86.6,160.6 83.1,155.8Z"/>
+<circle r="12" cx="101.9" cy="80"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M102.1,100 L114.8,67.4"/>
+<path stroke-width="13.5" d="M114.8,67.4 L125.1,38.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M102.1,100 L114.8,67.4"/>
+<path stroke-width="10" d="M114.8,67.4 L125.1,38.2"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="125.1" cy="38.2"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M206,14 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="9" d="M70,178 L128,178"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="5" d="M100,182 L100,224"/>
+<path stroke-width="5" d="M158.9,139.6 L158.9,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="4" d="M142.9,139.6 L158.9,139.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path stroke-width="1.6" d="M128,30 L128,8"/>
+<path stroke-width="1.6" d="M128,8 L206,8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="5" d="M96,30 L160,30"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="7" cx="142.9" cy="139.6"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="142.9" cy="139.6" r="11"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M172.9,124.6 L172.9,146.6 M175.4,128.9 L172.9,124.6 L170.4,128.9 M170.4,142.3 L172.9,146.6 L175.4,142.3"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M190.9,113.6 L150.9,131.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="150.9" cy="131.6" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="190.9" cy="113.6" r="8.5"/><text x="190.9" y="113.6" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M90,183 L90,205 M92.5,187.3 L90,183 L87.5,187.3 M87.5,200.7 L90,205 L92.5,200.7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M52,196 L88,182"/><circle class="muscle-fill" fill="#ff7a3c" cx="88" cy="182" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="52" cy="196" r="8.5"/><text x="52" y="196" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><g transform="translate(196,60)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-12" r="3" stroke-width="2"/><path d="M0,-9 L0,-3" stroke-width="2"/><path d="M-20,6 L-15,-2 L15,-2 L20,6" stroke-width="4"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="213.3" cy="77.3" r="8.5"/><text x="213.3" y="77.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

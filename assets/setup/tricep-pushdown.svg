@@ -1,0 +1,46 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Triceps Pushdown setup"><title>Triceps Pushdown setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M104,124 L104,173"/>
+<path stroke-width="14" d="M104,173 L104,220"/>
+<path stroke-width="7.5" d="M104,220 L120,220"/>
+<path stroke-width="13" d="M110.3,64.3 L106.6,99.1"/>
+<path stroke-width="10" d="M106.6,99.1 L134.9,86.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M104,124 L104,173"/>
+<path stroke-width="14" d="M104,173 L104,220"/>
+<path stroke-width="7.5" d="M104,220 L120,220"/>
+<path stroke-width="9" d="M110.3,64.3 L111,57.4"/>
+</g>
+<g fill="currentColor">
+<path d="M87.5,118.6 C84.3,113.6 92.8,104.9 93.7,97.6 C94.6,90.2 91.1,80.9 93.1,74.6 C95.1,68.3 101.1,60.9 105.7,59.6 C110.4,58.3 118,62.8 121.1,66.7 C124.2,70.5 124.7,76.9 124.4,82.7 C124.2,88.5 121.4,94 119.4,101.5 C117.5,109 118,125.1 112.6,127.9 C107.3,130.8 90.6,123.7 87.5,118.6Z"/>
+<circle r="12" cx="112.4" cy="44.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M110.3,64.3 L106.6,99.1"/>
+<path stroke-width="13.5" d="M106.6,99.1 L134.9,86.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M110.3,64.3 L106.6,99.1"/>
+<path stroke-width="10" d="M106.6,99.1 L134.9,86.5"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="134.9" cy="86.5"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M174,14 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<circle r="4" stroke-width="2.5" cx="174" cy="22"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M174,22 L134.9,86.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M129.9,86.5 L139.9,86.5"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="174" cy="22" r="7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M154,18 L174,22"/><circle class="muscle-fill" fill="#ff7a3c" cx="174" cy="22" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="154" cy="18" r="8.5"/><text x="154" y="18" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><g transform="translate(30,34)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-12" r="3" stroke-width="2"/><path d="M0,-9 L0,-2" stroke-width="2"/><path d="M-19,0 L19,0" stroke-width="4.5"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="47.3" cy="51.3" r="8.5"/><text x="47.3" y="51.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M70,210 L120,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="120" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="70" cy="210" r="8.5"/><text x="70" y="210" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

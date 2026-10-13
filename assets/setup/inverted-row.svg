@@ -1,0 +1,38 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Inverted Row (Low Bar) setup"><title>Inverted Row (Low Bar) setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M120.7,190.3 L167.3,205.5"/>
+<path stroke-width="14" d="M167.3,205.5 L212,220"/>
+<path stroke-width="7.5" d="M212,220 L217.5,205"/>
+<path stroke-width="13" d="M63.6,171.8 L64.2,136.8"/>
+<path stroke-width="10" d="M64.2,136.8 L63.7,105.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M120.7,190.3 L167.3,205.5"/>
+<path stroke-width="14" d="M167.3,205.5 L212,220"/>
+<path stroke-width="7.5" d="M212,220 L217.5,205"/>
+<path stroke-width="9" d="M63.6,171.8 L57,169.6"/>
+</g>
+<g fill="currentColor">
+<path d="M112,205.4 C106.4,207.4 99.7,197.4 92.7,194.9 C85.7,192.5 75.9,194 70.1,190.7 C64.3,187.4 58.4,180.1 58.1,175.3 C57.8,170.4 63.8,163.9 68.2,161.7 C72.6,159.5 78.9,160.3 84.6,161.8 C90.2,163.2 94.9,167.1 101.9,170.6 C108.9,174 124.6,176.9 126.3,182.7 C128,188.5 117.6,203.4 112,205.4Z"/>
+<circle r="12" cx="44.3" cy="166.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M63.6,171.8 L64.2,136.8"/>
+<path stroke-width="13.5" d="M64.2,136.8 L63.7,105.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M63.6,171.8 L64.2,136.8"/>
+<path stroke-width="10" d="M64.2,136.8 L63.7,105.8"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="63.7" cy="105.8"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+<path stroke-width="4" d="M63.6,104 L63.6,224"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="4.5" cx="63.6" cy="104"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="63.6" cy="104" r="8"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M79.6,115 L79.6,137 M82.1,119.3 L79.6,115 L77.1,119.3 M77.1,132.7 L79.6,137 L82.1,132.7"/><circle class="muscle-fill" fill="#ff7a3c" cx="99.6" cy="126" r="8.5"/><text x="99.6" y="126" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M196,196 L212,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="212" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="196" cy="196" r="8.5"/><text x="196" y="196" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

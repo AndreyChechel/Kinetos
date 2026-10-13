@@ -1,0 +1,46 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Face Pull setup"><title>Face Pull setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M96,124 L96,173"/>
+<path stroke-width="14" d="M96,173 L96,220"/>
+<path stroke-width="7.5" d="M96,220 L112,220"/>
+<path stroke-width="13" d="M92.9,64.1 L127.4,69.9"/>
+<path stroke-width="10" d="M127.4,69.9 L154.5,54.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M96,124 L96,173"/>
+<path stroke-width="14" d="M96,173 L96,220"/>
+<path stroke-width="7.5" d="M96,220 L112,220"/>
+<path stroke-width="9" d="M92.9,64.1 L92.5,57.1"/>
+</g>
+<g fill="currentColor">
+<path d="M78.8,121.3 C74.9,116.8 81.9,106.9 81.7,99.5 C81.5,92.1 76.5,83.5 77.5,76.9 C78.5,70.3 83.2,62.2 87.6,60.1 C92,58.1 100.2,61.4 103.9,64.7 C107.6,68 109.1,74.2 109.7,80 C110.4,85.8 108.5,91.6 107.7,99.4 C107,107.1 110,122.9 105.1,126.5 C100.3,130.2 82.7,125.8 78.8,121.3Z"/>
+<circle r="12" cx="91.8" cy="44.1"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M92.9,64.1 L127.4,69.9"/>
+<path stroke-width="13.5" d="M127.4,69.9 L154.5,54.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M92.9,64.1 L127.4,69.9"/>
+<path stroke-width="10" d="M127.4,69.9 L154.5,54.8"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="154.5" cy="54.8"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M216,14 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<circle r="4" stroke-width="2.5" cx="214" cy="66"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M214,66 L154.5,54.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M154.5,49.8 L154.5,59.8"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="214" cy="66" r="7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M224,29 L224,51 M226.5,33.3 L224,29 L221.5,33.3 M221.5,46.7 L224,51 L226.5,46.7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M200,40 L214,66"/><circle class="muscle-fill" fill="#ff7a3c" cx="214" cy="66" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="200" cy="40" r="8.5"/><text x="200" y="40" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.4" fill="none" stroke-dasharray="4 3" d="M60,66 L210,66"/><g transform="translate(30,30)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-18" r="3" stroke-width="2"/><path d="M0,-15 Q-3,-2 -9,12 M0,-15 Q3,-2 9,12" stroke-width="3.5"/><circle cx="-9" cy="14" r="3.6" fill="currentColor"/><circle cx="9" cy="14" r="3.6" fill="currentColor"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="47.3" cy="47.3" r="8.5"/><text x="47.3" y="47.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M60,200 L112,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="112" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="60" cy="200" r="8.5"/><text x="60" y="200" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

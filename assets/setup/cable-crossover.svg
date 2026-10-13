@@ -1,0 +1,53 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cable Crossover setup"><title>Cable Crossover setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M111.5,123 L106.4,171.7"/>
+<path stroke-width="14" d="M106.4,171.7 L106.4,218.7"/>
+<path stroke-width="7.5" d="M106.4,218.7 L98.4,218.7"/>
+<path stroke-width="20" d="M128.5,123 L133.6,171.7"/>
+<path stroke-width="14" d="M133.6,171.7 L133.6,218.7"/>
+<path stroke-width="7.5" d="M133.6,218.7 L141.6,218.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="11" d="M120,63 L120,56"/>
+</g>
+<g fill="currentColor">
+<path d="M104,127.8 C99.1,123 107,108 106.5,99 C106,90 101.9,80 101,73.8 C100.1,67.6 94.7,63.8 101,61.8 C107.3,59.8 132.7,59.8 139,61.8 C145.3,63.8 139.9,67.6 139,73.8 C138.1,80 134,90 133.5,99 C133,108 140.9,123 136,127.8 C131.1,132.6 108.9,132.6 104,127.8Z"/>
+<circle r="12" cx="120" cy="43"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M137,63 L171.7,67.6"/>
+<path stroke-width="13.5" d="M171.7,67.6 L178,98"/>
+<path stroke-width="16.5" d="M103,63 L68.3,67.6"/>
+<path stroke-width="13.5" d="M68.3,67.6 L62,98"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M137,63 L171.7,67.6"/>
+<path stroke-width="10" d="M171.7,67.6 L178,98"/>
+<path stroke-width="13" d="M103,63 L68.3,67.6"/>
+<path stroke-width="10" d="M68.3,67.6 L62,98"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="178" cy="98"/>
+<circle r="5" cx="62" cy="98"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M10,40 h16 V224 h-16Z"/>
+<path d="M214,40 h16 V224 h-16Z"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<circle r="4" stroke-width="2.5" cx="214" cy="50"/>
+<circle r="4" stroke-width="2.5" cx="26" cy="50"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.55" stroke-width="1.6">
+<path d="M214,50 L178,98"/>
+<path d="M26,50 L62,98"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="3" d="M178,93 L178,103"/>
+<path stroke-width="3" d="M62,93 L62,103"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="214" cy="50" r="7"/><circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="26" cy="50" r="7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M214,63 L214,85 M216.5,67.3 L214,63 L211.5,67.3 M211.5,80.7 L214,85 L216.5,80.7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M26,63 L26,85 M28.5,67.3 L26,63 L23.5,67.3 M23.5,80.7 L26,85 L28.5,80.7"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M196,30 L214,50"/><circle class="muscle-fill" fill="#ff7a3c" cx="214" cy="50" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="196" cy="30" r="8.5"/><text x="196" y="30" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><g transform="translate(30,120)"><circle r="24" fill="currentColor" opacity=".07"/><circle class="muscle-stroke" r="24" fill="none" stroke="#ff7a3c" stroke-width="1.6"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M-8,-12 L8,-12 M0,-12 L0,-18 M-10,-10 L-4,10 L4,10 L10,-10" stroke-width="3"/><path d="M-5,10 L5,10" stroke-width="6"/><circle cx="0" cy="-20" r="3" stroke-width="2"/></g></g><circle class="muscle-fill" fill="#ff7a3c" cx="47.3" cy="137.3" r="8.5"/><text x="47.3" y="137.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><circle class="muscle-fill" fill="#ff7a3c" cx="120" cy="228" r="8.5"/><text x="120" y="228" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

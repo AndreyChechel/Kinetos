@@ -1,7 +1,7 @@
 /* Kinetos service worker — offline-first.
    Bump CACHE when you change app files so clients pick up updates.
    Keep the version in sync with js/version.js (APP_VERSION). */
-const CACHE = 'kinetos-1.15.6';
+const CACHE = 'kinetos-1.15.7';
 
 const CORE = [
   './',
@@ -36,6 +36,8 @@ self.addEventListener('install', (event) => {
       const res = await fetch('js/data/exercises.json', { cache: 'no-cache' });
       const list = await res.json();
       await Promise.allSettled(list.map((ex) => cache.add('assets/exercises/' + ex.id + '.svg')));
+      // ...and every equipment-setup diagram (only exercises with `setup` have one).
+      await Promise.allSettled(list.filter((ex) => ex.setup).map((ex) => cache.add('assets/setup/' + ex.id + '.svg')));
     } catch (e) { /* offline first install still works with core */ }
     // NOTE: no skipWaiting() here — an updated SW must not hijack a running
     // session. The page shows an "update available" toast; accepting it posts

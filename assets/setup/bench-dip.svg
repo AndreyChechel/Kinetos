@@ -1,0 +1,41 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bench Dip (Reverse Push-Up) setup"><title>Bench Dip (Reverse Push-Up) setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M89.3,156.7 L132.2,180.4"/>
+<path stroke-width="14" d="M132.2,180.4 L172.8,204.1"/>
+<path stroke-width="7.5" d="M172.8,204.1 L178.3,189.1"/>
+<path stroke-width="13" d="M89.3,96.7 L83.2,131.2"/>
+<path stroke-width="10" d="M83.2,131.2 L80,162"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M89.3,156.7 L132.2,180.4"/>
+<path stroke-width="14" d="M132.2,180.4 L172.8,204.1"/>
+<path stroke-width="7.5" d="M172.8,204.1 L178.3,189.1"/>
+<path stroke-width="9" d="M89.3,96.7 L89.3,89.7"/>
+</g>
+<g fill="currentColor">
+<path d="M72.3,153.1 C68.7,148.4 76.2,138.9 76.3,131.5 C76.5,124.1 72,115.2 73.3,108.7 C74.7,102.2 79.8,94.3 84.3,92.5 C88.8,90.7 96.8,94.4 100.3,97.9 C103.8,101.4 105,107.7 105.3,113.5 C105.7,119.3 103.5,125 102.3,132.7 C101.2,140.4 103.3,156.3 98.3,159.7 C93.3,163.1 76,157.8 72.3,153.1Z"/>
+<circle r="12" cx="89.3" cy="76.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M89.3,96.7 L83.2,131.2"/>
+<path stroke-width="13.5" d="M83.2,131.2 L80,162"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M89.3,96.7 L83.2,131.2"/>
+<path stroke-width="10" d="M83.2,131.2 L80,162"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="80" cy="162"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M24,168 L84,168"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M32,172 L32,224"/>
+<path stroke-width="4" d="M76,172 L76,224"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M40,130 L80,162"/><circle class="muscle-fill" fill="#ff7a3c" cx="80" cy="162" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="40" cy="130" r="8.5"/><text x="40" y="130" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M210,190 L172.8,204.1"/><circle class="muscle-fill" fill="#ff7a3c" cx="172.8" cy="204.1" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="210" cy="190" r="8.5"/><text x="210" y="190" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

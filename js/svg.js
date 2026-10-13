@@ -1,6 +1,6 @@
 // Fetch-and-inline SVGs so they inherit theme colors (currentColor + CSS classes).
 import { buildExerciseSVG } from './exsvg.js';
-import { svgPath, isCustom } from './data/db.js';
+import { svgPath, isCustom, setupPath } from './data/db.js';
 
 const cache = new Map();
 
@@ -33,6 +33,12 @@ function settleAnimation(el) {
   if (play) return;
   svg.pauseAnimations();
   try { svg.setCurrentTime(0); } catch { /* not ready: stays at start */ }
+}
+
+/** Inject an exercise's equipment-setup diagram (a still; no animation). */
+export function injectSetupSVG(el, ex) {
+  if (!el || !ex) return;
+  injectSVG(el, setupPath(ex));
 }
 
 /** Inject an exercise illustration: generated markup for custom exercises

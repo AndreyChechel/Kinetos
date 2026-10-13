@@ -131,15 +131,67 @@ def build(ex, frames_dir=None):
     return svg
 
 
+# ---- equipment-setup diagrams (tools/setups.py) -------------------------------
+SETUP_OUT = os.path.join(ROOT, "assets", "setup")
+
+
+def build_setup(ex):
+    """Static annotated setup diagram: solid equipment over a faint ghost of
+    the start position, plus numbered accent callouts."""
+    from setups import SETUP
+    spec = SETUP[ex['id']]
+    anim = EX.get(ex['id'], {})
+    pose = spec.get('pose') or anim.get('a') or (anim['cycle'](0) if 'cycle' in anim else stand())
+    P = joints(pose)
+    P['_t'] = 0
+    eq = []
+    for prop in (spec.get('props') if spec.get('props') is not None else anim.get('props', [floor()])):
+        eq += prop(P)
+    for prop in spec.get('extra', []):
+        eq += prop(P)
+    ghost = figure_prims(P, [], [])
+    name = ex['names'].get('en', ex['id'])
+    body = ('<g opacity="0.22">' + assemble([ghost], 1) + '</g>\n'
+            + (assemble([eq], 1) if eq else '') + '\n'
+            + ''.join(a(P) for a in spec.get('ann', [])))
+    z = spec.get('zoom')
+    if z:
+        body = f'<g transform="translate({120 * (1 - z):.1f},{226 * (1 - z):.1f}) scale({z})">' + body + '</g>'
+    return (f'<svg viewBox="0 0 {SIZE} {SIZE}" xmlns="http://www.w3.org/2000/svg" role="img" '
+            f'aria-label="{name} setup"><title>{name} setup</title>\n{body}\n</svg>\n')
+
+
+def check_setup(exercises):
+    """Every diagram has setup steps (and vice versa) and its badges 1..n
+    match the number of steps in every language."""
+    from setups import SETUP, badge_numbers
+    problems = []
+    for ex in exercises:
+        st, has = ex.get('setup'), ex['id'] in SETUP
+        if bool(st) != has:
+            problems.append(f"{ex['id']}: {'steps but no diagram' if st else 'diagram but no steps'}")
+            continue
+        if not has:
+            continue
+        n = badge_numbers(SETUP[ex['id']])
+        for lang, steps in st.items():
+            if n != list(range(1, len(steps) + 1)):
+                problems.append(f"{ex['id']} [{lang}]: badges {n} vs {len(steps)} steps")
+    return problems
+
+
 def main():
     args = sys.argv[1:]
     frames_dir = args[args.index('--frames') + 1] if '--frames' in args else None
     only = set(args[args.index('--only') + 1].split(',')) if '--only' in args else None
     os.makedirs(OUT, exist_ok=True)
+    os.makedirs(SETUP_OUT, exist_ok=True)
     with open(DATA, encoding="utf-8") as f:
         exercises = json.load(f)
     missing = [e['id'] for e in exercises if e['id'] not in EX]
     count = 0
+    from setups import SETUP
+    nsetup = 0
     for ex in exercises:
         if only and ex['id'] not in only:
             continue
@@ -147,9 +199,16 @@ def main():
         with open(os.path.join(OUT, ex["id"] + ".svg"), "w", encoding="utf-8") as f:
             f.write(svg)
         count += 1
-    print(f"Generated {count} SVGs into {OUT}")
+        if ex['id'] in SETUP:
+            with open(os.path.join(SETUP_OUT, ex["id"] + ".svg"), "w", encoding="utf-8") as f:
+                f.write(build_setup(ex))
+            nsetup += 1
+    print(f"Generated {count} SVGs into {OUT} and {nsetup} setup diagrams into {SETUP_OUT}")
     if missing:
         print(f"No pose for {len(missing)} (standing fallback): {', '.join(missing)}")
+    problems = check_setup(exercises)
+    if problems:
+        print("SETUP MISMATCH:\n  " + "\n  ".join(problems))
 
 
 if __name__ == "__main__":

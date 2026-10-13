@@ -1,9 +1,9 @@
 // Reusable UI pieces: bottom sheet, confirm dialog, exercise picker, stepper,
 // long-press, popover menus, rep/weight choosers, set runner, swipe-to-delete.
 import { h, clickable, fmtDuration } from './ui.js';
-import { t } from './i18n.js';
-import { byGroup, groups, exName, repPresets } from './data/db.js';
-import { injectExerciseSVG } from './svg.js';
+import { t, pick } from './i18n.js';
+import { byGroup, groups, exName, repPresets, hasSetup } from './data/db.js';
+import { injectExerciseSVG, injectSetupSVG } from './svg.js';
 import { icon } from './icons.js';
 
 /** Shared a11y wiring for modal overlays: Escape closes, focus moves in and is
@@ -20,6 +20,25 @@ function modalize(overlay, panel, close, focusEl) {
     document.removeEventListener('keydown', onKey);
     if (prevFocus && prevFocus.focus && document.contains(prevFocus)) { try { prevFocus.focus(); } catch (_) { /* ignore */ } }
   };
+}
+
+/** Equipment setup: annotated diagram + numbered steps (the numbers match the
+ *  badges in the picture). Returns null for exercises without a setup. */
+export function setupContent(ex) {
+  if (!hasSetup(ex)) return null;
+  const steps = pick(ex.setup) || [];
+  const pic = h('div', { class: 'illus illus--setup' });
+  injectSetupSVG(pic, ex);
+  return h('div', { class: 'setup' }, [
+    pic,
+    h('ol', { class: 'setup-steps' }, steps.map((s) => h('li', { text: s })))
+  ]);
+}
+
+/** Open the setup for `ex` in a bottom sheet (used at the machine, mid-session). */
+export function openSetupSheet(ex) {
+  const body = setupContent(ex);
+  if (body) sheet(t('exercises.setup') + ' · ' + exName(ex), body);
 }
 
 /** Bottom sheet overlay. Returns { close }. */

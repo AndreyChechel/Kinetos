@@ -1,0 +1,38 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Incline Push-Up (Hands on Bar) setup"><title>Incline Push-Up (Hands on Bar) setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M112.4,150.6 L71.7,178"/>
+<path stroke-width="14" d="M71.7,178 L32.8,204.2"/>
+<path stroke-width="7.5" d="M32.8,204.2 L30,220"/>
+<path stroke-width="13" d="M162.1,117 L138,142.4"/>
+<path stroke-width="10" d="M138,142.4 L168.1,150"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M112.4,150.6 L71.7,178"/>
+<path stroke-width="14" d="M71.7,178 L32.8,204.2"/>
+<path stroke-width="7.5" d="M32.8,204.2 L30,220"/>
+<path stroke-width="9" d="M162.1,117 L167.9,113.1"/>
+</g>
+<g fill="currentColor">
+<path d="M105.8,134.5 C107.7,128.8 119.8,129.7 126,125.7 C132.2,121.7 137.1,113 143.2,110.5 C149.3,107.9 158.8,107.8 162.8,110.5 C166.8,113.2 168.2,121.9 167.3,126.8 C166.3,131.7 161.7,136.1 157.1,139.7 C152.5,143.2 146.6,144.6 139.5,147.9 C132.5,151.3 120.5,161.9 114.9,159.7 C109.3,157.5 104,140.1 105.8,134.5Z"/>
+<circle r="12" cx="179.6" cy="107.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M162.1,117 L138,142.4"/>
+<path stroke-width="13.5" d="M138,142.4 L168.1,150"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M162.1,117 L138,142.4"/>
+<path stroke-width="10" d="M138,142.4 L168.1,150"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="168.1" cy="150"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+<path stroke-width="4" d="M168.1,150 L168.1,224"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="5" cx="168.1" cy="150"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M184.1,159 L184.1,181 M186.6,163.3 L184.1,159 L181.6,163.3 M181.6,176.7 L184.1,181 L186.6,176.7"/><circle class="muscle-fill" fill="#ff7a3c" cx="202.1" cy="170" r="8.5"/><text x="202.1" y="170" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M40,196 L30,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="30" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="40" cy="196" r="8.5"/><text x="40" y="196" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

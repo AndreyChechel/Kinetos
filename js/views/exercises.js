@@ -2,10 +2,10 @@
 // notes, hide/unhide and (soft) deletion.
 import { h, uid, toast, fmtDate, todayISO } from '../ui.js';
 import { t, pick, getLang } from '../i18n.js';
-import { byGroup, groups, exName, getExercise, isCustom, countUnit, usesLevel } from '../data/db.js';
+import { byGroup, groups, exName, getExercise, isCustom, countUnit, usesLevel, hasSetup } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import { buildExerciseSVG, GROUP_VIEW, GROUP_MUSCLE } from '../exsvg.js';
-import { sheet, confirmDialog, promptDialog, popoverMenu, attachLongPress } from '../components.js';
+import { sheet, confirmDialog, promptDialog, popoverMenu, attachLongPress, setupContent } from '../components.js';
 import {
   addCustomExercise, updateCustomExercise, removeCustomExercise, softDeleteCustomExercise,
   getPlans, savePlan, saveSession, getSession,
@@ -153,6 +153,10 @@ export function renderExerciseDetail(root, params, ctx) {
       cues.length ? h('div', { class: 'card' }, [
         h('div', { class: 'card__title', text: t('exercises.howto') }),
         h('ol', { style: 'margin:0; padding-left:18px; line-height:1.6' }, cues.map((c) => h('li', { text: c })))
+      ]) : null,
+      hasSetup(ex) ? h('div', { class: 'card' }, [
+        h('div', { class: 'card__title', text: t('exercises.setup') }),
+        setupContent(ex)
       ]) : null,
       notesHost,
       ex.metric === 'reps' && ex.equipment !== 'bodyweight' ? weightStepCard(ex) : null,

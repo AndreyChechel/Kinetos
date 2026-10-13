@@ -1,0 +1,47 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Calf Press on Leg Press setup"><title>Calf Press on Leg Press setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M92,172 L112.3,127.4"/>
+<path stroke-width="14" d="M112.3,127.4 L156,110"/>
+<path stroke-width="7.5" d="M156,110 L142.1,102"/>
+<path stroke-width="13" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="10" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M92,172 L112.3,127.4"/>
+<path stroke-width="14" d="M112.3,127.4 L156,110"/>
+<path stroke-width="7.5" d="M156,110 L142.1,102"/>
+<path stroke-width="9" d="M49.6,129.6 L44.6,124.6"/>
+</g>
+<g fill="currentColor">
+<path d="M77.4,181.5 C71.5,180.7 70.1,168.7 65,163.4 C59.9,158 50.4,154.9 46.7,149.4 C43.1,143.8 41.2,134.6 43.1,130.1 C45,125.7 53.3,122.6 58.2,122.6 C63.2,122.6 68.4,126.3 72.8,130.1 C77.1,134 79.6,139.6 84.2,145.8 C88.8,152.1 101.6,161.8 100.5,167.8 C99.4,173.7 83.3,182.2 77.4,181.5Z"/>
+<circle r="12" cx="36.8" cy="114.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="13.5" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M49.6,129.6 L67.3,159.7"/>
+<path stroke-width="10" d="M67.3,159.7 L83.9,185.9"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="83.9" cy="185.9"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M86.3,191.8 L29.8,135.2"/>
+<path stroke-width="8" d="M83.5,189 L113.5,189"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="6" d="M50,218 L196,218"/>
+<path stroke-width="5" d="M97.5,189 L97.5,218"/>
+<path stroke-width="4" d="M115.5,171.1 L204.6,82"/>
+<path stroke-width="4" d="M115.5,171.1 L115.5,218"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M120.1,112 L150.1,82"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M162.1,80 L142.1,102"/><circle class="muscle-fill" fill="#ff7a3c" cx="142.1" cy="102" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="162.1" cy="80" r="8.5"/><text x="162.1" y="80" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M110.3,101.4 L112.3,127.4"/><circle class="muscle-fill" fill="#ff7a3c" cx="112.3" cy="127.4" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="110.3" cy="101.4" r="8.5"/><text x="110.3" y="101.4" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

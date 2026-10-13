@@ -118,6 +118,8 @@
   secondary: [ muscleKey ],  // highlighted lightly
   names: { en, de, fr, es, ru },
   cues:  { en: [ "step 1", "step 2" ] }   // how-to; add other langs as needed
+  setup: { en: [ "Pulley at the top.", … ] }  // optional, configurable equipment only: numbered
+                                         // steps matching the badges in assets/setup/&lt;id&gt;.svg
 }</pre>
 <p><code>js/data/muscles.json</code> lists valid <code>groups</code> and <code>muscles</code> keys. Their display names live in each <code>locales/*.json</code> under <code>groups.*</code> and <code>muscles.*</code>.</p>
 

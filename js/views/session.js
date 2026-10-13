@@ -7,11 +7,12 @@
 import { h, uid, toast, fmtDuration, fmtTime, fmtTimeSec, fmtDate, clickable } from '../ui.js';
 import { t, getLang } from '../i18n.js';
 import { getSession, saveSession, deleteSession, saveTemplate, getSettings, getPlan } from '../store.js';
-import { getExercise, exName, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit, usesLevel } from '../data/db.js';
+import { getExercise, exName, hasSetup, effectiveWeight, isPerDumbbell, isBarbellAdded, usesBarbell, barKgOf, barbellWeights, defaultBarKg, volumeWeightOf, countUnit, usesLevel } from '../data/db.js';
 import { injectExerciseSVG } from '../svg.js';
 import {
   exercisePicker, confirmDialog, promptDialog, PROMPT_DELETE, popoverMenu, repChooser, barChooser,
-  weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete, sessionTimeDialog
+  weightChooser, setRunner, EFFORT_COLORS, attachLongPress, attachSwipeToDelete, sessionTimeDialog,
+  openSetupSheet
 } from '../components.js';
 import { makeSortable } from '../sortable.js';
 import { lastSetFor, sessionDurationMs, targetsFromSession, setTargetsOf, bestE1RMBefore, isStaleSession, loadRest, saveRest, clearRest, REST_OVERTIME_MAX_MS } from '../workout.js';
@@ -229,6 +230,8 @@ export default function renderSession(root, params, ctx) {
             collapsed.delete(entry.id); // a new set should be visible straight away
             persist(); renderExercises();
           } }, [icon('plus', { size: 18 })]) : null,
+        hasSetup(ex) ? h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('exercises.setup'), title: t('exercises.setup'),
+          onclick: (e) => { e.stopPropagation(); openSetupSheet(ex); } }, [icon('sliders', { size: 18 })]) : null,
         noteButton(entry),
         editable ? h('button', { class: 'btn btn--icon btn--ghost btn--sm', 'aria-label': t('session.removeExercise'), title: t('session.removeExercise'),
           onclick: () => confirmRemoveExercise(idx) }, [icon('trash', { size: 18 })]) : null

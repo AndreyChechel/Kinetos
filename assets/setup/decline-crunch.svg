@@ -1,0 +1,47 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decline Bench Crunch setup"><title>Decline Bench Crunch setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M124,138 L164.6,110.6"/>
+<path stroke-width="14" d="M164.6,110.6 L200.6,140.8"/>
+<path stroke-width="7.5" d="M200.6,140.8 L214.5,132.8"/>
+<path stroke-width="13" d="M68.4,160.5 L102.3,151.9"/>
+<path stroke-width="10" d="M102.3,151.9 L72.4,143.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M124,138 L164.6,110.6"/>
+<path stroke-width="14" d="M164.6,110.6 L200.6,140.8"/>
+<path stroke-width="7.5" d="M200.6,140.8 L214.5,132.8"/>
+<path stroke-width="9" d="M68.4,160.5 L61.9,163.1"/>
+</g>
+<g fill="currentColor">
+<path d="M127,155.1 C124,160.3 112.4,156.9 105.5,159.5 C98.6,162.1 92,169.6 85.5,170.8 C79,172 69.7,170.2 66.3,166.7 C63,163.2 63.4,154.4 65.4,149.8 C67.3,145.3 72.7,141.8 78,139.3 C83.2,136.9 89.3,136.7 96.9,134.9 C104.5,133.1 118.4,125.2 123.4,128.5 C128.4,131.9 130,150 127,155.1Z"/>
+<circle r="12" cx="50.4" cy="169.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M68.4,160.5 L102.3,151.9"/>
+<path stroke-width="13.5" d="M102.3,151.9 L72.4,143.7"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M68.4,160.5 L102.3,151.9"/>
+<path stroke-width="10" d="M102.3,151.9 L72.4,143.7"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="72.4" cy="143.7"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M45.8,190.1 L158.9,144.4"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M58.8,184.8 L58.8,224"/>
+<path stroke-width="4" d="M158.9,144.4 L158.9,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="5" d="M158.9,144.4 L194.8,147.7"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="6" cx="194.8" cy="147.7"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.8" fill="none" d="M81,175.8 A38,38 0 0 1 83.8,190.1"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.2" fill="none" stroke-dasharray="2 2" d="M45.8,190.1 L86.6,173.6"/><text class="muscle-fill" fill="#ff7a3c" x="94.9" y="180.5" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">20°</text><circle class="muscle-fill" fill="#ff7a3c" cx="60" cy="150" r="8.5"/><text x="60" y="150" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M218.6,166.8 L194.8,147.7"/><circle class="muscle-fill" fill="#ff7a3c" cx="194.8" cy="147.7" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="218.6" cy="166.8" r="8.5"/><text x="218.6" y="166.8" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

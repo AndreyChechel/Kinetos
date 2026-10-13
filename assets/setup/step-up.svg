@@ -1,0 +1,40 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Step-Up (Step Platform) setup"><title>Step-Up (Step Platform) setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M118,150 L137.7,194.9"/>
+<path stroke-width="14" d="M137.7,194.9 L98,220"/>
+<path stroke-width="7.5" d="M98,220 L114,220"/>
+<path stroke-width="13" d="M122.2,90.1 L119.7,125.1"/>
+<path stroke-width="10" d="M119.7,125.1 L119.7,156.1"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M118,150 L166.9,146.3"/>
+<path stroke-width="14" d="M166.9,146.3 L156,192"/>
+<path stroke-width="7.5" d="M156,192 L172,192"/>
+<path stroke-width="9" d="M122.2,90.1 L122.7,83.2"/>
+</g>
+<g fill="currentColor">
+<path d="M101.3,145.2 C98,140.3 106.1,131.3 106.8,124 C107.5,116.6 103.6,107.4 105.4,101 C107.2,94.6 112.9,87.1 117.5,85.6 C122.1,84.1 129.8,88.4 133.1,92.1 C136.3,95.8 137,102.2 137,108 C136.9,113.8 134.3,119.4 132.6,127 C130.9,134.6 132,150.6 126.8,153.6 C121.5,156.7 104.6,150.2 101.3,145.2Z"/>
+<circle r="12" cx="123.6" cy="70.2"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M122.2,90.1 L119.7,125.1"/>
+<path stroke-width="13.5" d="M119.7,125.1 L119.7,156.1"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M122.2,90.1 L119.7,125.1"/>
+<path stroke-width="10" d="M119.7,125.1 L119.7,156.1"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="119.7" cy="156.1"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="currentColor" opacity="0.2">
+<path d="M128,196 L192,196 L192,224 L128,224Z"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="8" cx="119.7" cy="156.1"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.4" fill="none" stroke-dasharray="4 3" d="M100,196 L206,196"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M214,196 L192,196"/><circle class="muscle-fill" fill="#ff7a3c" cx="192" cy="196" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="214" cy="196" r="8.5"/><text x="214" y="196" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M200,150 L156,192"/><circle class="muscle-fill" fill="#ff7a3c" cx="156" cy="192" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="200" cy="150" r="8.5"/><text x="200" y="150" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

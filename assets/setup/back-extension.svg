@@ -1,0 +1,45 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Back Extension setup"><title>Back Extension setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M124,112 L89.4,146.6"/>
+<path stroke-width="14" d="M89.4,146.6 L56.1,179.9"/>
+<path stroke-width="7.5" d="M56.1,179.9 L44.8,168.6"/>
+<path stroke-width="13" d="M142.5,169.1 L115.5,191.3"/>
+<path stroke-width="10" d="M115.5,191.3 L125.5,162"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M124,112 L89.4,146.6"/>
+<path stroke-width="14" d="M89.4,146.6 L56.1,179.9"/>
+<path stroke-width="7.5" d="M56.1,179.9 L44.8,168.6"/>
+<path stroke-width="9" d="M142.5,169.1 L144.7,175.7"/>
+</g>
+<g fill="currentColor">
+<path d="M141.3,110.2 C146.2,113.5 142,124.9 144.2,131.9 C146.3,139 153.3,146.1 154,152.7 C154.8,159.3 152.3,168.4 148.6,171.5 C144.9,174.6 136.1,173.6 131.7,171.3 C127.3,169.1 124.2,163.4 122.1,158 C120,152.6 120.3,146.5 119.1,138.8 C117.8,131.2 110.8,116.7 114.5,111.9 C118.2,107.1 136.3,106.8 141.3,110.2Z"/>
+<circle r="12" cx="146.5" cy="188.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M142.5,169.1 L115.5,191.3"/>
+<path stroke-width="13.5" d="M115.5,191.3 L125.5,162"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M142.5,169.1 L115.5,191.3"/>
+<path stroke-width="10" d="M115.5,191.3 L125.5,162"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="125.5" cy="162"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M128,134 L66,196"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="5" d="M66,196 L66,224"/>
+<path stroke-width="5" d="M128,134 L150,224"/>
+</g>
+<g fill="currentColor" opacity="0.5">
+<circle r="9" cx="128" cy="131"/>
+<circle r="6" cx="64.1" cy="187.9"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.8" fill="none" d="M90,172 A34,34 0 0 1 100,196"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.2" fill="none" stroke-dasharray="2 2" d="M66,196 L94.3,167.7"/><text class="muscle-fill" fill="#ff7a3c" x="110.3" y="177.6" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">45°</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M186,120 L128,131"/><circle class="muscle-fill" fill="#ff7a3c" cx="128" cy="131" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="186" cy="120" r="8.5"/><text x="186" y="120" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M30,150 L64.1,187.9"/><circle class="muscle-fill" fill="#ff7a3c" cx="64.1" cy="187.9" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="30" cy="150" r="8.5"/><text x="30" y="150" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

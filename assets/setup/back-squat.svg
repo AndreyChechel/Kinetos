@@ -1,0 +1,45 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Back Squat setup"><title>Back Squat setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M128,124 L128,173"/>
+<path stroke-width="14" d="M128,173 L128,220"/>
+<path stroke-width="7.5" d="M128,220 L144,220"/>
+<path stroke-width="13" d="M131.1,64.1 L109.5,91.6"/>
+<path stroke-width="10" d="M109.5,91.6 L120.2,62.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M128,124 L128,173"/>
+<path stroke-width="14" d="M128,173 L128,220"/>
+<path stroke-width="7.5" d="M128,220 L144,220"/>
+<path stroke-width="9" d="M131.1,64.1 L131.5,57.1"/>
+</g>
+<g fill="currentColor">
+<path d="M111.2,119.5 C107.8,114.6 115.8,105.5 116.3,98.2 C116.9,90.8 112.9,81.6 114.5,75.2 C116.2,68.8 121.8,61.2 126.4,59.6 C131,58.1 138.8,62.2 142.1,65.9 C145.4,69.5 146.2,75.9 146.2,81.7 C146.3,87.5 143.8,93.1 142.2,100.7 C140.7,108.3 142,124.3 136.8,127.5 C131.7,130.6 114.6,124.4 111.2,119.5Z"/>
+<circle r="12" cx="132.2" cy="44.1"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M131.1,64.1 L109.5,91.6"/>
+<path stroke-width="13.5" d="M109.5,91.6 L120.2,62.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M131.1,64.1 L109.5,91.6"/>
+<path stroke-width="10" d="M109.5,91.6 L120.2,62.5"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="120.2" cy="62.5"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="6" d="M112.2,30 L112.2,224"/>
+<path stroke-width="4" d="M112.20756844851928,71.50790286129862 h9 v-9"/>
+<path stroke-width="5" d="M78.2,121.1 L146.2,121.1"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="17" cx="120.2" cy="62.5"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<circle r="2.5" stroke-width="3" cx="120.2" cy="62.5"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M98.2,54.5 L98.2,76.5 M100.7,58.8 L98.2,54.5 L95.7,58.8 M95.7,72.2 L98.2,76.5 L100.7,72.2"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M78.2,52.5 L110.2,65.5"/><circle class="muscle-fill" fill="#ff7a3c" cx="110.2" cy="65.5" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="78.2" cy="52.5" r="8.5"/><text x="78.2" y="52.5" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M156.2,113.1 L156.2,129.1 M158.7,117.4 L156.2,113.1 L153.7,117.4 M153.7,124.7 L156.2,129.1 L158.7,124.7"/><circle class="muscle-fill" fill="#ff7a3c" cx="176.2" cy="121.1" r="8.5"/><text x="176.2" y="121.1" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text>
+</svg>

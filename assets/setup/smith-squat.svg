@@ -1,0 +1,41 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Smith Machine Squat setup"><title>Smith Machine Squat setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M138,124 L138,173"/>
+<path stroke-width="14" d="M138,173 L138,220"/>
+<path stroke-width="7.5" d="M138,220 L154,220"/>
+<path stroke-width="13" d="M139,64 L118.4,92.3"/>
+<path stroke-width="10" d="M118.4,92.3 L128.1,62.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M138,124 L138,173"/>
+<path stroke-width="14" d="M138,173 L138,220"/>
+<path stroke-width="7.5" d="M138,220 L154,220"/>
+<path stroke-width="9" d="M139,64 L139.2,57"/>
+</g>
+<g fill="currentColor">
+<path d="M121.1,120.1 C117.5,115.3 125.1,106 125.4,98.6 C125.7,91.2 121.4,82.2 122.8,75.7 C124.3,69.3 129.6,61.4 134.1,59.7 C138.7,58 146.6,61.8 150,65.4 C153.5,69 154.5,75.3 154.8,81.1 C155,86.9 152.7,92.6 151.4,100.2 C150.1,107.9 152,123.8 146.9,127.2 C141.9,130.5 124.6,124.9 121.1,120.1Z"/>
+<circle r="12" cx="139.4" cy="44"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M139,64 L118.4,92.3"/>
+<path stroke-width="13.5" d="M118.4,92.3 L128.1,62.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M139,64 L118.4,92.3"/>
+<path stroke-width="10" d="M118.4,92.3 L128.1,62.8"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="128.1" cy="62.8"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+<path stroke-width="4" d="M122,14 L122,224"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="17" cx="128.1" cy="62.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<circle r="2.5" stroke-width="3" cx="128.1" cy="62.8"/>
+</g>
+<circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="128.1" cy="62.8" r="19"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M60,40 L115.1,62.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="115.1" cy="62.6" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="60" cy="40" r="8.5"/><text x="60" y="40" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="3.5" stroke-linecap="round" fill="none" d="M114,120.3 L130,120.3"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M92,120.3 L116,120.3"/><circle class="muscle-fill" fill="#ff7a3c" cx="116" cy="120.3" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="92" cy="120.3" r="8.5"/><text x="92" y="120.3" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M138,226 L162,226 M142.3,223.5 L138,226 L142.3,228.5 M157.7,228.5 L162,226 L157.7,223.5"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M190,214 L154,220"/><circle class="muscle-fill" fill="#ff7a3c" cx="154" cy="220" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="190" cy="214" r="8.5"/><text x="190" y="214" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>

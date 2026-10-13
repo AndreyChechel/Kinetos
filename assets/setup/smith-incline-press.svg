@@ -1,0 +1,53 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Smith Machine Incline Chest Press setup"><title>Smith Machine Incline Chest Press setup</title>
+<g opacity="0.22"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.38">
+<path stroke-width="20" d="M148,162 L195.7,173.1"/>
+<path stroke-width="14" d="M195.7,173.1 L192,220"/>
+<path stroke-width="7.5" d="M192,220 L208,220"/>
+<path stroke-width="13" d="M96,132 L107.2,98.8"/>
+<path stroke-width="10" d="M107.2,98.8 L104,68"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="20" d="M148,162 L195.7,173.1"/>
+<path stroke-width="14" d="M195.7,173.1 L192,220"/>
+<path stroke-width="7.5" d="M192,220 L208,220"/>
+<path stroke-width="9" d="M96,132 L90,128.5"/>
+</g>
+<g fill="currentColor">
+<path d="M136.4,174.9 C130.5,175.7 126,164.5 119.7,160.7 C113.4,156.8 103.4,156.3 98.4,151.9 C93.5,147.5 89.2,139 89.9,134.2 C90.6,129.4 97.8,124.4 102.6,123.1 C107.4,121.8 113.4,123.9 118.6,126.5 C123.8,129.2 127.6,133.9 133.7,138.7 C139.8,143.6 154.7,149.7 155.1,155.7 C155.5,161.7 142.3,174.1 136.4,174.9Z"/>
+<circle r="12" cx="78.3" cy="122.8"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<path stroke-width="16.5" d="M96,132 L107.2,98.8"/>
+<path stroke-width="13.5" d="M107.2,98.8 L104,68"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
+<path stroke-width="13" d="M96,132 L107.2,98.8"/>
+<path stroke-width="10" d="M107.2,98.8 L104,68"/>
+</g>
+<g fill="currentColor">
+<circle r="5" cx="104" cy="68"/>
+</g></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="2.5" d="M12,225 L228,225"/>
+<path stroke-width="4" d="M104,14 L104,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M147,177.6 L178,177.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M170,181.6 L170,224"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.5">
+<path stroke-width="8" d="M142.5,179.6 L68,136.6"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" opacity="0.28">
+<path stroke-width="4" d="M104.4,157.6 L104.4,224"/>
+</g>
+<g fill="currentColor" opacity="0.62">
+<circle r="16" cx="104" cy="68"/>
+</g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
+<circle r="2.5" stroke-width="3" cx="104" cy="68"/>
+</g>
+<path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.8" fill="none" d="M98.5,179.6 A44,44 0 0 1 104.4,157.6"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.2" fill="none" stroke-dasharray="2 2" d="M142.5,179.6 L92.5,179.6"/><text class="muscle-fill" fill="#ff7a3c" x="84.5" y="164.1" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">30°</text><circle class="muscle-fill" fill="#ff7a3c" cx="62.5" cy="164.1" r="8.5"/><text x="62.5" y="164.1" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">1</text><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.4" fill="none" stroke-dasharray="4 3" d="M86,116 L124,116"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="3.5" stroke-linecap="round" fill="none" d="M97,116 L111,116"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M128,96 L106,116"/><circle class="muscle-fill" fill="#ff7a3c" cx="106" cy="116" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="128" cy="96" r="8.5"/><text x="128" y="96" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">2</text><circle class="muscle-stroke" stroke="#ff7a3c" stroke-width="2" fill="none" cx="104" cy="68" r="9"/><path class="muscle-stroke" stroke="#ff7a3c" stroke-width="1.6" fill="none" stroke-dasharray="3 2.5" d="M70,56 L96,64"/><circle class="muscle-fill" fill="#ff7a3c" cx="96" cy="64" r="2.6"/><circle class="muscle-fill" fill="#ff7a3c" cx="70" cy="56" r="8.5"/><text x="70" y="56" dy=".36em" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">3</text>
+</svg>
