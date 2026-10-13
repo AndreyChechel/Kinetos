@@ -32,20 +32,20 @@
 <path stroke-width="13" d="M107.2,156.1 L86.8,166"><animate attributeName="d" dur="2.4s" repeatCount="indefinite" values="M107.2,156.1 L86.8,166;M107.2,156.1 L86.9,166.1;M107.3,156.3 L87.5,167.3;M107.6,156.8 L89.1,169.8;M108,157.3 L91.6,172.9;M108.6,157.8 L94.8,175.8;M109.2,158.2 L98.1,178;M109.6,158.4 L100.8,179.3;M109.8,158.5 L102,179.8;M109.9,158.5 L102.1,179.8;M109.8,158.5 L102,179.8;M109.6,158.4 L100.8,179.3;M109.2,158.2 L98.1,178;M108.6,157.8 L94.8,175.8;M108,157.3 L91.6,172.9;M107.6,156.8 L89.1,169.8;M107.3,156.3 L87.5,167.3;M107.2,156.1 L86.9,166.1;M107.2,156.1 L86.8,166"/></path>
 </g>
 <g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
-<path stroke-width="16.5" d="M137,94 L130.9,128.5"/>
-<path stroke-width="13.5" d="M130.9,128.5 L134.2,159.3"/>
-<path stroke-width="16.5" d="M103,94 L109.1,128.5"/>
-<path stroke-width="13.5" d="M109.1,128.5 L105.8,159.3"/>
+<path stroke-width="16.5" d="M137,94 L143.1,128.5"/>
+<path stroke-width="13.5" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="16.5" d="M103,94 L96.9,128.5"/>
+<path stroke-width="13.5" d="M96.9,128.5 L100.2,159.3"/>
 </g>
 <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
-<path stroke-width="13" d="M137,94 L130.9,128.5"/>
-<path stroke-width="10" d="M130.9,128.5 L134.2,159.3"/>
-<path stroke-width="13" d="M103,94 L109.1,128.5"/>
-<path stroke-width="10" d="M109.1,128.5 L105.8,159.3"/>
+<path stroke-width="13" d="M137,94 L143.1,128.5"/>
+<path stroke-width="10" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="13" d="M103,94 L96.9,128.5"/>
+<path stroke-width="10" d="M96.9,128.5 L100.2,159.3"/>
 </g>
 <g fill="currentColor">
-<circle r="5" cx="134.2" cy="159.3"/>
-<circle r="5" cx="105.8" cy="159.3"/>
+<circle r="5" cx="139.8" cy="159.3"/>
+<circle r="5" cx="100.2" cy="159.3"/>
 </g>
 <g fill="currentColor" opacity="0.5">
 <circle r="6" cx="150.3" cy="169"><animate attributeName="cx" dur="2.4s" repeatCount="indefinite" values="150.3;150.3;149.5;147.5;144.4;140.4;136.2;132.9;131.3;131.2;131.3;132.9;136.2;140.4;144.4;147.5;149.5;150.3;150.3"/><animate attributeName="cy" dur="2.4s" repeatCount="indefinite" values="169;169.1;170.6;173.8;177.6;181.2;184;185.6;186.2;186.2;186.2;185.6;184;181.2;177.6;173.8;170.6;169.1;169"/></circle>

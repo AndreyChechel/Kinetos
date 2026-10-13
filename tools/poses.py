@@ -153,12 +153,13 @@ EX['chest-fly'] = dict(
            dumbbell('hand', r=8), dumbbell('hand2', r=8)], dur=2.8)
 
 # cable crossover: front view, high pulleys both sides
-CX = dict(torso=-90, view='front', leg=(84, 90, 0), leg2=(96, 90, 180), at=('hip', (120, 126)))
+CX = dict(torso=-90, view='front', leg=(84, 90, 0), leg2=(96, 90, 180), at=('hip', (120, 123)))
 EX['cable-crossover'] = dict(
     a=dict(CX, arm={'to': (178, 98), 'bend': 'up'}, arm2={'to': (62, 98), 'bend': 'up'}),
     b=dict(CX, arm={'to': (128, 150), 'bend': 'fwd'}, arm2={'to': (112, 150), 'bend': 'back'}),
-    props=[floor(), stack(18, 86), stack(222, 86),
-           cable((26, 92), 'hand', layer=4), cable((214, 92), 'hand2', layer=4),
+    # 'hand' is the image-right hand -> right-hand pulley (cables never cross the body)
+    props=[floor(), stack(18, 40), stack(222, 40),
+           cable((214, 50), 'hand', layer=4), cable((26, 50), 'hand2', layer=4),
            handle('hand'), handle('hand2')], dur=2.8)
 
 # incline bench (~30°)
@@ -216,15 +217,17 @@ EX['incline-push-up'] = dict(
 
 # ======================================================================= BACK
 BAR_Y = 36
+# Hanging: slight backward lean with the hands a little in front of the head, so
+# the near arm doesn't hide the face; bar high enough that the feet stay in frame.
 EX['pull-up'] = dict(
-    a=dict(torso=-90, arm=(-92, -90), leg=(110, 160, 70), at=('hand', (124, BAR_Y))),
-    b=dict(torso=-82, arm=(70, -100), leg=(115, 165, 70), at=('hand', (124, BAR_Y))),
-    props=[line((56, BAR_Y), (200, BAR_Y), 5, 4, 'eq')], dur=2.8, zoom=.9)
+    a=dict(torso=-95, arm=(-76, -84), leg=(104, 150, 60), at=('hand', (124, 18))),
+    b=dict(torso=-84, arm=(70, -100), leg=(112, 160, 70), at=('hand', (124, 18))),
+    props=[line((56, 18), (200, 18), 5, 4, 'eq')], dur=2.8, zoom=.88)
 
 EX['hanging-leg-raise'] = dict(
-    a=dict(torso=-90, arm=(-92, -90), leg=(94, 104, 40), at=('hand', (110, BAR_Y - 6))),
-    b=dict(torso=-100, arm=(-88, -90), leg=(-6, -4, -70), at=('hand', (110, BAR_Y - 6))),
-    props=[line((40, BAR_Y - 6), (190, BAR_Y - 6), 5, 4, 'eq')], dur=3.0, zoom=.8)
+    a=dict(torso=-95, arm=(-76, -84), leg=(94, 100, 30), at=('hand', (110, 12))),
+    b=dict(torso=-104, arm=(-74, -84), leg=(-6, -4, -70), at=('hand', (110, 12))),
+    props=[line((40, 12), (190, 12), 5, 4, 'eq')], dur=3.0, zoom=.76)
 
 # lat pulldown: from behind, seated
 LPD = dict(torso=-90, view='back', leg=(96, 90, 0), leg2=(84, 90, 180), sl=.62,
@@ -299,7 +302,8 @@ _ir_bar = (J(_ir(18), 'shoulder')[0], 104)
 EX['inverted-row'] = dict(
     a=dict(_ir(18), arm={'to': _ir_bar, 'bend': 'down'}),
     b=dict(_ir(33), arm={'to': _ir_bar, 'bend': 'down'}),
-    props=[floor(), line(_ir_bar, (_ir_bar[0], FLOOR), 4, 0, 'eqs'), dot(_ir_bar, 5, 4, 'eqf')], dur=2.6)
+    # bar end-on drawn over the hand so the grip reads (it used to hide under it)
+    props=[floor(), line(_ir_bar, (_ir_bar[0], FLOOR), 4, 0, 'eqs'), dot(_ir_bar, 4.5, 5.3, 'plate')], dur=2.6)
 
 # ======================================================================= LEGS
 EX['back-squat'] = dict(
@@ -341,15 +345,16 @@ EX['step-up'] = dict(
     props=[floor(), box(128, 196, 192), dumbbell('hand', r=8)], dur=3.0)
 
 # leg press (45° sled)
-_lp = dict(torso=-135, head=8, arm=(70, 10), at=('hip', (92, 172)))
+# hands on the handles beside the hips (the arm used to lie along the thighs)
+_lp = dict(torso=-135, head=8, arm={'to': (84, 186), 'bend': 'down'}, at=('hip', (92, 172)))
+_LP_U = (0.707, -0.707)      # sled travel direction (45°)
+_LP_PERP = (0.707, 0.707)
 
 
 def _sled(P):
     t = P['toe'] if P.get('_sled_toe') else P['ankle']
-    u = (0.707, -0.707)
-    perp = (0.707, 0.707)
-    c = add(t, mul(u, 6))
-    return [(4.5, 'eq', 'path', {'stroke-width': 6}, {'d': seg_d(add(c, mul(perp, -22)), add(c, mul(perp, 14)))})]
+    c = add(t, mul(_LP_U, 6))
+    return [(4.5, 'eq', 'path', {'stroke-width': 6}, {'d': seg_d(add(c, mul(_LP_PERP, -22)), add(c, mul(_LP_PERP, 14)))})]
 
 
 def _lp_seat():
@@ -357,8 +362,17 @@ def _lp_seat():
     u = vec(-135, 1)
     back = (u[1], -u[0])
     p0 = add(hip, mul(back, 18))
+    # seat pan under the hips, back pad behind the torso, frame on the floor,
+    # and the sled rail running parallel to the travel just below the plate
+    pan0 = add(p0, mul(u, -6))
+    rail0 = add(add((124, 140), mul(_LP_U, 6)), mul(_LP_PERP, 16))
+    r_lo, r_hi = add(rail0, mul(_LP_U, -34)), add(rail0, mul(_LP_U, 92))
     return [line(add(p0, mul(u, -10)), add(p0, mul(u, 70)), 8, 0, 'eq'),
-            line((58, 196), (130, 196), 6, 0, 'eqs'), line((112, 196), (226, 82), 4, 0, 'eqs')]
+            line(pan0, add(pan0, (30, 0)), 8, 0, 'eq'),
+            line((50, FLOOR - 6), (196, FLOOR - 6), 6, 0, 'eqs'),
+            line(add(pan0, (14, 0)), (pan0[0] + 14, FLOOR - 6), 5, 0, 'eqs'),
+            line(r_lo, r_hi, 4, 0, 'eqs'),
+            line(r_lo, (r_lo[0], FLOOR - 6), 4, 0, 'eqs')]
 
 
 EX['leg-press'] = dict(
@@ -419,17 +433,20 @@ EX['smith-calf-raise'] = dict(
 _gb = dict(head=-4, leg={'to': (160, G), 'bend': 'up'}, at=('shoulder', (60, FLOOR - 13)))
 EX['barbell-glute-bridge'] = dict(
     a=dict(_gb, torso=180, arm={'to': ('h', 0, 22), 'bend': 'down'}),
-    b=dict(_gb, torso=153, arm={'to': ('h', 0, 22), 'bend': 'down'}),
+    # head stays flat on the floor as the hips rise (neck flexes, abs angle 176)
+    b=dict(_gb, torso=153, head=23, arm={'to': ('h', 0, 22), 'bend': 'down'}),
     props=[floor(), plate(lambda P: tp(P, 0, 22, 'hip'), r=16, layer=5.25)], dur=2.6)
 
-_slr = dict(leg2={'to': (64, 196), 'bend': 'down', 'foot': 60}, at=('ankle', (122, G)))
+# free leg floats just behind at the top and rises in line with the torso as it hinges
+_slr = dict(at=('ankle', (128, G)))
 EX['single-leg-rdl'] = dict(
-    a=stand(**_slr, torso=-88, leg=(88, 92, 0), arm={'to': down(-88, 62), 'bend': 'back'}),
-    b=stand(**_slr, torso=-12, leg=(76, 96, 0), arm={'to': down(-12, 62), 'bend': 'back'}),
-    props=[floor(), box(44, 204, 86), dumbbell('hand', r=8)], dur=3.0)
+    a=stand(**_slr, torso=-88, leg=(88, 92, 0), leg2=(100, 112, 20), arm={'to': down(-88, 62), 'bend': 'back'}),
+    b=stand(**_slr, torso=-14, leg=(78, 96, 0), leg2=(166, 166, 100), arm={'to': down(-14, 62), 'bend': 'back'}),
+    props=[floor(), dumbbell('hand', r=8)], dur=3.0)
 
 # hip abduction / adduction: seated, front view
-_hab = dict(torso=-90, view='front', sl=.7, arm=(100, 84), arm2=(80, 96), at=('hip', (120, 154)))
+# hands on the seat handles beside the hips (arms used to hang across the thighs)
+_hab = dict(torso=-90, view='front', sl=.7, arm=(80, 96), arm2=(100, 84), at=('hip', (120, 154)))
 _hab_props = [floor(), line((92, 170), (148, 170), 10, 0, 'eq'), line((120, 170), (120, FLOOR), 5, 0, 'eqs')]
 EX['hip-abduction'] = dict(
     a=dict(_hab, leg=(70, 92, 0), leg2=(110, 88, 180)),
@@ -456,7 +473,7 @@ EX['seated-db-press'] = dict(
     b=dict(_sdp, arm={'to': ('t', 64, 3), 'bend': 'down'}),
     props=_seat + [dumbbell('hand', r=8)], dur=2.6)
 
-_fv = dict(torso=-90, view='front', leg=(86, 90, 0), leg2=(94, 90, 180), at=('hip', (120, 126)))
+_fv = dict(torso=-90, view='front', leg=(86, 90, 0), leg2=(94, 90, 180), at=('hip', (120, 123)))
 EX['lateral-raise'] = dict(
     a=dict(_fv, arm=(84, 86), arm2=(96, 94)),
     b=dict(_fv, arm=(-4, 4), arm2=(184, 176)),
@@ -468,7 +485,7 @@ EX['front-raise'] = dict(
     props=[floor(), dumbbell('hand', r=8)], dur=2.6)
 
 # rear-delt fly: bent over, seen from behind (torso foreshortened)
-_rdf = dict(torso=-90, view='back', st=.55, hd=.35, head=0, leg=(88, 90, 0), leg2=(92, 90, 180), at=('hip', (120, 130)))
+_rdf = dict(torso=-90, view='back', st=.55, hd=.35, head=0, leg=(88, 90, 0), leg2=(92, 90, 180), at=('hip', (120, 123)))
 EX['rear-delt-fly'] = dict(
     a=dict(_rdf, arm=(94, 88), arm2=(86, 92)),
     b=dict(_rdf, arm=(-2, 8), arm2=(182, 172)),
@@ -550,13 +567,33 @@ EX['crunch'] = dict(
     b=dict(_cr_base, torso=212, head=-24, arm={'to': ('t', 16, -4), 'bend': 'up'}),
     props=[floor()], dur=2.4)
 
-_dc = dict(leg=(-34, 40, -30), at=('hip', (128, 136)))
+_dc = dict(leg=(-34, 40, -30), at=('hip', (124, 138)))
+
+
+def _dc_bench():
+    """Decline pad under the back (parallel to the lying torso, touching the
+    hips), plus the leg-hook post: the roller sits on a post from the pad's
+    top end, so the ankles are actually hooked onto something."""
+    a = dict(_dc, torso=158)
+    P = joints(a)
+    u = vec(158, 1)                       # along the pad, toward the head
+    back = (u[1], -u[0])                  # away from the torso's front
+    p_hip = add(P['hip'], mul(back, 19))  # pad centre line under the hips
+    lo = add(p_hip, mul(u, 92))
+    hi = add(p_hip, mul(u, -30))
+    knee, ank = P['knee'], P['ankle']
+    roll = add(ank, mul(_unit_perp(knee, ank), -9))
+    return [line(lo, hi, 8, 0, 'eq'),
+            line(add(lo, mul(u, -14)), (add(lo, mul(u, -14))[0], FLOOR), 4, 0, 'eqs'),
+            line(hi, (hi[0], FLOOR), 4, 0, 'eqs'),
+            line(hi, roll, 5, 0, 'eq'),
+            dot(roll, 6, 6, 'eqf')]
+
+
 EX['decline-crunch'] = dict(
     a=dict(_dc, torso=158, head=-6, arm={'to': ('t', -10, 14), 'bend': 'down'}),
     b=dict(_dc, torso=222, head=-20, arm={'to': ('t', -10, 14), 'bend': 'down'}),
-    props=[floor(), line((136, 154), (34, 194), 8, 0, 'eq'), line((128, 158), (128, FLOOR), 4, 0, 'eqs'),
-           line((48, 190), (48, FLOOR), 4, 0, 'eqs'),
-           pad(lambda P: add(P['ankle'], mul(_unit_perp(P['knee'], P['ankle']), -9)), r=6)], dur=2.4)
+    props=[floor(), *_dc_bench()], dur=2.4)
 
 
 def russian(t):
@@ -575,10 +612,11 @@ def _rt_weight(P):
 
 EX['russian-twist'] = dict(cycle=russian, props=[floor(), custom(_rt_weight)], dur=2.4, frames=20)
 
-_wc = dict(view='front', leg=(78, 90, 0), leg2=(102, 90, 180), at=('hip', (120, 126)))
+_wc = dict(view='front', leg=(78, 90, 0), leg2=(102, 90, 180), at=('hip', (120, 123)))
 EX['cable-woodchop'] = dict(
-    a=dict(_wc, torso=-82, arm={'to': (190, 52), 'bend': 'up'}, arm2={'to': (180, 56), 'bend': 'up'}),
-    b=dict(_wc, torso=-98, arm={'to': (76, 166), 'bend': 'down'}, arm2={'to': (66, 162), 'bend': 'down'}),
+    # both hands on the one handle: high right -> low left across the body
+    a=dict(_wc, torso=-84, arm={'to': (178, 60), 'bend': 'down'}, arm2={'to': (172, 64), 'bend': 'down'}),
+    b=dict(_wc, torso=-96, arm={'to': (74, 168), 'bend': 'down'}, arm2={'to': (68, 164), 'bend': 'down'}),
     props=[floor(), stack(222, 14), cable((214, 30), lambda P: mid_hands(P)), handle('hand', angle=0)], dur=2.6)
 
 # ===================================================================== CARDIO
@@ -652,16 +690,21 @@ def jump(t):
 
 
 def _rope(P):
-    """Rope seen from the side: one arc from the hands to the tip, which
-    circles the body (over the head, under the feet); P['_t'] = phase."""
-    a = TWO_PI * P['_t'] + math.pi / 2          # tip starts under the feet
-    c = add(P['hip'], (-2, -8))
-    rx, ry = 42, 118
-
-    def e(k, s=1.0):
-        return (c[0] + rx * s * math.cos(a + k), c[1] + ry * s * math.sin(a + k))
-    tip, ctl = e(0), e(-0.7, 1.15)
+    """Rope seen from the side. It turns about the hands' axis (which points
+    at the viewer), so its tip circles the hands: under the feet at t=0 (the
+    airborne frame), behind, over the head, in front. The rope is a bow from
+    the hand to the tip whose middle trails the motion."""
+    th = math.pi / 2 + TWO_PI * P['_t']      # bottom -> back -> top -> front
     h = P['hand']
+    c = (P['hip'][0] + 4, h[1])              # circle round the body axis, not the hand
+    up, dn, rx = 96, 104, 40
+    r_y = dn if math.sin(th) > 0 else up
+    tip = (c[0] + rx * math.cos(th), min(FLOOR - 1, c[1] + r_y * math.sin(th)))
+    tip = (tip[0], max(14, tip[1]))
+    mid = mul(add(h, tip), .5)
+    tan = (-math.sin(th), math.cos(th))      # direction of travel (th increasing)
+    k = .28 * math.dist(h, tip)
+    ctl = sub(mid, mul(tan, k))              # bow lags behind the tip
     d = f"M{f1(h[0])},{f1(h[1])} Q{f1(ctl[0])},{f1(ctl[1])} {f1(tip[0])},{f1(tip[1])}"
     return [(5.3, 'rope', 'path', {}, {'d': d})]
 

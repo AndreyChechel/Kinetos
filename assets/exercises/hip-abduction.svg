@@ -28,20 +28,20 @@
 <path stroke-width="6" d="M107,157.6 L107,149.2"/>
 </g>
 <g fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--surface-2,#eceef1)">
-<path stroke-width="16.5" d="M137,94 L130.9,128.5"/>
-<path stroke-width="13.5" d="M130.9,128.5 L134.2,159.3"/>
-<path stroke-width="16.5" d="M103,94 L109.1,128.5"/>
-<path stroke-width="13.5" d="M109.1,128.5 L105.8,159.3"/>
+<path stroke-width="16.5" d="M137,94 L143.1,128.5"/>
+<path stroke-width="13.5" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="16.5" d="M103,94 L96.9,128.5"/>
+<path stroke-width="13.5" d="M96.9,128.5 L100.2,159.3"/>
 </g>
 <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
-<path stroke-width="13" d="M137,94 L130.9,128.5"/>
-<path stroke-width="10" d="M130.9,128.5 L134.2,159.3"/>
-<path stroke-width="13" d="M103,94 L109.1,128.5"/>
-<path stroke-width="10" d="M109.1,128.5 L105.8,159.3"/>
+<path stroke-width="13" d="M137,94 L143.1,128.5"/>
+<path stroke-width="10" d="M143.1,128.5 L139.8,159.3"/>
+<path stroke-width="13" d="M103,94 L96.9,128.5"/>
+<path stroke-width="10" d="M96.9,128.5 L100.2,159.3"/>
 </g>
 <g fill="currentColor">
-<circle r="5" cx="134.2" cy="159.3"/>
-<circle r="5" cx="105.8" cy="159.3"/>
+<circle r="5" cx="139.8" cy="159.3"/>
+<circle r="5" cx="100.2" cy="159.3"/>
 </g>
 <g fill="currentColor" opacity="0.5">
 <circle r="6" cx="149.2" cy="186.2"><animate attributeName="cx" dur="2.4s" repeatCount="indefinite" values="149.2;149.3;150.9;154.2;158.4;162.4;165.5;167.5;168.3;168.3;168.3;167.5;165.5;162.4;158.4;154.2;150.9;149.3;149.2"/><animate attributeName="cy" dur="2.4s" repeatCount="indefinite" values="186.2;186.2;185.6;184;181.2;177.6;173.8;170.6;169.1;169;169.1;170.6;173.8;177.6;181.2;184;185.6;186.2;186.2"/></circle>

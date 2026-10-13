@@ -165,8 +165,38 @@ def joints(pose):
     return P
 
 
+def _to_kind(spec):
+    if isinstance(spec, dict):
+        to = spec['to']
+        return to[0] if isinstance(to[0], str) else 'w'
+    return None
+
+
+def _world_target(pose, name):
+    """IK target of limb `name` resolved to world coordinates."""
+    P = joints(pose)
+    to = pose[name]['to']
+    if not isinstance(to[0], str):
+        return to
+    base = P['shoulder'] if to[0] == 't' else P['hip']
+    tu, tf = P['_tu'], P['_tf']
+    return (base[0] + tu[0] * to[1] + tf[0] * to[2], base[1] + tu[1] * to[1] + tf[1] * to[2])
+
+
 def interp(p0, p1, t):
-    """Interpolate two poses (same structure)."""
+    """Interpolate two poses (same structure). IK targets of different kinds
+    (absolute vs torso/hip-relative) are both resolved to world space first —
+    zipping ('t', u, v) with (x, y) would mix coordinate systems."""
+    fix = {}
+    for k in ('arm', 'arm2', 'leg', 'leg2'):
+        ka, kb = _to_kind(p0.get(k)), _to_kind(p1.get(k))
+        if ka and kb and ka != kb:
+            fix[k] = (_world_target(p0, k), _world_target(p1, k))
+    if fix:
+        p0, p1 = dict(p0), dict(p1)
+        for k, (w0, w1) in fix.items():
+            p0[k] = dict(p0[k], to=w0)
+            p1[k] = dict(p1[k], to=w1)
     out = {}
     for k in set(p0) | set(p1):
         a, b = p0.get(k, p1.get(k)), p1.get(k, p0.get(k))
